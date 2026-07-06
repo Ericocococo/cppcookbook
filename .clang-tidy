@@ -1,0 +1,41 @@
+Checks: >-
+  modernize-use-nullptr,
+  modernize-use-auto,
+  modernize-use-override,
+  modernize-use-default-member-init,
+  modernize-use-emplace,
+  modernize-loop-convert,
+  modernize-avoid-bind,
+  modernize-replace-auto-ptr,
+  modernize-use-nodiscard,
+  modernize-use-ranges,
+  bugprone-use-after-move,
+  bugprone-dangling-handle,
+  bugprone-infinite-loop,
+  bugprone-integer-division,
+  bugprone-suspicious-memset-usage,
+  bugprone-unchecked-optional-access,
+  readability-const-return-type,
+  readability-container-size-empty,
+  readability-string-compare,
+  performance-unnecessary-copy-initialization,
+  performance-move-const-arg,
+  performance-avoid-endl,
+  cppcoreguidelines-avoid-magic-numbers,
+  cppcoreguidelines-prefer-member-initializer
+
+WarningsAsErrors: ""
+HeaderFilterRegex: ""
+FormatStyle: file
+
+CheckOptions:
+  - key:   cppcoreguidelines-avoid-magic-numbers.IgnoredIntegerValues
+    value: "0;1;2;-1"
+  - key:   readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key:   readability-identifier-naming.FunctionCase
+    value: lower_case
+  - key:   readability-identifier-naming.VariableCase
+    value: lower_case
+  - key:   readability-identifier-naming.ConstantCase
+    value: UPPER_CASE

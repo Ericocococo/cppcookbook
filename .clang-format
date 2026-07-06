@@ -1,0 +1,50 @@
+---
+Language: Cpp
+BasedOnStyle: Google
+Standard: c++20
+
+# 缩进
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ContinuationIndentWidth: 4
+IndentCaseLabels: true
+IndentPPDirectives: BeforeHash
+
+# 行宽
+ColumnLimit: 120
+
+# 大括号：K&R 风格（左括号不换行）
+BreakBeforeBraces: Attach
+
+# 短语句折叠策略
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortLambdasOnASingleLine: Inline
+
+# 指针 / 引用靠左：int* p
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# 括号前空格
+SpaceBeforeParens: ControlStatements
+SpaceAfterTemplateKeyword: true
+
+# include 排序：标准库 → 三方库 → 项目内
+SortIncludes: CaseSensitive
+IncludeBlocks: Regroup
+
+# 模板
+AlwaysBreakTemplateDeclarations: Yes
+
+# 换行
+BinPackArguments: false
+BinPackParameters: false
+AlignAfterOpenBracket: AlwaysBreak
+
+# 注释
+ReflowComments: false
+SpacesBeforeTrailingComments: 2
+...
