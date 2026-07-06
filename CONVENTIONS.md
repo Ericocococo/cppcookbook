@@ -5,6 +5,28 @@
 
 ---
 
+## 术语解释规范
+
+专业名词、英文缩写必须解释，让读者不查文档也能读懂。解释方式按场景选一种：
+
+| 场景 | 写法 | 示例 |
+|------|------|------|
+| 一句话能说清 | 行内注释 | `// RAII：资源获取即初始化` |
+| 需要多句说明 | `.cpp` 文件顶部注释块 | 见下方模板 |
+| 目录/库的术语表 | 该目录的 `README.md` 末尾 `## 术语速查` 表格 | 见 [01_language/README.md](01_language/README.md) |
+| 全局通用缩写 | 本约定末尾 `## 全局术语表` | 见下方 |
+
+**`.cpp` 文件顶部注释模板：**
+
+```cpp
+// C++20 | 依赖：<库名>
+// 演示：<一句话说明演示内容>
+// <专业名词>：<英文全称> — <中文解释>
+// 构建：<构建命令>
+```
+
+---
+
 ## 目录与结构
 
 1. **用到再建，不建空壳** — 目录只在有文件时才创建，不预先遗留空目录占位
@@ -12,7 +34,7 @@
 2. **所有层级目录带两位数字前缀**（`01_ 02_ ...`），阅读顺序即学习/工程顺序；
    工程约定目录（`tests/`、`.github/`）按惯例不加号。
 3. **一个库/主题一个子目录，内部按功能拆多个带序号 `.cpp`** —
-   以 [`03_stl/01_containers/`](03_stl/01_containers/) 为范例（vector/map/queue/...），
+   以 `03_stl/01_containers/` 为范例（vector/map/queue/...），
    **不平铺成一个大文件**。
 4. **子目录名要说明内容；缩写和非一般词在 `README.md` 里解释** —
    如 `01_sfinae`（SFINAE = Substitution Failure Is Not An Error）、
@@ -25,14 +47,96 @@
    中文缩写、框架内术语（`ECS`/`DDS`）等，让读者不查文档也能读懂。
    解释位置：短的一句话放行内注释，较长放 `README.md` 里。
 
+## 命令行工具使用
+
+本机有两套工具路径体系，写命令时必须明确选一种，不要混用。
+
+### 方式一：加 PATH（短命令，前提是系统 PATH 已含对应目录）
+
+CLion 安装后自动将以下路径写入系统 PATH，打开任意终端即可直接使用短命令：
+
+```
+D:\ProgramData\JetBrains\CLion20260101\bin\mingw\bin        ← g++, gcc, mingw32-make
+D:\ProgramData\JetBrains\CLion20260101\bin\ninja\win\x64    ← ninja
+D:\Program Files\Microsoft Visual Studio\18\Community\
+    Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin  ← cmake 4.3.1-msvc1（优先）
+D:\ProgramData\JetBrains\CLion20260101\bin\cmake\win\x64\bin ← cmake 4.2.2（被上条覆盖）
+D:\software\vcpkg                                           ← vcpkg
+```
+
+```bash
+# Git Bash / cmd 直接用
+g++ -std=c++20 main.cpp -o app.exe
+cmake -B build -G Ninja
+ninja -C build
+```
+
+> **例外**：`cl.exe`（MSVC 编译器）永远不在 PATH，必须先运行 `vcvarsall.bat` 激活。
+
+---
+
+### 方式二：不加 PATH（完整路径，不依赖系统 PATH 配置）
+
+适合脚本、CI、或需要精确指定版本的场景。在命令中直接写绝对路径：
+
+**Git Bash（MinGW 工具链）：**
+
+```bash
+GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
+GCC="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/gcc.exe"
+CMAKE="D:/Program Files/Microsoft Visual Studio/18/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe"
+NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+
+"$GXX" -std=c++20 main.cpp -o app.exe
+"$CMAKE" -B build -G Ninja -DCMAKE_C_COMPILER="$GCC" -DCMAKE_CXX_COMPILER="$GXX"
+"$CMAKE" --build build
+```
+
+**cmd（MSVC 工具链）：**
+
+```bat
+set CMAKE=D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
+set VCVARSALL=D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat
+
+:: cl.exe 必须通过 vcvarsall.bat 激活，即使用完整路径也无法绕过（头文件/库路径由它注入）
+call "%VCVARSALL%" x64
+
+:: 激活后 cmake 自动检测 cl.exe
+"%CMAKE%" -B build -G Ninja
+"%CMAKE%" --build build
+```
+
+> `D:\software\cmake-4.3.3` 和 `D:\software\mingw64` 是本机自装版本，**不使用**，不写进任何命令或路径。
+
+---
+
 ## CMake 结构
 
 8. **每个目录都是独立的 CMake 工程** — 任意层级的子目录均可在 CLion 中直接打开为独立项目，
    互不依赖，没有根目录聚合所有子目录的主工程。
-9. **每个含 `.cpp` 的目录都有自己的 `CMakeLists.txt`** — 包含完整的
-   `cmake_minimum_required` + `project()` + `add_executable()`，开箱即编译，无需上级配置。
-10. **共享设置通过 `cmake/common.cmake` 引入** — 编译标准、警告级别等公共选项写在根目录
-    `cmake/common.cmake`，各子目录 `include()` 引用，改一处全局生效。
+9. **每个含 `.cpp` 的目录都有自己的 `CMakeLists.txt`** — 完全自包含，开箱即编译，
+   无需上级配置。叶子目录标准模板：
+
+   ```cmake
+   cmake_minimum_required(VERSION 3.28)
+   project(示例名 LANGUAGES CXX)
+
+   set(CMAKE_CXX_STANDARD 20)
+   set(CMAKE_CXX_STANDARD_REQUIRED ON)
+   set(CMAKE_CXX_EXTENSIONS OFF)
+
+   if(MSVC)
+       add_compile_options(/W4 /utf-8)
+   else()
+       add_compile_options(-Wall -Wextra -Wpedantic)
+   endif()
+
+   add_executable(示例名 main.cpp)
+   ```
+
+10. **需要三方库时，在本目录 `CMakeLists.txt` 里加 `find_package` / `target_link_libraries`**，
+    并在 `vcpkg.json`（如有）里声明依赖；不依赖根目录的 `vcpkg.json`。
 
 ## 代码规范
 
@@ -55,6 +159,8 @@
 16. **别含顶层命名为 `cpp` 或 `test`** — 会与 ctest 或标准库 `<test>` 混淆概念。
 
 ## Git 提交信息
+
+**生成提交说明前**：同时运行 `git diff` 和 `git diff --cached`，把所有改动（含删除文件）一起看，不遗漏。
 
 格式：`<type>(<scope>): <描述>`
 
@@ -83,3 +189,58 @@
 ---
 
 > 新习惯确立后追加到这里，保持一句话一条、可执行、不说废话。
+
+---
+
+## 全局术语表
+
+遇到不认识的缩写先查这里，各目录 README 的 `## 术语速查` 里有更细分的术语。
+
+### 语言与编译
+
+| 缩写 | 全称 | 说明 |
+|------|------|------|
+| RAII | Resource Acquisition Is Initialization | 资源获取即初始化，析构时自动释放 |
+| CRTP | Curiously Recurring Template Pattern | 奇异递归模板模式，实现静态多态 |
+| SFINAE | Substitution Failure Is Not An Error | 模板替换失败不报错，用于编译期条件选择 |
+| TMP | Template Metaprogramming | 模板元编程，编译期计算 |
+| UB | Undefined Behavior | 未定义行为，编译器无任何保证 |
+| ABI | Application Binary Interface | 二进制接口，名称修饰、调用约定等 |
+| ODR | One Definition Rule | 单一定义规则 |
+| POD | Plain Old Data | 无虚函数、无用户定义构造的简单数据 |
+| CTAD | Class Template Argument Deduction | 类模板参数推导（C++17）|
+| ADL | Argument-Dependent Lookup | 参数依赖查找 |
+| NVI | Non-Virtual Interface | 非虚接口模式，模板方法的 C++ 惯用法 |
+| EBO | Empty Base Optimization | 空基类优化 |
+
+### 构建与工具链
+
+| 缩写 | 全称 | 说明 |
+|------|------|------|
+| LTO / IPO | Link-Time / Interprocedural Optimization | 链接期优化，跨编译单元内联 |
+| PGO | Profile-Guided Optimization | 基于运行时 profile 的优化 |
+| ASan | AddressSanitizer | 内存错误检测（越界/UAF/double-free）|
+| UBSan | UndefinedBehaviorSanitizer | 未定义行为检测 |
+| TSan | ThreadSanitizer | 数据竞争检测 |
+| MSan | MemorySanitizer | 未初始化内存读检测 |
+| UAF | Use-After-Free | 释放后使用，常见内存安全漏洞 |
+
+### 并发与系统
+
+| 缩写 | 全称 | 说明 |
+|------|------|------|
+| NUMA | Non-Uniform Memory Access | 非统一内存访问，多 CPU 插槽架构 |
+| CAS | Compare-And-Swap | 比较并交换，lock-free 的基础原语 |
+| SIMD | Single Instruction Multiple Data | 单指令多数据，向量化计算 |
+| IPC | Inter-Process Communication | 进程间通信（管道/共享内存/消息队列）|
+| POSIX | Portable Operating System Interface | 可移植操作系统接口，Unix 标准 API |
+
+### 领域
+
+| 缩写 | 全称 | 说明 |
+|------|------|------|
+| ECS | Entity-Component-System | 实体-组件-系统，游戏引擎架构模式 |
+| DDS | Data Distribution Service | 数据分发服务，ROS2 底层通信中间件 |
+| ONNX | Open Neural Network Exchange | 开放神经网络交换格式 |
+| FFT | Fast Fourier Transform | 快速傅里叶变换 |
+| PBR | Physically Based Rendering | 基于物理的渲染 |
