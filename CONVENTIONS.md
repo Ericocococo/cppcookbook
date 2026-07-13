@@ -127,9 +127,16 @@ call "%VCVARSALL%" x64
    set(CMAKE_CXX_EXTENSIONS OFF)
 
    if(MSVC)
-       add_compile_options(/W4 /utf-8)
+       add_compile_options(
+           /W4      # 警告级别 4（/W0=无，/W1-/W4 递增，最高常用级）
+           /utf-8   # 源文件和执行字符集均为 UTF-8，避免中文乱码
+       )
    else()
-       add_compile_options(-Wall -Wextra -Wpedantic)
+       add_compile_options(
+           -Wall        # GCC 高价值警告集合（非全部，名字有误导）
+           -Wextra      # Wall 之外的额外警告
+           -Wpedantic   # 严格 C++ 标准，报所有 GCC 扩展用法
+       )
    endif()
 
    add_executable(示例名 main.cpp)
@@ -162,11 +169,21 @@ call "%VCVARSALL%" x64
 
 **生成提交说明前**：同时运行 `git diff` 和 `git diff --cached`，把所有改动（含删除文件）一起看，不遗漏。
 
-格式：`<type>(<scope>): <描述>`
+```
+<type>(<scope>): <subject>
 
-- **scope** 可选，填改动所在的库/模块名，如 `stl`、`cmake`、`language`。
-- **描述**用中文，动词开头，不加句号，首行不超过 72 字。
-- **正文**（body）可选，空行隔开，一两句说清楚"为什么"即可，不要复述"改了什么"。
+<body>
+```
+
+**subject（首行）**
+- 格式：`<type>(<scope>): <描述>`
+- scope 可选，填改动所在目录名去掉数字前缀，如 `ops`、`stl`、`language`
+- 描述用中文，动词开头，不加句号，不超过 72 字
+
+**body（正文）**
+- 可选，与 subject 空一行隔开
+- 说清楚"为什么"，不复述"改了什么"（diff 已经说明了改了什么）
+- 每行不超过 72 字
 
 | type | 含义 | 例子 |
 |------|------|------|

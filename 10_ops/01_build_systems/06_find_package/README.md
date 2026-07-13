@@ -9,7 +9,7 @@ Module 模式 vs Config 模式，可选依赖处理
 ## 命令行 · MinGW（Git Bash）
 
 ```bash
-CMAKE="D:/Program Files/Microsoft Visual Studio/18/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe"
+CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
 GCC="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/gcc.exe"
 GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
 

@@ -6,61 +6,58 @@
 
 ---
 
-<a id="toolchain-setup"></a>
 ## 工具路径（完整路径，不依赖 PATH）
 
 所有命令行示例均使用以下完整路径，无需修改系统 PATH。
 
-### 工具链 A · MinGW
+### 工具链 A · MinGW（CLion 内置）
 
 | 工具 | 完整路径 |
 |------|----------|
-| gcc / g++ | `D:\ProgramData\JetBrains\CLion20260101\bin\mingw\bin\gcc.exe` |
-| ninja | `D:\ProgramData\JetBrains\CLion20260101\bin\ninja\win\x64\ninja.exe` |
-| cmake | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` |
+| g++.exe | `D:\ProgramData\JetBrains\CLion20260101\bin\mingw\bin\g++.exe` |
+| cmake.exe | `D:\ProgramData\JetBrains\CLion20260101\bin\cmake\win\x64\bin\cmake.exe` |
+| ninja.exe | `D:\ProgramData\JetBrains\CLion20260101\bin\ninja\win\x64\ninja.exe` |
 
 **Git Bash 里定义变量（可粘贴到 ~/.bashrc 长期生效）：**
 
 ```bash
 GCC="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/gcc.exe"
 GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
+CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
 NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
-CMAKE="D:/Program Files/Microsoft Visual Studio/18/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe"
 
 # 验证
 "$GXX"   --version   # → GCC 13.1.0
-"$CMAKE" --version   # → cmake version 4.3.1-msvc1
+"$CMAKE" --version   # → cmake version 4.2.2
 "$NINJA" --version   # → 1.13.2
 ```
 
 ---
 
-### 工具链 B · MSVC
+### 工具链 B · MSVC（VS 自带）
 
 | 工具 | 完整路径 |
 |------|----------|
 | cl.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe` |
+| link.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\link.exe` |
+| cmake.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` |
+| ninja.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe` |
 | vcvarsall.bat | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat` |
-| cmake | 同上（VS 捆绑）|
-| ninja | 同上（CLion 捆绑）|
 
-**cl.exe 必须通过 vcvarsall.bat 激活环境后才能使用**（头文件、库路径均由它注入）。
+**cl.exe 必须通过 vcvarsall.bat 激活环境后才能使用**（头文件、库路径、link.exe 路径均由它注入）。
 
 **cmd 里定义变量：**
 
 ```bat
-set GCC=D:\ProgramData\JetBrains\CLion20260101\bin\mingw\bin\gcc.exe
-set GXX=D:\ProgramData\JetBrains\CLion20260101\bin\mingw\bin\g++.exe
-set NINJA=D:\ProgramData\JetBrains\CLion20260101\bin\ninja\win\x64\ninja.exe
 set CMAKE=D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
 set VCVARSALL=D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat
 
-:: 激活 MSVC 环境（当前 cmd 会话有效）
+:: 激活 MSVC 环境（当前 cmd 会话有效，cl/link/ninja 均自动加入 PATH）
 call "%VCVARSALL%" x64
 
 :: 验证
 cl              & :: → Microsoft (R) C/C++ Optimizing Compiler Version 19.51...
-"%CMAKE%" --version
+"%CMAKE%" --version & :: → cmake version 4.3.1-msvc1
 ```
 
 ---

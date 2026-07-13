@@ -9,7 +9,7 @@ PRIVATE / PUBLIC / INTERFACE 精确控制属性传播范围
 ## 命令行 · MinGW（Git Bash）
 
 ```bash
-CMAKE="D:/Program Files/Microsoft Visual Studio/18/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe"
+CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
 GCC="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/gcc.exe"
 GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
 

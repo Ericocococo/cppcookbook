@@ -21,50 +21,55 @@
 
 ## 开发环境
 
-- **OS**：Windows 11 x64
+- **OS**：Windows 11 x64（Build 26200）
 - **IDE**：CLion 2026.0.1
-- **Windows SDK**：10.0.26100.0（`D:\Windows Kits\10\`）
 
 ---
 
-### 工具链 A — MinGW（CLion 默认）
+### Windows 环境
+
+| 组件 | 路径 | 版本 |
+|------|------|------|
+| Windows SDK | `D:\Windows Kits\10\` | 10.0.26100.0 |
+| SDK 头文件 | `D:\Windows Kits\10\Include\10.0.26100.0\` | — |
+| SDK 库文件 | `D:\Windows Kits\10\Lib\10.0.26100.0\` | — |
+
+> Windows SDK 由 `vcvarsall.bat` 自动注入到 MSVC 的 `INCLUDE` / `LIB` 环境变量，
+> MinGW 工具链不依赖 Windows SDK（使用自带的 MinGW 头文件）。
+
+---
+
+### 工具链 A — MinGW（CLion 内置）
 
 GCC + GDB 组合，跨平台友好，适合学习语言特性和标准库。
 编译器目标三元组：`x86_64-w64-mingw32`。
 
 | 工具 | 完整路径 | 版本 |
 |------|----------|------|
-| C/C++ 编译器 | `D:\ProgramData\JetBrains\CLion20260101\bin\mingw\bin\g++.exe` | GCC 13.1.0 |
+| g++.exe | `D:\ProgramData\JetBrains\CLion20260101\bin\mingw\bin\g++.exe` | GCC 13.1.0 |
+| cmake.exe | `D:\ProgramData\JetBrains\CLion20260101\bin\cmake\win\x64\bin\cmake.exe` | 4.2.2 |
+| ninja.exe | `D:\ProgramData\JetBrains\CLion20260101\bin\ninja\win\x64\ninja.exe` | 1.13.2 |
 | 调试器 | `D:\ProgramData\JetBrains\CLion20260101\bin\gdb\win\x64\bin\gdb.exe` | GDB 16.3（JetBrains 定制构建 243）|
 
 ---
 
-### 工具链 B — MSVC
+### 工具链 B — MSVC（VS 自带）
 
 cl.exe + LLDB 组合，生成原生 Windows COFF 格式目标文件，适合调试 Windows API、测试 ABI 兼容性。
 工具集版本号 `14.51`，对应 VS 2022 17.x。
 
 | 工具 | 完整路径 | 版本 |
 |------|----------|------|
-| C/C++ 编译器 | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe` | 19.51.36247（Hostx64 → Targetx64）|
+| cl.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe` | 19.51.36247 |
+| link.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\link.exe` | 同上 |
+| cmake.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` | 4.3.1-msvc1 |
+| ninja.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe` | 1.13.2 |
+| vcvarsall.bat | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat` | — |
 | 调试器 | `D:\ProgramData\JetBrains\CLion20260101\bin\lldb\win\x64\bin\lldb.exe` | LLDB 9.0（JetBrains 定制构建 445）|
 
-> MSVC 的 cl.exe 依赖 `vcvarsall.bat` 设置的环境变量（头文件路径、库路径、SDK 路径），
-> 不能脱离 Visual Studio 环境单独调用。CLion 在启动构建时会自动注入这些变量，无需手动操作。
-
----
-
-### 独立工具：CMake 与 Ninja
-
-CMake 是构建系统生成器，Ninja 是构建执行器，两者与编译器无关，理论上装一份即可全局使用。
-CLion 和 Visual Studio 各自捆绑了副本，版本略有差异；CLion 配置中选"已捆绑"时各用各的。
-
-| 工具 | 来源 | 完整路径 | 版本 |
-|------|------|----------|------|
-| CMake | CLion 捆绑 | `D:\ProgramData\JetBrains\CLion20260101\bin\cmake\win\x64\bin\cmake.exe` | 4.2.2 |
-| CMake | VS 捆绑 | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` | 4.3.1-msvc1 |
-| Ninja | CLion 捆绑 | `D:\ProgramData\JetBrains\CLion20260101\bin\ninja\win\x64\ninja.exe` | 1.13.2 |
-| Ninja | VS 捆绑 | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe` | 1.13.2 |
+> cl.exe 依赖 `vcvarsall.bat` 注入头文件路径、库路径、SDK 路径，不能脱离 VS 环境单独调用。
+> CLion 构建时自动注入，命令行使用时需手动执行（注意路径有空格，**必须加引号**）：
+> `call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64`
 
 ---
 
