@@ -35,5 +35,14 @@ logger.o:     logger.cpp logger.h
 run: $(TARGET)
 	./$(TARGET)
 
+# Windows 下 mingw32-make 默认用 sh 执行命令，但 rm 不在 PATH 里；
+# 显式切换到 cmd 并用 del，避免依赖 sh 环境；Unix 保持 rm -f
+ifeq ($(OS),Windows_NT)
+SHELL = cmd
+clean:
+	if exist *.o del /Q *.o
+	if exist $(TARGET).exe del /Q $(TARGET).exe
+else
 clean:
 	rm -f $(OBJS) $(TARGET)
+endif

@@ -89,7 +89,7 @@ NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
 MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
 
 "$GXX" -std=c++20 main.cpp -o app.exe
-"$CMAKE" -B build -G Ninja -DCMAKE_C_COMPILER="$GCC" -DCMAKE_CXX_COMPILER="$GXX"
+"$CMAKE" -B build -G Ninja -DCMAKE_CXX_COMPILER="$GXX"
 "$CMAKE" --build build
 ```
 
