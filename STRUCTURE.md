@@ -59,18 +59,13 @@ cppcookbook/
 cppcookbook/                                  # 顶层仓库（可运行的合集）
 │
 ├── README.md                               # 总索引：每个系列一句话导航
-├── CMakeLists.txt                          # 主构建文件（对应 pyproject.toml）
-│                                           #   ① 项目元数据  ② add_subdirectory 统一管理
-│                                           #   ③ 工具链配置（clang-tidy/asan 等）
-├── CMakePresets.json                       # 预置构建变体（debug/release/asan/wasm）
-├── vcpkg.json                              # ★新增: 依赖声明（换机 vcpkg install 一键装）
-├── .clang-format                           # ★新增: 统一代码格式
-├── .clang-tidy                             # ★新增: 静态分析规则
-├── .gitignore                              # 忽略 build//.venv/密钥/大文件
-├── Makefile                               # 快捷方式：make build/test/lint/clean
-├── CONTRIBUTING.md                         # ★新增: 贡献风格与提交约定
-├── .github/workflows/                      # ★新增: CI（安装依赖→构建→测试→lint）
-└── tests/                                  # ★新增: 全库集成/回归测试
+├── STRUCTURE.md                            # 目录设计文档（本文件）
+├── CONVENTIONS.md                          # 项目规范：命名/注释/提交约定
+├── CMakeLists.txt                          # 仓库根标记，仅供 CLion 识别根目录
+├── Makefile                                # 命令快捷表：make fmt / make lint
+├── .clang-format                           # 格式规则（Google+C++20+4空格）
+├── .clang-tidy                             # 静态分析规则集
+└── .gitignore                              # 忽略 build/ *.o *.pdb 大二进制
 │
 ├── 01_language/                            # ─── C++ 语言本身（按难度递进）───
 │   ├── 01_basics/                          # 基础
@@ -220,23 +215,18 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 
 ## 根级文件说明
 
-| 文件 / 目录 | 作用 | 说明 |
-|-------------|------|------|
+| 文件 | 作用 | 说明 |
+|------|------|------|
 | `README.md` | 总索引 | 每个系列一句话导航，新人从这里进 |
-| `CMakeLists.txt` | **项目配置中心** | ① 项目元数据 ② `add_subdirectory` 统一管理 ③ 工具链 ④ 安装规则。**不绑定编译器** |
-| `CMakePresets.json` | 构建变体预置 | `debug` / `release` / `asan` / `wasm` 等一键切换 |
-| `vcpkg.json` | **依赖声明** | 换机后 `vcpkg install` 一键装；版本固定防漂移 |
-| `.clang-format` | 统一格式 | 存档一套风格，`make fmt` 全格式化 |
-| `.clang-tidy` | 静态分析规则 | 与 CI 打通，`make lint` 本地验证 |
+| `STRUCTURE.md` | 目录设计文档 | 顶层分桶原则、完整目录树、扩展策略（本文件） |
+| `CONVENTIONS.md` | 项目规范 | 命名、注释、提交、代码风格约定 |
+| `CMakeLists.txt` | 仓库根标记 | 仅供 CLion 识别仓库根目录；各子目录是独立 CMake 工程，互不依赖 |
+| `Makefile` | 命令快捷表 | `make fmt` / `make lint`；只是命令运行器，不负责 C++ 构建 |
+| `.clang-format` | 统一格式规则 | 基于 Google 风格 + C++20 + 4 空格缩进，`make fmt` 全格式化 |
+| `.clang-tidy` | 静态分析规则 | modernize / bugprone / readability / performance 检查集 |
 | `.gitignore` | git 忽略 | `build/` / `.cache/` / `*.o` / `*.pdb` / 大二进制 |
-| `Makefile` | **命令快捷表** | `make build/test/lint/clean/fmt`。只是命令运行器，不认语言、不做 C++ 构建 |
-| `CONTRIBUTING.md` | 贡献约定 | 提交风格与 PR 规范 |
-| `.github/workflows/` | CI | 推代码自动：安装依赖 → 构建 → 测试 → lint |
-| `tests/` | 全库回归测试 | 跨模块的整体验证 |
 
-> **关于 `CMakeLists.txt` vs `Makefile`**：
-> `CMakeLists.txt` 是 **C++ 构建的核心**，控制编译/链接/安装；
-> `Makefile` 只是 **命令别名**（`make test` → `cmake --build build && ctest`），两者共存，职责不重叠。
+> **各子目录是独立工程**：每个知识点子目录含自己的 `CMakeLists.txt`，在 CLion 里单独打开/构建，互不依赖。根目录的 `CMakeLists.txt` 不负责任何构建，`Makefile` 只做格式化和 lint 的快捷入口。
 
 ---
 

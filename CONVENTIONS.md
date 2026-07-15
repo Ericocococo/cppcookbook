@@ -25,6 +25,41 @@
 // 构建：<构建命令>
 ```
 
+### 代码中英文词汇的注释规则
+
+面向小白读者，代码里出现的**英文关键字、标准库名称、API 名**，凡是名字本身不能自解释的，必须在行内注释中加中文说明。判断标准：初学者看到这个英文名，能否在 3 秒内猜出它的作用？不能就加注释。
+
+**需要注释的典型场景：**
+
+```cpp
+// ① 标准库 API —— 函数名不直白的
+auto p = std::make_unique<int>(10);   // make_unique：创建 unique_ptr（独占所有权的智能指针）
+v.emplace_back(1, 2);                 // emplace_back：直接在末尾原地构造，比 push_back 少一次拷贝
+s.shrink_to_fit();                    // shrink_to_fit：释放多余的预分配内存
+
+// ② C++ 关键字 —— 初学者可能不熟悉的
+int&& rref = std::move(x);           // &&：右值引用；move：转移所有权，x 之后不可再用
+explicit Foo(int x);                 // explicit：禁止隐式类型转换，只能显式调用构造函数
+[[nodiscard]] int compute();         // nodiscard：调用者若不使用返回值，编译器发出警告
+
+// ③ 英文缩写 —— 看不出全称的
+size_t n = v.size();                 // size_t：无符号整数类型，专门用于表示大小/长度
+nullptr                              // nullptr：空指针常量（C++11），类型安全，替代 NULL/0
+
+// ④ 模板/STL 术语
+typename T                           // typename：占位符，T 可以是任意类型
+std::forward<T>(arg)                 // forward：完美转发，保留实参的值类别（左值/右值）
+```
+
+**不需要注释的场景**（名字已经足够直白）：
+
+```cpp
+v.push_back(x);    // 不需要：push back = 推到后面，一看就懂
+v.size();          // 不需要：size = 大小
+v.empty();         // 不需要：empty = 是否为空
+std::cout << x;    // 不需要：cout = 输出流
+```
+
 ---
 
 ## 目录与结构
@@ -41,8 +76,14 @@
    `03_crtp`（CRTP = Curiously Recurring Template Pattern）。
 5. **每个主题都放在自己的子目录里**，不直接把 `.cpp` 散放在上级目录 —
    以 `01_language/04_modern/01_move_semantics/` 为范例。
-6. **只有其子目录直接含 `.cpp` 的目录，才建 `README.md`**，中间层目录不加 —
-   `README.md` 列出当前目录所有文件/子目录一行内容摘要，`cat README.md` 即可查导航。
+6. **每个含 `.cpp` 的目录（含叶子目录）都必须有 `README.md`**，中间层目录不加 —
+   上级目录的 `README.md` 列出子目录一行摘要；叶子目录的 `README.md` 包含以下五个带序号的 `##` 章节：
+   - **`## 1. 文件`**：列出 `main.cpp` / `CMakeLists.txt` 及各文件用途
+   - **`## 2. 命令行 · MinGW（Git Bash）`**：变量块 + 方案A bash变量版 + cmd内联三步版
+   - **`## 3. 命令行 · MSVC（cmd）`**：方案A 变量版 + 四步版内联
+   - **`## 4. CLion IDE`**：File→Open→加载→Ctrl+F9/Shift+F10
+   - **`## 5. 英文及缩写说明`**：本文件代码中出现的所有英文关键字、API 名、缩写，逐条列表解释
+   - 构建命令格式以 [`10_ops/01_build_systems/01_hello/README.md`](10_ops/01_build_systems/01_hello/README.md) 为标准模板
 7. **英文缩写、缩写、非一般词必须解释** — 包括英文缩写（`RAII`/`CRTP`/`TMP`/`SFINAE`/`UB`/`ABI`），
    中文缩写、框架内术语（`ECS`/`DDS`）等，让读者不查文档也能读懂。
    解释位置：短的一句话放行内注释，较长放 `README.md` 里。
@@ -111,6 +152,107 @@ call "%VCVARSALL%" x64
 
 ---
 
+### README 部署命令标准格式
+
+所有含构建步骤的 README 必须按以下结构写，参考完整范例：[`10_ops/01_build_systems/01_hello/README.md`](10_ops/01_build_systems/01_hello/README.md)。
+
+**路径常量（直接复制，不要改）：**
+
+| 变量 | 路径 |
+|------|------|
+| `CMAKE`（MinGW 段用）| `D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe` |
+| `GXX` | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe` |
+| `NINJA` | `D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe` |
+| `MAKE` | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe` |
+| `CMAKE`（MSVC 段用）| `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` |
+| `VCVARSALL` | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat` |
+| MSVC Ninja | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe` |
+
+**MinGW 段模板（`## 2. 命令行 · MinGW（Git Bash）`）：**
+
+````markdown
+```bash
+CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
+GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
+NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+```
+
+### 方案 A：Ninja（推荐）
+
+```bash
+# 配置
+"$CMAKE" -B build-mingw -G Ninja \
+  -DCMAKE_CXX_COMPILER="$GXX" \
+  -DCMAKE_MAKE_PROGRAM="$NINJA"
+
+# 构建
+"$CMAKE" --build build-mingw
+
+# 运行
+./build-mingw/<exe名>.exe
+```
+
+> cmd 三步版：
+
+```bat
+:: 配置
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw -G Ninja -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+
+:: 构建
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw
+
+:: 运行
+build-mingw\<exe名>.exe
+```
+````
+
+**MSVC 段模板（`## 3. 命令行 · MSVC（cmd）`）：**
+
+````markdown
+### 方案 A：vcvarsall + Ninja（推荐）
+
+```bat
+set CMAKE=D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
+set VCVARSALL=D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat
+
+:: 激活 — 把 cl.exe / link.exe / ninja.exe 加入当前会话 PATH，并注入 INCLUDE / LIB / LIBPATH
+call "%VCVARSALL%" x64
+
+"%CMAKE%" -B build-msvc -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+
+"%CMAKE%" --build build-msvc
+
+build-msvc\<exe名>.exe
+```
+
+> 四步版（激活、配置、构建、运行各一行）：
+
+```bat
+:: 激活
+call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+
+:: 配置
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+
+:: 构建
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc
+
+:: 运行
+build-msvc\<exe名>.exe
+```
+````
+
+**CLion IDE 段模板（`## 4. CLion IDE`）：**
+
+````markdown
+1. `File → Open` 选择 `<目录名>/` 目录
+2. CLion 自动识别 `CMakeLists.txt`，右下角点击**加载**
+3. 工具栏选择工具链（MinGW 或 Visual Studio）
+4. **构建** `Ctrl+F9`　**运行** `Shift+F10`
+````
+
+---
+
 ## CMake 结构
 
 8. **每个目录都是独立的 CMake 工程** — 任意层级的子目录均可在 CLion 中直接打开为独立项目，
@@ -159,6 +301,9 @@ call "%VCVARSALL%" x64
 12. **文件顶部注释写清楚**：所属标准库/三方库、C++ 标准版本（如 `// C++20`）、编译/安装方式。
 13. **注释使用中文**。
 14. **给出的 demo 必须是可执行的**，假定实际跑一遍确认输出正常后完成。
+15. **目标受众是 C++ 小白** — 注释要解释"为什么"和"什么意思"，不只写"做了什么"；
+    每个语法点附一句话说明常见陷阱或与直觉不符的行为（如整数除法截断、前后缀自增区别）。
+    `README.md` 作详细原理解释，`.cpp` 是可运行的配套示例代码。
 
 ## 命名
 
