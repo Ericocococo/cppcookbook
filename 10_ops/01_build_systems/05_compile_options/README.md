@@ -272,7 +272,7 @@ build-msvc-vs\Release\compile_options_demo.exe
 | `-A x64` | 目标平台；不指定默认 Win32（32 位）；可选值：`x64`、`Win32`、`ARM`、`ARM64`、`ARM64EC` |
 | `--config Debug/Release` | 构建时指定配置，VS Generator 是多配置，**不用** `-DCMAKE_BUILD_TYPE` |
 
-其他通用配置参数（`-DCMAKE_INSTALL_PREFIX`、`-DCMAKE_TOOLCHAIN_FILE`、`-DCMAKE_EXPORT_COMPILE_COMMANDS` 等）见 [cmake_syntax.md § 2.7.1](../cmake_syntax.md)。
+其他通用配置参数（`-DCMAKE_INSTALL_PREFIX`、`-DCMAKE_TOOLCHAIN_FILE`、`-DCMAKE_EXPORT_COMPILE_COMMANDS` 等）见 [cmake_syntax.md § 0.1 配置阶段](../cmake_syntax.md)。
 
 **生成的 build 目录中三个 `.vcxproj` 的作用：**
 
@@ -349,7 +349,55 @@ cat build-mingw-ninja-debug/compile_commands.json
 
 ---
 
-## 标志速查
+## 5. CMakeLists.txt 写法解读
+
+### 5.1 `if(MSVC)` — 最简跨编译器写法
+
+项目标准模板（`01_basics` 各子目录都用这套）：
+
+```cmake
+if(MSVC)                                          # 如果当前编译器是 MSVC（Visual Studio 的 cl.exe）
+    add_compile_options(/W4 /utf-8)               #   → 用 MSVC 语法的选项
+else()                                            # 否则（MinGW / GCC / Clang）
+    add_compile_options(-Wall -Wextra -Wpedantic) #   → 用 GCC 语法的选项
+endif()                                           # if 结束
+```
+
+**为什么要区分两套**：MSVC 和 GCC 是两家公司的编译器，选项语法不兼容：
+
+| 编译器 | 前缀 | 示例 |
+|--------|------|------|
+| MSVC（`cl.exe`）| `/` | `/W4`、`/utf-8` |
+| GCC / Clang（`g++`）| `-` | `-Wall`、`-Wextra` |
+
+把 GCC 的 `-Wall` 传给 MSVC 会报错，反之亦然。`if(MSVC)` 自动判断，不用手动切换。
+
+### 5.2 `add_compile_options` vs `target_compile_options`
+
+| 命令 | 作用范围 | 适合场景 |
+|------|----------|----------|
+| `add_compile_options(...)` | 当前 CMakeLists.txt 内所有目标 | 只有一个 `add_executable` 的简单工程（即本项目各子目录）|
+| `target_compile_options(目标 PRIVATE ...)` | 指定的单个目标 | 多目标工程，需要各自独立控制选项 |
+
+本项目各子目录只有一个可执行文件，两者效果相同，用 `add_compile_options` 更简洁。
+
+### 5.3 本目录的进阶写法：生成器表达式
+
+本目录 `CMakeLists.txt` 用的是**生成器表达式**，比 `if(MSVC)` 更精细，可以在单条命令里同时处理编译器类型和 Debug/Release 配置：
+
+```cmake
+# 生成器表达式：$<条件:值>  — 条件为真时展开为值，否则为空
+target_compile_options(app PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>:/W4 /utf-8>            # MSVC 时加这些
+    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra>  # 非 MSVC 时加这些
+)
+```
+
+`if(MSVC)` 是**配置阶段**判断（cmake 运行时），生成器表达式是**构建阶段**判断（ninja/make 运行时），后者能区分 Debug/Release，前者不行。入门阶段用 `if(MSVC)` 即可。
+
+---
+
+## 6. 标志速查
 
 ### GCC/Clang 警告标志（`-W` 前缀）
 

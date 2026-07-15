@@ -4,6 +4,99 @@
 
 ---
 
+## 0. CMake 命令行速查
+
+### 0.1 配置阶段（`cmake -B`）
+
+```bash
+cmake -B <构建目录> [选项...]
+```
+
+| 参数 | 说明 |
+|------|------|
+| `-B build` | 指定构建目录（build 文件夹），不存在时自动创建 |
+| `-S .` | 指定源目录（含 CMakeLists.txt），默认为当前目录，通常可省略 |
+| `-G Ninja` | 指定构建系统生成器；常用值：`Ninja`（快）、`"MinGW Makefiles"`、`"Visual Studio 18 2026"` |
+| `-A x64` | 目标平台，**VS Generator 专用**；不指定默认 Win32（32 位）；可选值：`x64`（64 位）、`Win32`（32 位）、`ARM`、`ARM64`、`ARM64EC` |
+| `-DCMAKE_BUILD_TYPE=Debug` | 构建类型（单配置 Generator 用）：`Debug` / `Release` / `RelWithDebInfo` / `MinSizeRel`；VS Generator 不用此参数，改用 `--config` |
+| `-DCMAKE_CXX_COMPILER="路径"` | 指定 C++ 编译器可执行文件路径；编译器不在 PATH 时必填 |
+| `-DCMAKE_MAKE_PROGRAM="路径"` | 指定构建工具（ninja.exe / mingw32-make.exe）路径；构建工具不在 PATH 时必填 |
+| `-DCMAKE_TOOLCHAIN_FILE=路径` | 工具链文件（vcpkg 集成时用）|
+| `-DCMAKE_INSTALL_PREFIX=路径` | `cmake --install` 的安装根目录，默认 `/usr/local`（Linux）或 `C:/Program Files`（Windows）|
+| `-DCMAKE_CXX_STANDARD=17` | 强制 C++ 标准（17 / 20 / 23），等价于 CMakeLists.txt 里的 `set(CMAKE_CXX_STANDARD 17)` |
+| `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` | 导出 `compile_commands.json`，供 clangd / IDE 静态分析用；**Ninja 支持，VS Generator 不支持** |
+| `-DCMAKE_VERBOSE_MAKEFILE=ON` | 构建时打印完整编译命令，排查编译参数问题用 |
+| `-DFOO=ON` | 向 CMakeLists.txt 传递缓存变量，等价于 `set(FOO ON CACHE BOOL "")` |
+| `-Wno-dev` | 抑制 CMakeLists.txt 的开发者警告 |
+| `--fresh` | 强制删除旧缓存重新配置（CMake 3.24+）|
+
+```bash
+# 完整示例
+cmake -B build -G Ninja \
+  -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" \
+  -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=./install-root
+```
+
+### 0.2 构建阶段（`cmake --build`）
+
+```bash
+cmake --build <构建目录> [选项...]
+```
+
+| 参数 | 说明 |
+|------|------|
+| `--build build` | 指定构建目录（与配置时的 `-B` 一致）|
+| `--target <名称>` | 只构建指定目标；`--target clean` 清理构建产物 |
+| `--config Release` | 多配置生成器（Visual Studio）下指定构建类型 |
+| `-j 8` / `--parallel 8` | 并行编译线程数；省略时使用生成器默认值 |
+| `--verbose` / `-v` | 打印实际执行的编译命令，排查编译选项问题时用 |
+
+```bash
+cmake --build build -j 8 --verbose    # 8 线程构建并打印完整命令
+cmake --build build --target clean    # 只清理
+```
+
+### 0.3 安装阶段（`cmake --install`）
+
+```bash
+cmake --install <构建目录> [选项...]
+```
+
+| 参数 | 说明 |
+|------|------|
+| `--install build` | 指定构建目录 |
+| `--prefix 路径` | 覆盖安装根目录（优先级高于配置时的 `CMAKE_INSTALL_PREFIX`）|
+| `--component <名称>` | 只安装指定组件（需 CMakeLists.txt 配合 `COMPONENT` 参数）|
+| `--config Release` | 多配置生成器下指定安装哪种构建类型 |
+
+```bash
+cmake --install build --prefix ./dist   # 安装到 ./dist
+```
+
+### 0.4 测试（`ctest`）
+
+```bash
+ctest --test-dir <构建目录> [选项...]
+```
+
+| 参数 | 说明 |
+|------|------|
+| `--test-dir build` | 指定构建目录（含 CTestTestfile.cmake）|
+| `--output-on-failure` | 只在测试失败时打印输出，通过的不显示 |
+| `-L <标签>` | 只运行带指定标签的测试（标签在 `set_tests_properties` 里设置）|
+| `-R <正则>` | 按测试名称正则过滤 |
+| `-j 4` | 并行运行测试 |
+| `--rerun-failed` | 只重跑上次失败的测试 |
+
+```bash
+ctest --test-dir build --output-on-failure -j 4   # 4 并行，失败时才输出
+ctest --test-dir build -L edge --rerun-failed      # 只跑 edge 标签的失败用例
+```
+
+---
+
 ## 1. 逐例解析
 
 ### 1.1 最小工程（01_hello）
@@ -190,6 +283,8 @@ g++ main.o core.a -o app
 ---
 
 ### 1.5 编译选项与生成器表达式（05_compile_options）
+
+> 入门简单写法（`if(MSVC)` + `add_compile_options`）见 § 2.20；本节演示进阶的生成器表达式写法。
 
 ```cmake
 target_compile_options(app PRIVATE
@@ -971,100 +1066,7 @@ target_precompile_headers(my_app REUSE_FROM my_lib)
 | `$<INSTALL_INTERFACE:path>` | 仅安装后生效 |
 | `$<TARGET_FILE:name>` | 目标输出文件的完整路径 |
 
-### 2.17 常用构建命令详解
-
-#### 2.17.1 配置阶段（`cmake -B`）
-
-```bash
-cmake -B <构建目录> [选项...]
-```
-
-| 参数 | 说明 |
-|------|------|
-| `-B build` | 指定构建目录（build 文件夹），不存在时自动创建 |
-| `-S .` | 指定源目录（含 CMakeLists.txt），默认为当前目录，通常可省略 |
-| `-G Ninja` | 指定构建系统生成器；常用值：`Ninja`（快）、`"MinGW Makefiles"`、`"Visual Studio 18 2026"` |
-| `-A x64` | 目标平台，**VS Generator 专用**；不指定默认 Win32（32 位）；可选值：`x64`（64 位）、`Win32`（32 位）、`ARM`、`ARM64`、`ARM64EC` |
-| `-DCMAKE_BUILD_TYPE=Debug` | 构建类型（单配置 Generator 用）：`Debug` / `Release` / `RelWithDebInfo` / `MinSizeRel`；VS Generator 不用此参数，改用 `--config` |
-| `-DCMAKE_CXX_COMPILER="路径"` | 指定 C++ 编译器可执行文件路径；编译器不在 PATH 时必填 |
-| `-DCMAKE_MAKE_PROGRAM="路径"` | 指定构建工具（ninja.exe / mingw32-make.exe）路径；构建工具不在 PATH 时必填 |
-| `-DCMAKE_TOOLCHAIN_FILE=路径` | 工具链文件（vcpkg 集成时用） |
-| `-DCMAKE_INSTALL_PREFIX=路径` | `cmake --install` 的安装根目录，默认 `/usr/local`（Linux）或 `C:/Program Files`（Windows） |
-| `-DCMAKE_CXX_STANDARD=17` | 强制 C++ 标准（17 / 20 / 23），等价于 CMakeLists.txt 里的 `set(CMAKE_CXX_STANDARD 17)` |
-| `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` | 导出 `compile_commands.json`，供 clangd / IDE 静态分析用；**Ninja 支持，VS Generator 不支持** |
-| `-DCMAKE_VERBOSE_MAKEFILE=ON` | 构建时打印完整编译命令，排查编译参数问题用 |
-| `-DFOO=ON` | 向 CMakeLists.txt 传递缓存变量，等价于 `set(FOO ON CACHE BOOL "")` |
-| `-Wno-dev` | 抑制 CMakeLists.txt 的开发者警告 |
-| `--fresh` | 强制删除旧缓存重新配置（CMake 3.24+） |
-
-```bash
-# 完整示例
-cmake -B build -G Ninja \
-  -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" \
-  -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe" \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_INSTALL_PREFIX=./install-root
-```
-
-#### 2.17.2 构建阶段（`cmake --build`）
-
-```bash
-cmake --build <构建目录> [选项...]
-```
-
-| 参数 | 说明 |
-|------|------|
-| `--build build` | 指定构建目录（与配置时的 `-B` 一致） |
-| `--target <名称>` | 只构建指定目标；`--target clean` 清理构建产物 |
-| `--config Release` | 多配置生成器（Visual Studio）下指定构建类型 |
-| `-j 8` / `--parallel 8` | 并行编译线程数；省略时使用生成器默认值 |
-| `--verbose` / `-v` | 打印实际执行的编译命令，排查编译选项问题时用 |
-
-```bash
-cmake --build build -j 8 --verbose    # 8 线程构建并打印完整命令
-cmake --build build --target clean    # 只清理
-```
-
-#### 2.17.3 安装阶段（`cmake --install`）
-
-```bash
-cmake --install <构建目录> [选项...]
-```
-
-| 参数 | 说明 |
-|------|------|
-| `--install build` | 指定构建目录 |
-| `--prefix 路径` | 覆盖安装根目录（优先级高于配置时的 `CMAKE_INSTALL_PREFIX`） |
-| `--component <名称>` | 只安装指定组件（需 CMakeLists.txt 配合 `COMPONENT` 参数） |
-| `--config Release` | 多配置生成器下指定安装哪种构建类型 |
-
-```bash
-cmake --install build --prefix ./dist   # 安装到 ./dist
-```
-
-#### 2.17.4 测试（`ctest`）
-
-```bash
-ctest --test-dir <构建目录> [选项...]
-```
-
-| 参数 | 说明 |
-|------|------|
-| `--test-dir build` | 指定构建目录（含 CTestTestfile.cmake） |
-| `--output-on-failure` | 只在测试失败时打印输出，通过的不显示 |
-| `-L <标签>` | 只运行带指定标签的测试（标签在 `set_tests_properties` 里设置） |
-| `-R <正则>` | 按测试名称正则过滤 |
-| `-j 4` | 并行运行测试 |
-| `--rerun-failed` | 只重跑上次失败的测试 |
-
-```bash
-ctest --test-dir build --output-on-failure -j 4   # 4 并行，失败时才输出
-ctest --test-dir build -L edge --rerun-failed      # 只跑 edge 标签的失败用例
-```
-
----
-
-### 2.18 find_library() / find_program() / find_path() / find_file()
+### 2.17 find_library() / find_program() / find_path() / find_file()
 
 ```cmake
 # find_library — 查找库文件（.a / .lib / .so / .dll）
@@ -1114,7 +1116,7 @@ find_file(ZLIB_H zlib.h
 
 ---
 
-### 2.19 install() 完整语法
+### 2.18 install() 完整语法
 
 ```cmake
 include(GNUInstallDirs)   # 提供标准目录变量
@@ -1154,7 +1156,7 @@ install(TARGETS mylib COMPONENT devel)
 
 ---
 
-### 2.20 enable_testing() / add_test() / set_tests_properties()
+### 2.19 enable_testing() / add_test() / set_tests_properties()
 
 ```cmake
 enable_testing()   # 或 include(CTest)，启用 CTest 支持
@@ -1193,7 +1195,7 @@ set_property(TEST basic_test basic_verbose PROPERTY LABELS "unit")
 
 ---
 
-### 2.21 add_compile_options() / add_link_options()
+### 2.20 add_compile_options() / add_link_options()
 
 ```cmake
 # 全局编译选项：作用于当前目录及所有子目录的所有目标
@@ -1215,7 +1217,158 @@ add_link_options(-Wl,--as-needed)
 
 > **最佳实践**：优先用 `target_compile_options`；如需全局设置，考虑用接口库（`project_options` 模式，见 1.11 节）代替 `add_compile_options`，避免意外影响 `add_subdirectory` 引入的第三方库。
 
+**跨编译器写法：`if(MSVC)` vs 生成器表达式**
+
+MSVC（`cl.exe`）和 GCC/Clang 的选项前缀不兼容（MSVC 用 `/`，GCC 用 `-`），需要区分处理。有两种写法：
+
+```cmake
+# 写法 A：if(MSVC) — 简单直观，适合单目标的入门工程（本项目各子目录用此写法）
+# if(MSVC) 在 CMake 配置阶段（cmake -B build 时）判断
+if(MSVC)
+    add_compile_options(
+        /W4        # 警告级别 4（最高常用级，/W0=无，/W1-/W4 递增）
+        /utf-8     # 源文件和执行字符集均为 UTF-8，避免中文注释乱码
+    )
+else()             # MinGW / GCC / Clang
+    add_compile_options(
+        -Wall      # 高价值警告集合（非全部，名字有误导）
+        -Wextra    # Wall 之外的额外警告
+        -Wpedantic # 严格 C++ 标准，报所有编译器扩展用法
+    )
+endif()
+
+# 写法 B：生成器表达式 — 精细控制，可同时区分编译器类型 + Debug/Release
+# 生成器表达式在构建阶段（ninja/make 运行时）展开，能区分 Debug/Release；if(MSVC) 不行
+target_compile_options(app PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>:/W4 /utf-8>
+    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
+)
+```
+
+| 对比项 | `if(MSVC)` | 生成器表达式 |
+|--------|-----------|-------------|
+| 判断时机 | 配置阶段（`cmake -B`）| 构建阶段（`ninja`/`make`）|
+| 能否区分 Debug/Release | ❌ | ✅ |
+| 可读性 | ✅ 直观 | ⚠ 嵌套深，初学难读 |
+| 适合场景 | 简单工程、入门 | 多配置工程、需精细控制 |
+
 ---
+
+### 2.21 跨平台条件配置
+
+根据编译器、操作系统、构建类型的不同，向目标传入不同的编译选项。
+
+#### 按编译器区分
+
+| 条件 | 匹配对象 |
+|------|----------|
+|  | Visual Studio / cl.exe |
+|  | GCC / MinGW |
+|  | Clang / AppleClang |
+
+Usage
+
+  cmake [options] <path-to-source>
+  cmake [options] <path-to-existing-build>
+  cmake [options] -S <path-to-source> -B <path-to-build>
+
+Specify a source directory to (re-)generate a build system for it in the
+current working directory.  Specify an existing build directory to
+re-generate its build system.
+
+Run 'cmake --help' for more information.
+
+> 本项目各子目录只区分 MSVC / 其他，用简化版：
+> Usage
+
+  cmake [options] <path-to-source>
+  cmake [options] <path-to-existing-build>
+  cmake [options] -S <path-to-source> -B <path-to-build>
+
+Specify a source directory to (re-)generate a build system for it in the
+current working directory.  Specify an existing build directory to
+re-generate its build system.
+
+Run 'cmake --help' for more information.
+
+#### 按操作系统区分
+
+| 条件 | 匹配对象 |
+|------|----------|
+|  | Windows（MSVC 或 MinGW 均匹配）|
+|  | macOS / iOS |
+|  | Linux（macOS 也匹配，但  更精确）|
+
+Usage
+
+  cmake [options] <path-to-source>
+  cmake [options] <path-to-existing-build>
+  cmake [options] -S <path-to-source> -B <path-to-build>
+
+Specify a source directory to (re-)generate a build system for it in the
+current working directory.  Specify an existing build directory to
+re-generate its build system.
+
+Run 'cmake --help' for more information.
+
+#### 按 Debug / Release 区分
+
+Usage
+
+  cmake [options] <path-to-source>
+  cmake [options] <path-to-existing-build>
+  cmake [options] -S <path-to-source> -B <path-to-build>
+
+Specify a source directory to (re-)generate a build system for it in the
+current working directory.  Specify an existing build directory to
+re-generate its build system.
+
+Run 'cmake --help' for more information.
+
+#### 按用户开关区分（option）
+
+Usage
+
+  cmake [options] <path-to-source>
+  cmake [options] <path-to-existing-build>
+  cmake [options] -S <path-to-source> -B <path-to-build>
+
+Specify a source directory to (re-)generate a build system for it in the
+current working directory.  Specify an existing build directory to
+re-generate its build system.
+
+Run 'cmake --help' for more information.
+
+#### 按编译器版本区分
+
+Usage
+
+  cmake [options] <path-to-source>
+  cmake [options] <path-to-existing-build>
+  cmake [options] -S <path-to-source> -B <path-to-build>
+
+Specify a source directory to (re-)generate a build system for it in the
+current working directory.  Specify an existing build directory to
+re-generate its build system.
+
+Run 'cmake --help' for more information.
+
+#### 常用条件变量速查
+
+| 变量 | 含义 | 对应命令行 |
+|------|------|-----------|
+|  | 编译器是 MSVC | 自动检测 |
+|  | 目标平台是 Windows | 自动检测 |
+|  | 目标平台是 macOS/iOS | 自动检测 |
+|  | 目标平台是 Linux/macOS | 自动检测 |
+|  | 构建类型 |  |
+|  | 编译器 ID 字符串 |  |
+|  | 编译器版本号 | 自动检测 |
+|  | 指定 CMake 目标是否已定义 | — |
+|  | 文件或目录是否存在 | — |
+
+---
+
 
 ### 2.22 math(EXPR ...)
 
