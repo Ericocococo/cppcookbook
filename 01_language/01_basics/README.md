@@ -4,6 +4,7 @@
 
 | 子目录 | 内容 |
 |--------|------|
+| [00_hello_world](00_hello_world/) | 程序结构：#include、main、变量声明、cout、注释、作用域 |
 | [01_types](01_types/) | 内置类型、字面量后缀、auto/decltype、const/constexpr |
 | [02_operators](02_operators/) | 算术、比较、逻辑、位运算、自增自减、三目、sizeof |
 | [03_control_flow](03_control_flow/) | if/else、switch、while、do-while、for、范围 for、break/continue |
@@ -13,6 +14,88 @@
 | [07_oop](07_oop/) | struct、class 封装、继承、多态（虚函数） |
 | [08_misc](08_misc/) | 枚举（enum/enum class）、命名空间、类型转换 |
 | [09_templates_exceptions](09_templates_exceptions/) | 函数模板、类模板、模板特化、try/catch/throw |
+
+---
+
+## 0. 程序结构
+
+### 0.1 一个程序的"必须件"
+
+```cpp
+#include <iostream>   // 引入工具箱，不写就用不了 cout
+
+int main() {          // 程序入口，有且只有一个
+    // 代码写在这里
+    return 0;         // 返回 0 = 正常退出
+}
+```
+
+| 部分 | 说明 |
+|------|------|
+| `#include <xxx>` | 引入工具箱（头文件），需要什么先包含什么 |
+| `int main()` | 程序入口，操作系统从这里开始执行，固定写法 |
+| `{}` | 作用域边界，函数体、if、for 等都用它划定范围 |
+| `;` | 每条语句结束符，缺少会编译报错 |
+| `return 0` | 向操作系统返回 0，表示程序正常结束 |
+
+### 0.2 `#include` — 引入工具箱
+
+C++ 自带很多工具箱（标准库），但默认什么都不带，用什么先 `#include` 什么：
+
+```cpp
+#include <iostream>   // 提供 cout（打印）、cin（读输入）
+#include <string>     // 提供 std::string 字符串类型
+#include <vector>     // 提供 std::vector 动态数组
+#include <cmath>      // 提供 sqrt、sin、pow 等数学函数
+```
+
+### 0.3 `std::cout` — 向终端打印
+
+```cpp
+std::cout << "文字" << 变量 << "\n";
+```
+
+| 部分 | 说明 |
+|------|------|
+| `std::` | 标准库命名空间前缀，表示"去标准库里找" |
+| `cout` | console output，控制台输出 |
+| `<<` | 流插入运算符，把右边内容"送进"输出流，可以连续用 |
+| `"\n"` | 换行符，推荐用这个（比 `std::endl` 快） |
+
+### 0.4 变量声明
+
+```cpp
+// 格式：类型 变量名 = 初始值;
+int    age    = 18;
+double height = 1.75;
+bool   passed = true;
+char   grade  = 'A';          // 单个字符用单引号
+std::string name = "小白";    // 字符串用双引号
+```
+
+### 0.5 注释
+
+```cpp
+// 单行注释：从 // 到行尾，编译器完全忽略
+
+/* 多行注释：
+   从 /* 到 */ 之间都被忽略 */
+```
+
+注释只给人看，写"为什么"这样写，不写"做了什么"（代码本身已经说明了做了什么）。
+
+### 0.6 作用域 `{}`
+
+变量只在声明它的 `{}` 内有效，出了 `{}` 就消失：
+
+```cpp
+int outer = 10;
+{
+    int inner = 20;   // inner 只在这个 {} 内有效
+    // outer 在这里也能访问
+}
+// 这里访问 inner 会编译报错
+```
 
 ---
 
