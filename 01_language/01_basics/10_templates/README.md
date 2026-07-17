@@ -1,13 +1,13 @@
-# 09_templates_exceptions — 模板与异常
+# 10_templates — 模板
 
-演示函数模板、类模板、模板特化，以及 `try`/`catch`/`throw` 异常处理机制。
+函数模板、类模板、全特化、非类型模板参数、Concepts（C++20）、`if constexpr`。
 
 ## 1. 文件
 
 | 文件 | 说明 |
 |------|------|
-| `main.cpp` | 4 个 demo 函数：函数模板 → 类模板 → 特化 → 异常 |
-| `CMakeLists.txt` | 构建配置，生成可执行文件 `templates_exceptions` |
+| `main.cpp` | 6 个 demo：函数模板推断 / 类模板（Stack）/ 全特化 / 非类型参数 / Concepts / if constexpr |
+| `CMakeLists.txt` | 构建配置，生成可执行文件 `templates` |
 
 ---
 
@@ -31,7 +31,7 @@ NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
 "$CMAKE" --build build-mingw
 
 # 运行
-./build-mingw/templates_exceptions.exe
+./build-mingw/templates.exe
 ```
 
 > cmd 三步版：
@@ -44,7 +44,7 @@ D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-
 D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw
 
 :: 运行
-build-mingw\templates_exceptions.exe
+build-mingw\templates.exe
 ```
 
 ---
@@ -63,7 +63,7 @@ call "%VCVARSALL%" x64
 
 "%CMAKE%" --build build-msvc
 
-build-msvc\templates_exceptions.exe
+build-msvc\templates.exe
 ```
 
 > 四步版：
@@ -79,14 +79,14 @@ call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\v
 "D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc
 
 :: 运行
-build-msvc\templates_exceptions.exe
+build-msvc\templates.exe
 ```
 
 ---
 
 ## 4. CLion IDE
 
-1. `File → Open` 选择 `09_templates_exceptions/` 目录
+1. `File → Open` 选择 `10_templates/` 目录
 2. CLion 自动识别 `CMakeLists.txt`，右下角点击**加载**
 3. **构建** `Ctrl+F9`　**运行** `Shift+F10`
 
@@ -94,32 +94,16 @@ build-msvc\templates_exceptions.exe
 
 ## 5. 英文及缩写说明
 
-### 模板
-
 | 词汇 | 说明 |
 |------|------|
-| `template` | 模板：定义"代码的模具"，让函数或类对任意类型通用；编译器根据实际类型生成代码 |
-| `typename` | 类型名：模板参数列表中的占位符，与 `class` 在此处等价 |
-| type parameter | 类型参数：模板中的 T 等占位符，调用时由编译器推断或显式指定 |
-| template instantiation | 模板实例化：编译器根据实际类型生成具体函数/类，发生在编译期 |
-| template specialization | 模板特化：针对特定类型提供专门实现，覆盖通用版本 |
-| full specialization | 全特化：`template<>` 为某个具体类型提供完全不同的实现 |
+| `template` | 模板：定义代码的"模具"，让函数/类对任意类型通用；编译器根据实际类型生成对应代码，零运行时开销 |
+| `typename` | 类型名：模板参数列表中的占位符关键字；与 `class` 在此处完全等价 |
+| type parameter | 类型参数：模板中的 T 等占位符，调用时由编译器自动推断或显式指定 |
+| template instantiation | 模板实例化：编译器根据实际类型参数生成具体函数/类，发生在编译期 |
+| full specialization | 全特化：`template<>` 为某个具体类型提供完全不同的实现，覆盖通用版本 |
+| non-type template parameter | 非类型模板参数：用编译期常量（如 `size_t N`）作为模板参数 |
+| `requires` | Concepts（C++20）约束关键字：指定模板类型必须满足的条件；不满足则编译报错（而不是难懂的模板错误）|
+| `std::is_arithmetic_v<T>` | T 是算术类型（int/float 等）时为 true；来自 `<type_traits>` |
+| `if constexpr` | 编译期条件（C++17）：条件为 false 的分支在编译期丢弃；普通 if 两个分支都要能编译 |
 | TMP | Template Metaprogramming：模板元编程，利用模板在编译期执行计算 |
-
-### 异常处理
-
-| 词汇 | 说明 |
-|------|------|
-| `try` | 尝试：标记可能抛出异常的代码块 |
-| `catch` | 捕获：捕获 `try` 块中抛出的异常 |
-| `throw` | 抛出：主动抛出一个异常对象，函数立即终止，跳到最近的 `catch` |
-| `noexcept` | no exception：承诺函数不会抛出异常，编译器可做更多优化 |
-| `std::exception` | 标准库所有异常类的基类，`what()` 返回错误描述字符串 |
-| `std::runtime_error` | runtime error：运行时错误（如除零、文件不存在）|
-| `std::logic_error` | logic error：逻辑错误（程序设计问题，如无效参数）|
-| `std::out_of_range` | out of range：越界错误，下标超出有效范围 |
-| `std::invalid_argument` | invalid argument：无效参数 |
-| `what()` | `std::exception` 的成员函数，返回异常描述（`const char*`）|
-| `catch(...)` | 捕获任意类型异常，作为最后的兜底 catch |
-| stack unwinding | 栈展开：异常抛出后自动销毁 try 块内已构造的局部对象，保证析构函数被调用 |
-| `<stdexcept>` | standard exceptions：包含 `runtime_error`、`logic_error`、`out_of_range` 等 |
+| CTAD | Class Template Argument Deduction：类模板参数推断（C++17），可省略模板参数 |

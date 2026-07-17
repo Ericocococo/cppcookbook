@@ -4,16 +4,19 @@
 
 | 子目录 | 内容 |
 |--------|------|
-| [00_hello_world](00_hello_world/) | 程序结构：#include、main、变量声明、cout、注释、作用域 |
-| [01_types](01_types/) | 内置类型、字面量后缀、auto/decltype、const/constexpr |
-| [02_operators](02_operators/) | 算术、比较、逻辑、位运算、自增自减、三目、sizeof |
-| [03_control_flow](03_control_flow/) | if/else、switch、while、do-while、for、范围 for、break/continue |
-| [04_functions](04_functions/) | 函数定义、默认参数、重载、内联、函数指针、lambda |
-| [05_pointers_refs](05_pointers_refs/) | 引用、指针、nullptr、const 指针、指针算术、new/delete、智能指针 |
-| [06_arrays_strings](06_arrays_strings/) | 原始数组、std::array、std::vector、std::string |
-| [07_oop](07_oop/) | struct、class 封装、继承、多态（虚函数） |
-| [08_misc](08_misc/) | 枚举（enum/enum class）、命名空间、类型转换 |
-| [09_templates_exceptions](09_templates_exceptions/) | 函数模板、类模板、模板特化、try/catch/throw |
+| [00_hello_world](00_hello_world/) | 程序结构：#include、main、变量、cout、注释、作用域 |
+| [01_types](01_types/) | 整数/浮点/bool/char、字面量后缀、初始化、const/constexpr、定宽整数、类型别名 |
+| [02_type_queries](02_type_queries/) | sizeof（大小+填充）、alignof（对齐）、auto（深入）、decltype |
+| [03_operators](03_operators/) | 算术、比较、逻辑（短路）、位运算（标志位）、自增自减、三目、优先级、逗号 |
+| [04_control_flow](04_control_flow/) | if/else（悬空else）、switch（fall-through）、while、do-while、for、范围for（结构化绑定）、break/continue/goto、if constexpr |
+| [05_functions](05_functions/) | 值/引用/指针传参、默认参数、重载、inline、constexpr函数、函数指针、std::function、lambda（mutable/泛型/IIFE） |
+| [06_pointers_refs](06_pointers_refs/) | 引用/右值引用、指针、nullptr、const指针四种、指针算术、void*、new/delete、unique_ptr/shared_ptr/weak_ptr |
+| [07_arrays_strings](07_arrays_strings/) | 原始数组（退化陷阱）、std::array、std::vector（扩容/reserve）、std::string、string_view（C++17） |
+| [08_oop](08_oop/) | struct、class（封装/初始化列表/委托构造）、继承、多态、纯虚函数、Rule of 0/3/5、移动语义 |
+| [09_misc](09_misc/) | enum/enum class（底层类型）、namespace（嵌套/using）、static_cast/dynamic_cast/const_cast/reinterpret_cast |
+| [10_templates](10_templates/) | 函数模板、类模板、全特化、非类型参数、Concepts（C++20）、if constexpr |
+| [11_exceptions](11_exceptions/) | try/catch/throw、标准异常层次、自定义异常、noexcept、RAII异常安全、catch顺序 |
+| [12_typeid_pack](12_typeid_pack/) | typeid（多态实际类型）、sizeof...、变参模板（折叠表达式）、type_traits |
 
 ---
 
@@ -313,26 +316,156 @@ public:
 
 ---
 
-## 9. 模板与异常
+## 9. 模板
 
 ### 9.1 模板的本质
 
-模板是"代码的模具"，编译器根据你实际调用的类型生成对应的函数/类，不会有运行时开销。
+模板是"代码的模具"，编译器根据实际调用的类型生成对应的函数/类，**零运行时开销**（代价在编译期）。
 
-### 9.2 异常使用原则
+```cpp
+template<typename T>
+T maxVal(T a, T b) { return (a > b) ? a : b; }
 
-- 只在**真正异常的情况**下抛异常（不是用来做正常控制流）
-- `catch` 的顺序：**具体类型先，通用类型后**（`runtime_error` 在 `exception` 前面）
-- 函数保证不抛异常时，加 `noexcept`，让编译器做更多优化
+maxVal(3, 5);       // 编译器生成 maxVal<int>
+maxVal(3.14, 2.71); // 编译器生成 maxVal<double>
+```
 
-### 9.3 标准异常继承关系（简化）
+### 9.2 函数模板 vs 类模板
+
+| | 函数模板 | 类模板 |
+|---|---|---|
+| 类型推断 | 自动（根据实参）| 需显式写（C++17 前）|
+| 特化 | 全特化 | 全特化 + 偏特化 |
+| 典型用途 | 通用算法 | 通用容器 |
+
+### 9.3 非类型模板参数
+
+```cpp
+template<typename T, size_t N>
+class FixedArray { T data_[N]; };   // N 在编译期确定，无动态内存
+
+FixedArray<int, 5> arr;   // 类似 std::array<int,5>
+```
+
+### 9.4 Concepts（C++20）约束
+
+```cpp
+template<typename T>
+    requires std::is_arithmetic_v<T>
+T average(T a, T b) { return (a + b) / 2; }
+// average("a","b") → 编译错误，报错信息更友好
+```
+
+### 9.5 if constexpr（C++17）
+
+```cpp
+template<typename T>
+void process(T val) {
+    if constexpr (std::is_integral_v<T>) {
+        // 只有 T 是整数时才编译这段
+    } else {
+        // 其他类型走这里
+    }
+}
+```
+
+与普通 `if` 的区别：两个分支分别在编译期裁剪，不要求两段代码都能对当前 T 编译通过。
+
+---
+
+## 10. 异常
+
+### 10.1 基本语法
+
+```cpp
+try {
+    if (bad) throw std::runtime_error("出错了");
+} catch (const std::runtime_error& e) {
+    std::cout << e.what();
+} catch (const std::exception& e) {
+    // 兜底：具体类型先，通用类型后（顺序不能反）
+}
+```
+
+### 10.2 标准异常继承关系（简化）
 
 ```
 std::exception
-├── std::logic_error
+├── std::logic_error          // 程序逻辑错误，可预防
 │   ├── std::invalid_argument
 │   └── std::out_of_range
-└── std::runtime_error
+└── std::runtime_error        // 运行时无法预防的错误
     ├── std::overflow_error
     └── std::underflow_error
+```
+
+### 10.3 使用原则
+
+- 只在**真正异常的情况**下抛异常，不用作正常控制流
+- `catch` 顺序：具体类型先，`std::exception` 兜底后
+- 确保不抛异常的函数标 `noexcept`，编译器可以做更多优化
+- 用 RAII（对象析构自动释放资源）而不是 try/catch 来保证异常安全
+
+### 10.4 自定义异常
+
+```cpp
+class AppError : public std::runtime_error {
+    int code_;
+public:
+    AppError(int code, const std::string& msg)
+        : std::runtime_error(msg), code_(code) {}
+    int code() const { return code_; }
+};
+```
+
+---
+
+## 11. typeid / 变参包
+
+### 11.1 typeid
+
+```cpp
+#include <typeinfo>
+typeid(expr).name()   // 返回类型名（格式因编译器而异）
+typeid(a) == typeid(b)  // 比较两个表达式的类型是否相同
+```
+
+**多态场景**：`typeid(*ptr)` 返回运行期实际类型（需要 virtual 函数存在）。
+适合调试；生产代码优先用虚函数多态，不用 typeid 做类型分发。
+
+### 11.2 sizeof...
+
+```cpp
+template<typename... Args>
+void f(Args... args) {
+    std::cout << sizeof...(args);  // 参数包里有多少个参数
+}
+f(1, 2.0, "hi");  // 输出 3
+```
+
+### 11.3 折叠表达式（C++17）
+
+```cpp
+template<typename... Args>
+auto sum(Args... args) { return (args + ...); }  // a1 + a2 + a3 + ...
+
+template<typename... Args>
+void print(Args... args) { ((std::cout << args << " "), ...); }
+```
+
+| 写法 | 展开结果 |
+|------|----------|
+| `(args + ...)` | `a1 + (a2 + (a3 + ...))` 右折叠 |
+| `(... + args)` | `((a1 + a2) + a3) + ...` 左折叠 |
+| `(std::cout << args << " ", ...)` | 逐个打印 |
+
+### 11.4 type_traits 速查
+
+```cpp
+std::is_same_v<T, U>          // T 和 U 类型完全相同？
+std::is_integral_v<T>         // T 是整数类型？
+std::is_floating_point_v<T>   // T 是浮点类型？
+std::is_pointer_v<T>          // T 是指针？
+std::remove_const_t<T>        // 去掉 const
+std::add_pointer_t<T>         // 加指针：T → T*
 ```

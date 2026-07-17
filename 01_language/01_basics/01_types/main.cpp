@@ -1,134 +1,207 @@
 // C++20
-// 演示：内置数据类型、字面量后缀、auto/decltype、const/constexpr
+// 演示：内置类型、字面量后缀、初始化方式、类型别名、const/constexpr/volatile
 // 构建：cmake -B build-mingw（详见 README.md）
 
 #include <iostream>
-#include <climits>   // INT_MAX / INT_MIN 等范围常量
+#include <climits>    // INT_MAX / INT_MIN 等范围常量
+#include <cfloat>     // FLT_MAX / DBL_MAX 等浮点范围常量
+#include <cstdint>    // int8_t / uint32_t 等定宽整数类型
+#include <string>
 
-// ① 基本类型：每种类型能存什么、占多少内存
-void demo01_basic_types() {
-    std::cout << "\n① 基本类型大小与取值\n";
+// ① 整数类型：大小、范围、符号
+void demo01_integer_types() {
+    std::cout << "\n① 整数类型\n";
 
-    // bool：只有 true(1) 和 false(0) 两个值
-    bool flag = true;
-    std::cout << "  bool   : " << sizeof(bool)   << " 字节  值=" << flag << "\n";
+    // 有符号整数：可以存负数，范围 -2^(n-1) ~ 2^(n-1)-1
+    std::cout << "  --- 有符号整数 ---\n";
+    std::cout << "  char:      " << sizeof(char)      << " 字节  "
+              << (int)CHAR_MIN << " ~ " << (int)CHAR_MAX << "\n";
+    std::cout << "  short:     " << sizeof(short)     << " 字节  "
+              << SHRT_MIN  << " ~ " << SHRT_MAX  << "\n";
+    std::cout << "  int:       " << sizeof(int)       << " 字节  "
+              << INT_MIN   << " ~ " << INT_MAX   << "\n";
+    std::cout << "  long:      " << sizeof(long)      << " 字节  "
+              << LONG_MIN  << " ~ " << LONG_MAX  << "\n";
+    std::cout << "  long long: " << sizeof(long long) << " 字节  "
+              << LLONG_MIN << " ~ " << LLONG_MAX << "\n";
 
-    // char：存一个字符，本质是一个小整数（ASCII 码）
-    char ch = 'A';
-    std::cout << "  char   : " << sizeof(char)   << " 字节  值=" << ch
-              << "  ASCII码=" << static_cast<int>(ch) << "\n";
+    // 无符号整数：不能存负数，范围 0 ~ 2^n-1（正数范围翻倍）
+    std::cout << "  --- 无符号整数 ---\n";
+    std::cout << "  unsigned char:      " << sizeof(unsigned char)
+              << " 字节  0 ~ " << (unsigned)UCHAR_MAX  << "\n";
+    std::cout << "  unsigned int:       " << sizeof(unsigned int)
+              << " 字节  0 ~ " << UINT_MAX   << "\n";
+    std::cout << "  unsigned long long: " << sizeof(unsigned long long)
+              << " 字节  0 ~ " << ULLONG_MAX << "\n";
 
-    // int：最常用的整数类型
-    int n = 42;
-    std::cout << "  int    : " << sizeof(int)    << " 字节  值=" << n << "\n";
-    std::cout << "    int 最大值=" << INT_MAX << "  最小值=" << INT_MIN << "\n";
+    // 整数溢出
+    unsigned char uc = 255;
+    ++uc;  // 无符号溢出：取模 256 = 0（合法的定义行为）
+    std::cout << "  无符号溢出：255u+1 = " << (unsigned)uc
+              << "（回绕到 0，取模 256，合法）\n";
 
-    // long long：需要存非常大的整数时用
-    long long big = 9000000000LL;   // LL 后缀表示 long long 字面量
-    std::cout << "  long long: " << sizeof(long long) << " 字节  值=" << big << "\n";
-
-    // double：小数，精度比 float 高
-    double pi = 3.141592653589793;
-    std::cout << "  double : " << sizeof(double) << " 字节  值=" << pi << "\n";
-
-    // float：精度较低的小数，占内存小
-    float pif = 3.14F;             // F 后缀表示 float 字面量
-    std::cout << "  float  : " << sizeof(float)  << " 字节  值=" << pif << "\n";
+    // 有符号/无符号混用陷阱
+    int si = -1;
+    unsigned int ui = 1;
+    std::cout << "  陷阱：-1 < 1u = " << (si < ui)
+              << "（0=false！-1 被转为超大无符号数）\n";
 }
 
-// ② 字面量后缀：告诉编译器这个数字是什么类型
-void demo02_literals() {
-    std::cout << "\n② 字面量后缀\n";
+// ② 浮点类型：精度与范围
+void demo02_float_types() {
+    std::cout << "\n② 浮点类型\n";
 
-    // 没有后缀时，整数默认是 int，小数默认是 double
-    auto a = 42;      // int
-    auto b = 42LL;    // long long（加 LL）
-    auto c = 42U;     // unsigned int（加 U，不能存负数，但正数范围翻倍）
-    auto d = 3.14;    // double
-    auto e = 3.14F;   // float（加 F）
+    std::cout << "  float:  " << sizeof(float)  << " 字节  精度约7位有效数字\n";
+    std::cout << "  double: " << sizeof(double) << " 字节  精度约15位有效数字（推荐）\n";
 
-    std::cout << "  42    -> int:          " << sizeof(a) << " 字节\n";
-    std::cout << "  42LL  -> long long:    " << sizeof(b) << " 字节\n";
-    std::cout << "  42U   -> unsigned int: " << sizeof(c) << " 字节\n";
-    std::cout << "  3.14  -> double:       " << sizeof(d) << " 字节\n";
-    std::cout << "  3.14F -> float:        " << sizeof(e) << " 字节\n";
+    // 浮点精度问题：不能用 == 比较
+    double a = 0.1 + 0.2;
+    std::cout << "  0.1+0.2 == 0.3 : " << (a == 0.3)
+              << "（0=false！浮点有精度误差）\n";
 
-    // 不同进制的整数字面量
-    int hex = 0xFF;    // 0x 开头 = 十六进制，0xFF = 255
-    int bin = 0b1010;  // 0b 开头 = 二进制（C++14），0b1010 = 10
-    std::cout << "  0xFF   = " << hex << "（十六进制）\n";
-    std::cout << "  0b1010 = " << bin << "（二进制）\n";
+    // 特殊值
+    float inf = FLT_MAX * 2.0F;   // 溢出 → +∞
+    float nan = 0.0F / 0.0F;      // 0/0 → NaN
+    std::cout << "  FLT_MAX*2 = " << inf << "（正无穷）\n";
+    std::cout << "  0.0f/0.0f = " << nan << "（NaN，任何比较都返回 false）\n";
+    std::cout << "  NaN==NaN  = " << (nan == nan) << "（NaN 不等于自身！）\n";
 }
 
-// ③ 初始化方式：C++ 有多种写法，推荐用 {}
-void demo03_initialization() {
-    std::cout << "\n③ 初始化方式\n";
+// ③ bool 和 char
+void demo03_bool_char() {
+    std::cout << "\n③ bool 与 char\n";
 
-    int a = 10;    // 拷贝初始化（最传统的写法，C 语言风格）
+    // bool
+    std::cout << "  true=" << true << "  false=" << false << "（1/0）\n";
+    std::cout << "  bool(42)=" << (bool)42 << "  bool(0)=" << (bool)0
+              << "  bool(-1)=" << (bool)-1 << "（非零即 true）\n";
+
+    // char：字符本质是整数
+    char c = 'A';
+    std::cout << "  'A' = " << c << "  ASCII=" << (int)c << "\n";
+    std::cout << "  'A'+1 = '" << (char)('A'+1) << "'（B）\n";
+    std::cout << "  'a'-'A' = " << ('a'-'A') << "（大小写差32）\n";
+
+    // 转义字符
+    std::cout << "  转义：\\n换行 \\t制表 \\\\反斜杠 \\'单引号 \\\"双引号 \\0空字符\n";
+}
+
+// ④ 字面量：写法与后缀
+void demo04_literals() {
+    std::cout << "\n④ 字面量写法\n";
+
+    // 不同进制
+    std::cout << "  255  = " << 255   << "（十进制）\n";
+    std::cout << "  0xFF = " << 0xFF  << "（十六进制）\n";
+    std::cout << "  0377 = " << 0377  << "（八进制）\n";
+    std::cout << "  0b11111111 = " << 0b11111111 << "（二进制，C++14）\n";
+
+    // 数字分隔符（C++14）
+    int million = 1'000'000;
+    std::cout << "  1'000'000 = " << million << "（单引号分隔，增加可读性）\n";
+
+    // 科学计数法
+    std::cout << "  3.14e2 = " << 3.14e2 << "（= 314）\n";
+    std::cout << "  1.5e-3 = " << 1.5e-3 << "（= 0.0015）\n";
+
+    // 后缀
+    std::cout << "  42   -> int:       " << sizeof(42)   << " 字节\n";
+    std::cout << "  42LL -> long long: " << sizeof(42LL) << " 字节\n";
+    std::cout << "  42U  -> uint:      " << sizeof(42U)  << " 字节\n";
+    std::cout << "  3.14F-> float:     " << sizeof(3.14F)<< " 字节\n";
+}
+
+// ⑤ 初始化方式
+void demo05_initialization() {
+    std::cout << "\n⑤ 初始化方式\n";
+
+    int a = 10;    // 拷贝初始化（C 风格）
     int b(20);     // 直接初始化
-    int c{30};     // 列表初始化（C++11，推荐）—— 更安全，防止精度丢失
+    int c{30};     // 列表初始化（推荐，C++11）
+    int d{};       // 值初始化（= 0）
+    std::cout << "  a=10  b(20)  c{30}  d{}=" << d << "\n";
 
-    std::cout << "  int a = 10  -> " << a << "（拷贝初始化）\n";
-    std::cout << "  int b(20)   -> " << b << "（直接初始化）\n";
-    std::cout << "  int c{30}   -> " << c << "（列表初始化，推荐）\n";
+    // 列表初始化防窄化
+    // int bad{3.14};  // 编译错误：double→int 窄化
+    int bad = 3.14;    // 允许但丢精度
+    std::cout << "  int bad=3.14 -> " << bad << "（悄悄截断，{}会报错）\n";
 
-    // 列表初始化的安全性：会拒绝会丢失精度的转换
-    // int d{3.14};  // 编译错误！double -> int 会丢失精度，列表初始化不允许
-    int d = 3.14;    // 这行编译通过，但悄悄丢掉了小数部分（不安全）
-    std::cout << "  int d = 3.14 -> " << d << "（悄悄丢失了小数，列表初始化{}会报错）\n";
+    // 数组零初始化
+    int arr[5]{};
+    std::cout << "  int arr[5]{}: ";
+    for (int x : arr) std::cout << x << " ";
+    std::cout << "（全零）\n";
+
+    // 结构体部分初始化
+    struct Point { int x, y, z; };
+    Point p{1, 2};   // z 自动补 0
+    std::cout << "  Point{1,2}: x=" << p.x << " y=" << p.y
+              << " z=" << p.z << "（未指定的补 0）\n";
 }
 
-// ④ auto：让编译器自动推断类型，不用手写
-void demo04_auto() {
-    std::cout << "\n④ auto 类型推断\n";
+// ⑥ const / constexpr / volatile
+void demo06_qualifiers() {
+    std::cout << "\n⑥ const / constexpr / volatile\n";
 
-    // 编译器根据右边的值推断变量类型
-    auto i = 10;          // int
-    auto d = 3.14;        // double
-    auto c = 'A';         // char
-    auto b = true;        // bool
-    auto s = std::string("hello");  // std::string
+    const int MAX = 100;         // 运行时常量
+    constexpr int SIZE = 10*10;  // 编译期常量
+    int arr[SIZE];               // constexpr 才保证可作数组大小
+    std::cout << "  const MAX=" << MAX << "（不可修改，运行时确定）\n";
+    std::cout << "  constexpr SIZE=" << SIZE << "（编译时确定，可作数组大小）\n";
+    std::cout << "  arr 元素数=" << sizeof(arr)/sizeof(arr[0]) << "\n";
 
-    std::cout << "  auto i = 10   -> " << sizeof(i) << " 字节 (int),    值=" << i << "\n";
-    std::cout << "  auto d = 3.14 -> " << sizeof(d) << " 字节 (double), 值=" << d << "\n";
-    std::cout << "  auto c = 'A'  -> " << sizeof(c) << " 字节 (char),   值=" << c << "\n";
-    std::cout << "  auto b = true -> " << sizeof(b) << " 字节 (bool),   值=" << b << "\n";
-    std::cout << "  auto s = string(\"hello\") -> 值=" << s << "\n";
-
-    // decltype：根据表达式推断类型，但不执行表达式
-    int x = 5;
-    decltype(x) y = 100;         // y 和 x 类型相同（int）
-    decltype(x + 0.5) z = 1.5;   // x+0.5 是 double，所以 z 是 double
-    std::cout << "  decltype(x) y    -> " << sizeof(y) << " 字节 (int)\n";
-    std::cout << "  decltype(x+0.5) z-> " << sizeof(z) << " 字节 (double)\n";
+    volatile int reg = 0;  // 禁止编译器缓存，用于硬件寄存器/多线程
+    reg = 1;
+    std::cout << "  volatile reg=" << reg << "（每次都从内存读写）\n";
 }
 
-// ⑤ const 与 constexpr：不允许修改的变量
-void demo05_const_constexpr() {
-    std::cout << "\n⑤ const 与 constexpr\n";
+// ⑦ 定宽整数类型（<cstdint>）
+void demo07_fixed_width() {
+    std::cout << "\n⑦ 定宽整数类型（<cstdint>）\n";
 
-    // const：运行时常量，值不能修改
-    const int MAX_SCORE = 100;
-    // MAX_SCORE = 200;  // 编译错误：const 变量不能修改
-    std::cout << "  const int MAX_SCORE = " << MAX_SCORE << "（不可修改）\n";
+    int8_t  i8  = 127;
+    int16_t i16 = 32767;
+    int32_t i32 = 2147483647;
+    int64_t i64 = 9223372036854775807LL;
+    uint8_t u8  = 255;
+    uint32_t u32 = 4294967295U;
 
-    // constexpr：编译期常量，编译时就计算好了，效率更高
-    // 用于需要编译期已知值的场景（数组长度、模板参数等）
-    constexpr int BOARD_SIZE = 8 * 8;  // 编译时计算，结果是 64
-    std::cout << "  constexpr int BOARD_SIZE = " << BOARD_SIZE << "（编译时算好）\n";
+    std::cout << "  int8_t  = " << (int)i8  << "（8位，精确）\n";
+    std::cout << "  int16_t = " << i16 << "（16位，精确）\n";
+    std::cout << "  int32_t = " << i32 << "（32位，精确）\n";
+    std::cout << "  int64_t = " << i64 << "（64位，精确）\n";
+    std::cout << "  uint8_t = " << (unsigned)u8 << "  uint32_t=" << u32 << "\n";
+    std::cout << "  （用于网络协议/文件格式/跨平台，需要精确位数时用）\n";
+}
 
-    // constexpr 可以直接用作数组大小
-    int board[BOARD_SIZE];
-    std::cout << "  int board[BOARD_SIZE] 大小=" << sizeof(board)/sizeof(board[0]) << "\n";
+// ⑧ 类型别名
+void demo08_type_alias() {
+    std::cout << "\n⑧ 类型别名\n";
+
+    using Score = int;           // using（C++11，推荐）
+    typedef double Price;        // typedef（传统写法）
+
+    Score s = 95;
+    Price p = 9.99;
+    std::cout << "  using Score=int;    Score s=" << s << "\n";
+    std::cout << "  typedef double Price; Price p=" << p << "\n";
+
+    // size_t：无符号整数，专门表示大小/索引
+    size_t len = sizeof(int);
+    std::cout << "  size_t len=sizeof(int)=" << len
+              << "（size_t：无符号，专门表示大小和索引）\n";
 }
 
 int main() {
-    std::cout << "=== 01_types: 数据类型 ===";
-    demo01_basic_types();
-    demo02_literals();
-    demo03_initialization();
-    demo04_auto();
-    demo05_const_constexpr();
+    std::cout << "=== 01_types: 内置类型 ===";
+    demo01_integer_types();
+    demo02_float_types();
+    demo03_bool_char();
+    demo04_literals();
+    demo05_initialization();
+    demo06_qualifiers();
+    demo07_fixed_width();
+    demo08_type_alias();
     std::cout << "\n完成。\n";
     return 0;
 }

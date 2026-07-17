@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(templates_exceptions LANGUAGES CXX)
+project(templates LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -11,4 +11,4 @@ else()
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-add_executable(templates_exceptions main.cpp)
+add_executable(templates main.cpp)

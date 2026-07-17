@@ -1258,114 +1258,216 @@ target_compile_options(app PRIVATE
 
 根据编译器、操作系统、构建类型的不同，向目标传入不同的编译选项。
 
-#### 按编译器区分
+**两种主要写法对比：**
 
-| 条件 | 匹配对象 |
-|------|----------|
-|  | Visual Studio / cl.exe |
-|  | GCC / MinGW |
-|  | Clang / AppleClang |
+| 写法 | 判断时机 | 能否区分 Debug/Release | 推荐场景 |
+|------|---------|---------------------|---------|
+| `if(MSVC)` 等条件块 | 配置阶段（`cmake -B`）| ❌ 仅单配置 Generator 有效 | 简单工程，只按编译器/OS 区分 |
+| 生成器表达式 `$<...>` | 构建阶段（`ninja`/`make`）| ✅ 多/单配置均有效 | 需同时区分编译器 + 构建类型 |
 
-Usage
+---
 
-  cmake [options] <path-to-source>
-  cmake [options] <path-to-existing-build>
-  cmake [options] -S <path-to-source> -B <path-to-build>
+#### 层次一：最简 — MSVC vs 其他
 
-Specify a source directory to (re-)generate a build system for it in the
-current working directory.  Specify an existing build directory to
-re-generate its build system.
+最常见场景：MSVC（`/`前缀选项）和 GCC/Clang（`-`前缀选项）不兼容，必须分支。
 
-Run 'cmake --help' for more information.
+```cmake
+# 作用于当前目录所有目标（放顶层 CMakeLists.txt）
+if(MSVC)
+    add_compile_options(/W4 /utf-8)
+else()  # MinGW / GCC / Clang
+    add_compile_options(-Wall -Wextra)
+endif()
 
-> 本项目各子目录只区分 MSVC / 其他，用简化版：
-> Usage
+# 精确控制单个目标（推荐）
+if(MSVC)
+    target_compile_options(app PRIVATE /W4 /utf-8)
+else()
+    target_compile_options(app PRIVATE -Wall -Wextra)
+endif()
+```
 
-  cmake [options] <path-to-source>
-  cmake [options] <path-to-existing-build>
-  cmake [options] -S <path-to-source> -B <path-to-build>
+> **本项目各子目录**均采用此简化写法。
 
-Specify a source directory to (re-)generate a build system for it in the
-current working directory.  Specify an existing build directory to
-re-generate its build system.
+---
 
-Run 'cmake --help' for more information.
+#### 层次二：三路编译器区分
 
-#### 按操作系统区分
+| 条件 | 匹配对象 | `CMAKE_CXX_COMPILER_ID` 值 |
+|------|----------|--------------------------|
+| `MSVC` | Visual Studio 的 cl.exe | `"MSVC"` |
+| `CMAKE_CXX_COMPILER_ID STREQUAL "GNU"` | GCC / MinGW-w64 | `"GNU"` |
+| `CMAKE_CXX_COMPILER_ID MATCHES "Clang"` | Clang 和 AppleClang 均匹配 | `"Clang"` / `"AppleClang"` |
 
-| 条件 | 匹配对象 |
-|------|----------|
-|  | Windows（MSVC 或 MinGW 均匹配）|
-|  | macOS / iOS |
-|  | Linux（macOS 也匹配，但  更精确）|
+```cmake
+if(MSVC)
+    target_compile_options(app PRIVATE /W4 /WX /utf-8 /permissive-)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(app PRIVATE -Wall -Wextra -Wpedantic -Werror)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(app PRIVATE -Weverything -Wno-c++98-compat)
+endif()
+```
 
-Usage
+> `if(MSVC)` 等价于 `if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")`，`MSVC` 是 CMake 内置快捷变量。
 
-  cmake [options] <path-to-source>
-  cmake [options] <path-to-existing-build>
-  cmake [options] -S <path-to-source> -B <path-to-build>
+---
 
-Specify a source directory to (re-)generate a build system for it in the
-current working directory.  Specify an existing build directory to
-re-generate its build system.
+#### 层次三：操作系统区分
 
-Run 'cmake --help' for more information.
+| 条件 | 匹配对象 | 注意 |
+|------|----------|------|
+| `WIN32` | Windows（MSVC 或 MinGW 均匹配）| 含 64 位 Windows |
+| `APPLE` | macOS / iOS | `UNIX` 同时也为真 |
+| `UNIX AND NOT APPLE` | 纯 Linux | 排除 macOS |
+| `UNIX` | Linux + macOS | 两者都匹配 |
 
-#### 按 Debug / Release 区分
+```cmake
+if(WIN32)
+    target_compile_definitions(app PRIVATE PLATFORM_WINDOWS)
+    target_link_libraries(app PRIVATE ws2_32)          # Windows Socket
+elseif(APPLE)
+    target_compile_definitions(app PRIVATE PLATFORM_MACOS)
+    find_library(CORE_FOUNDATION CoreFoundation)
+    target_link_libraries(app PRIVATE ${CORE_FOUNDATION})
+elseif(UNIX AND NOT APPLE)
+    target_compile_definitions(app PRIVATE PLATFORM_LINUX)
+    target_link_libraries(app PRIVATE pthread)
+endif()
+```
 
-Usage
+---
 
-  cmake [options] <path-to-source>
-  cmake [options] <path-to-existing-build>
-  cmake [options] -S <path-to-source> -B <path-to-build>
+#### 层次四：Debug / Release 区分
 
-Specify a source directory to (re-)generate a build system for it in the
-current working directory.  Specify an existing build directory to
-re-generate its build system.
+**单配置 Generator（Ninja、MinGW Makefiles）** 在 `cmake -B` 时确定类型，可用 `if()`；
+**多配置 Generator（Visual Studio）** 构建时才确定，必须用生成器表达式。
 
-Run 'cmake --help' for more information.
+```cmake
+# ✅ 推荐：生成器表达式（两种 Generator 均有效）
+target_compile_options(app PRIVATE
+    $<$<CONFIG:Debug>:-O0 -g3>           # Debug：不优化，最全调试信息
+    $<$<CONFIG:Release>:-O3>             # Release：最大优化
+)
 
-#### 按用户开关区分（option）
+target_compile_definitions(app PRIVATE
+    $<$<CONFIG:Debug>:DEBUG_BUILD>
+    $<$<CONFIG:Release>:NDEBUG>
+)
 
-Usage
+# ⚠ 仅单配置 Generator 有效（VS Generator 下 CMAKE_BUILD_TYPE 为空）
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_definitions(app PRIVATE DEBUG_BUILD)
+endif()
+```
 
-  cmake [options] <path-to-source>
-  cmake [options] <path-to-existing-build>
-  cmake [options] -S <path-to-source> -B <path-to-build>
+---
 
-Specify a source directory to (re-)generate a build system for it in the
-current working directory.  Specify an existing build directory to
-re-generate its build system.
+#### 层次五：组合条件（编译器 + 构建类型）
 
-Run 'cmake --help' for more information.
+`if()` 无法同时区分编译器和构建类型；生成器表达式可以嵌套 `$<AND:...>` 实现。
 
-#### 按编译器版本区分
+```cmake
+target_compile_options(app PRIVATE
+    # MSVC：所有构建类型
+    $<$<CXX_COMPILER_ID:MSVC>:/W4 /utf-8>
+    # GCC/Clang Debug：不优化 + 调试符号
+    $<$<AND:$<NOT:$<CXX_COMPILER_ID:MSVC>>,$<CONFIG:Debug>>:-O0 -g3>
+    # GCC/Clang Release：最大优化
+    $<$<AND:$<NOT:$<CXX_COMPILER_ID:MSVC>>,$<CONFIG:Release>>:-O3>
+)
 
-Usage
+# 更清晰的三元写法（CMake 3.15+）
+target_compile_options(app PRIVATE
+    $<IF:$<CXX_COMPILER_ID:MSVC>,/W4 /utf-8,$<IF:$<CONFIG:Debug>,-O0 -g3,-O3>>
+)
+```
 
-  cmake [options] <path-to-source>
-  cmake [options] <path-to-existing-build>
-  cmake [options] -S <path-to-source> -B <path-to-build>
+---
 
-Specify a source directory to (re-)generate a build system for it in the
-current working directory.  Specify an existing build directory to
-re-generate its build system.
+#### 层次六：用户 option 开关
 
-Run 'cmake --help' for more information.
+```cmake
+option(ENABLE_ASAN    "开启 AddressSanitizer" OFF)
+option(ENABLE_FEATURE "启用某功能"             OFF)
 
-#### 常用条件变量速查
+if(ENABLE_ASAN)
+    # ASan 必须同时设编译标志和链接标志
+    target_compile_options(app PRIVATE -fsanitize=address -fno-omit-frame-pointer)
+    target_link_options(app    PRIVATE -fsanitize=address)
+endif()
 
-| 变量 | 含义 | 对应命令行 |
-|------|------|-----------|
-|  | 编译器是 MSVC | 自动检测 |
-|  | 目标平台是 Windows | 自动检测 |
-|  | 目标平台是 macOS/iOS | 自动检测 |
-|  | 目标平台是 Linux/macOS | 自动检测 |
-|  | 构建类型 |  |
-|  | 编译器 ID 字符串 |  |
-|  | 编译器版本号 | 自动检测 |
-|  | 指定 CMake 目标是否已定义 | — |
-|  | 文件或目录是否存在 | — |
+if(ENABLE_FEATURE)
+    target_compile_definitions(app PRIVATE FEATURE_ENABLED)
+    target_sources(app PRIVATE feature.cpp)
+endif()
+
+# 等价的生成器表达式写法（option 变量是布尔值）
+target_compile_definitions(app PRIVATE
+    $<$<BOOL:${ENABLE_FEATURE}>:FEATURE_ENABLED>
+)
+```
+
+```bash
+cmake -B build -DENABLE_ASAN=ON -DENABLE_FEATURE=ON
+```
+
+---
+
+#### 层次七：编译器版本区分
+
+```cmake
+# if() 写法（配置阶段判断）
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
+   AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "12")
+    target_compile_options(app PRIVATE -fcoroutines)
+endif()
+
+if(MSVC AND MSVC_VERSION GREATER_EQUAL 1930)   # VS 2022 = 1930
+    target_compile_options(app PRIVATE /Zc:__cplusplus)
+endif()
+
+# 生成器表达式（可与 CONFIG 嵌套组合）
+target_compile_options(app PRIVATE
+    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>>:-fcoroutines>
+)
+```
+
+| 变量 | 示例值 | 说明 |
+|------|--------|------|
+| `CMAKE_CXX_COMPILER_VERSION` | `"13.2.0"` | 完整版本字符串，用 `VERSION_GREATER_EQUAL` 比较 |
+| `MSVC_VERSION` | `1930` | MSVC 内部版本号（VS 2022 = 193x，VS 2019 = 192x）|
+| `MSVC_TOOLSET_VERSION` | `143` | 工具集版本（v143 = VS 2022，v142 = VS 2019）|
+
+---
+
+#### 速查表
+
+**常用条件变量：**
+
+| 变量 / 条件 | 含义 | 典型值 |
+|-------------|------|--------|
+| `MSVC` | 编译器是 cl.exe | `TRUE` / `FALSE` |
+| `WIN32` | 目标平台是 Windows（含 64 位）| `TRUE` / `FALSE` |
+| `APPLE` | 目标平台是 macOS 或 iOS | `TRUE` / `FALSE` |
+| `UNIX` | 目标平台是 Linux 或 macOS | `TRUE` / `FALSE` |
+| `CMAKE_CXX_COMPILER_ID` | 编译器 ID 字符串 | `MSVC` / `GNU` / `Clang` / `AppleClang` |
+| `CMAKE_CXX_COMPILER_VERSION` | 编译器完整版本号 | `13.2.0` / `17.0.1` |
+| `CMAKE_BUILD_TYPE` | 构建类型（单配置 Generator）| `Debug` / `Release` / `RelWithDebInfo` / `MinSizeRel` |
+| `MSVC_VERSION` | MSVC 内部版本号 | `1930`（VS 2022）|
+
+**生成器表达式速查（用于 `target_compile_options` 等）：**
+
+| 表达式 | 含义 |
+|--------|------|
+| `$<CXX_COMPILER_ID:MSVC>` | 编译器是 MSVC |
+| `$<CXX_COMPILER_ID:GNU>` | 编译器是 GCC |
+| `$<CONFIG:Debug>` | 当前构建类型是 Debug |
+| `$<NOT:$<CXX_COMPILER_ID:MSVC>>` | 编译器不是 MSVC |
+| `$<AND:$<A>,$<B>>` | A 且 B 同时为真 |
+| `$<IF:cond,yes,no>` | 三元：cond 为真取 yes，否则取 no |
+| `$<BOOL:${VAR}>` | 将 CMake 变量转成布尔值 |
+| `$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>` | 编译器版本 ≥ 12 |
 
 ---
 
