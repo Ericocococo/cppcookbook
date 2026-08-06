@@ -200,6 +200,10 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 │   └── 06_robotics/                            # 机器人（ROS2/DDS/传感器融合/SLAM）
 │                                           #   其他领域来了就追加 07_ 08_ …
 │
+├── projects/                               # ─── 阶段性实战项目（综合运用，独立编译）───
+│                                           #   不带数字前缀；每个项目自含 CMakeLists.txt
+│                                           #   例: snake_game/ json_parser/ http_server/
+│
 └── 10_ops/                                 # ─── ▲ 工程化（横切；只放"纯工程活动"）───
     ├── 01_build_systems/                       # 构建系统演进：手动编译→Makefile→CMake→vcpkg→企业级
     ├── 02_testing/                             # ctest 集成/代码覆盖率/模糊测试（libFuzzer/AFL）
@@ -244,6 +248,7 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 | `08_hpc` | 无限增长 | 高性能计算：SIMD/OpenMP/TBB/CUDA/数值/内存优化 |
 | `09_domain` | 无限增长 | 领域应用：游戏/图形/AI推理/音视频/量化/机器人 |
 | `10_ops` | 无限增长 | 工程化横切（纯工程活动）：CMake/调试/分析/包管理 |
+| `projects` | 按需增长 | 阶段性实战项目，综合运用多个知识点，每个项目独立编译 |
 
 ---
 
@@ -255,6 +260,7 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 4. **所有层级目录统一带两位数字前缀 `01_ 02_ ...`**——顺序即导航；插入新目录就重排序号，幅度大就整体重组。
 5. **`04_libraries` 与 `10_ops` 分工**——"某个库怎么用"（含 cli/log/test 工具库）归 `04_libraries`；"纯工程活动/流程"（CMake 构建/CI/静态分析/交叉编译）归 `10_ops`，两边不重复。
 6. **`05_frameworks` 只放领域级完整系统**——通用 web 框架（drogon/crow）在 `07_systems/05_server`；序列化/CLI 等工具库在 `04_libraries`。
+7. **`projects/` 放阶段性实战项目**——综合运用多个知识点的独立小项目（如贪吃蛇、JSON 解析器、mini HTTP 服务器），每个项目自含 `CMakeLists.txt`，不带数字前缀。
 
 ---
 
