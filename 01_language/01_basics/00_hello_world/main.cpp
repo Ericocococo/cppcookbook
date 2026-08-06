@@ -27,7 +27,7 @@ void demo02_comments() {
     // 单行注释：// 到行尾
     std::cout << "  // 单行注释：从 // 到行尾都被忽略\n";
 
-    /* 多行注释：从 /* 到 */
+    /* 多行注释
        可以跨越多行
     */
     std::cout << "  /* 多行注释 */：从 /* 到 */ 之间全被忽略\n";
@@ -122,14 +122,27 @@ void demo05_scope() {
 // ⑥ 基本输入（cin）
 void demo06_cin() {
     std::cout << "\n⑥ cin（从键盘读输入）\n";
-    std::cout << "  cin 用法：std::cin >> 变量;\n";
-    std::cout << "  示例代码（实际不运行，避免等待输入）：\n";
-    std::cout << "    int age;\n";
-    std::cout << "    std::cout << \"请输入年龄: \";\n";
-    std::cout << "    std::cin >> age;   // 从键盘读一个整数\n";
-    std::cout << "    std::cout << \"你输入了: \" << age;\n";
-    std::cout << "  读字符串（不含空格）：std::cin >> s\n";
-    std::cout << "  读一整行（含空格）：std::getline(std::cin, s)\n";
+
+    // >> 运算符：读单个整数，遇空白停止
+    int age;
+    std::cout << "  请输入年龄（整数）: ";
+    std::cin >> age;
+    std::cout << "  你输入了: " << age << "\n";
+
+    // >> 读单词（遇空格停止）
+    std::string name;
+    std::cout << "  请输入姓名（单词）: ";
+    std::cin >> name;
+    std::cout << "  你输入了: " << name << "\n";
+
+    // cin >> 读完后缓冲区留有换行符，getline 前需要清掉
+    std::cin.ignore();
+
+    // getline：读整行（含空格，回车结束）
+    std::string line;
+    std::cout << "  请输入一句话（含空格）: ";
+    std::getline(std::cin, line);
+    std::cout << "  你输入了: \"" << line << "\"\n";
 }
 
 int main() {

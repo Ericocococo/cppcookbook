@@ -40,11 +40,6 @@ void demo01_integer_types() {
     std::cout << "  无符号溢出：255u+1 = " << (unsigned)uc
               << "（回绕到 0，取模 256，合法）\n";
 
-    // 有符号/无符号混用陷阱
-    int si = -1;
-    unsigned int ui = 1;
-    std::cout << "  陷阱：-1 < 1u = " << (si < ui)
-              << "（0=false！-1 被转为超大无符号数）\n";
 }
 
 // ② 浮点类型：精度与范围
@@ -55,6 +50,9 @@ void demo02_float_types() {
     std::cout << "  double: " << sizeof(double) << " 字节  精度约15位有效数字（推荐）\n";
 
     // 浮点精度问题：不能用 == 比较
+    // 原因：计算机用二进制存储小数，0.1、0.2 在二进制里是无限循环小数（类似 1/3 在十进制是 0.333...）
+    // 存进有限位数时被截断，产生微小误差；两个误差相加后不等于 0.3 的截断值
+    // 正确做法：比较两数之差是否足够小，如 std::abs(a - 0.3) < 1e-9
     double a = 0.1 + 0.2;
     std::cout << "  0.1+0.2 == 0.3 : " << (a == 0.3)
               << "（0=false！浮点有精度误差）\n";
@@ -119,7 +117,7 @@ void demo05_initialization() {
     int b(20);     // 直接初始化
     int c{30};     // 列表初始化（推荐，C++11）
     int d{};       // 值初始化（= 0）
-    std::cout << "  a=10  b(20)  c{30}  d{}=" << d << "\n";
+    std::cout << "  a=" << a << "  b=" << b << "  c=" << c << "  d{}=" << d << "\n";
 
     // 列表初始化防窄化
     // int bad{3.14};  // 编译错误：double→int 窄化
@@ -134,7 +132,7 @@ void demo05_initialization() {
 
     // 结构体部分初始化
     struct Point { int x, y, z; };
-    Point p{1, 2};   // z 自动补 0
+    Point p{1, 2, 0};   // 显式写 0；省略时编译器同样补 0，但会触发 warning
     std::cout << "  Point{1,2}: x=" << p.x << " y=" << p.y
               << " z=" << p.z << "（未指定的补 0）\n";
 }
