@@ -168,13 +168,14 @@ call "%VCVARSALL%" x64
 | `VCVARSALL` | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat` |
 | MSVC Ninja | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe` |
 
-**MinGW 段模板（`## 2. 命令行 · MinGW（Git Bash）`）：**
+#### MinGW 段模板（`## 2. 命令行 · MinGW（Git Bash）`）
 
 ````markdown
 ```bash
 CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
 GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
 NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
 ```
 
 ### 方案 A：Ninja（推荐）
@@ -204,28 +205,82 @@ D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build b
 :: 运行
 build-mingw\<exe名>.exe
 ```
+
+### 方案 B：MinGW Makefiles（无需 ninja.exe）
+
+```bash
+# 配置
+"$CMAKE" -B build-mingw-make -G "MinGW Makefiles" \
+  -DCMAKE_CXX_COMPILER="$GXX" \
+  -DCMAKE_MAKE_PROGRAM="$MAKE"
+
+# 构建
+"$CMAKE" --build build-mingw-make
+
+# 运行
+./build-mingw-make/<exe名>.exe
+```
+
+> cmd 三步版：
+
+```bat
+:: 配置
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-make -G "MinGW Makefiles" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+
+:: 构建
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-make
+
+:: 运行
+build-mingw-make\<exe名>.exe
+```
+
+### 方案 C：Ninja Multi-Config（一目录同时支持 Debug / Release）
+
+```bash
+# 配置
+"$CMAKE" -B build-mingw-mc -G "Ninja Multi-Config" \
+  -DCMAKE_CXX_COMPILER="$GXX" \
+  -DCMAKE_MAKE_PROGRAM="$NINJA"
+
+# 构建 Debug（多配置，构建时必须指定 --config）
+"$CMAKE" --build build-mingw-mc --config Debug
+
+# 运行 Debug
+./build-mingw-mc/Debug/<exe名>.exe
+
+# 构建 Release
+"$CMAKE" --build build-mingw-mc --config Release
+
+# 运行 Release
+./build-mingw-mc/Release/<exe名>.exe
+```
 ````
 
-**MSVC 段模板（`## 3. 命令行 · MSVC（cmd）`）：**
+#### MSVC 段模板（`## 3. 命令行 · MSVC（cmd）`）
 
 ````markdown
-### 方案 A：vcvarsall + Ninja（推荐）
-
 ```bat
 set CMAKE=D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
 set VCVARSALL=D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat
 
-:: 激活 — 把 cl.exe / link.exe / ninja.exe 加入当前会话 PATH，并注入 INCLUDE / LIB / LIBPATH
+:: 激活 — 把 cl.exe / link.exe 加入当前会话 PATH，并注入 INCLUDE / LIB / LIBPATH
 call "%VCVARSALL%" x64
+```
 
+### 方案 A：vcvarsall + Ninja（推荐，单配置）
+
+```bat
+:: 配置
 "%CMAKE%" -B build-msvc -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
 
+:: 构建（Ninja 是单配置生成器，不需要 --config）
 "%CMAKE%" --build build-msvc
 
+:: 运行
 build-msvc\<exe名>.exe
 ```
 
-> 四步版（激活、配置、构建、运行各一行）：
+> 四步版（激活、配置、构建、运行各一行，全部内联路径，无变量依赖）：
 
 ```bat
 :: 激活
@@ -240,9 +295,93 @@ call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\v
 :: 运行
 build-msvc\<exe名>.exe
 ```
+
+### 方案 B：Visual Studio 生成器（多配置，无需激活 vcvarsall）
+
+CMake 自动通过 `vswhere.exe` 检测 MSVC 工具链，生成 `.sln` 工程。VS Generator 是多配置，构建时须指定 `--config`，exe 输出到 `build-msvc-vs\Debug\` 或 `Release\` 子目录下。
+
+```bat
+set CMAKE=D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
+
+:: 配置（-A x64 指定目标 64 位，不加默认为 Win32）
+"%CMAKE%" -B build-msvc-vs -G "Visual Studio 18 2026" -A x64
+
+:: 构建（多配置，必须指定 --config）
+"%CMAKE%" --build build-msvc-vs --config Debug
+```
+
+> 三步版：
+
+```bat
+:: 配置
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-vs -G "Visual Studio 18 2026" -A x64
+
+:: 构建
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-vs --config Debug
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-vs --config Release
+
+:: 运行
+build-msvc-vs\Debug\<exe名>.exe
+build-msvc-vs\Release\<exe名>.exe
+```
+
+### 方案 C：x64 Native Tools + Ninja（无需手动激活）
+
+开始菜单搜索 `x64 Native Tools Command Prompt for VS 2026` 打开，窗口已自动注入环境。进去后三步运行：
+
+```bat
+:: 配置
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+
+:: 构建
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc
+
+:: 运行
+build-msvc\<exe名>.exe
+```
 ````
 
-**CLion IDE 段模板（`## 4. CLion IDE`）：**
+#### 生成器对比
+
+| | MinGW 方案 A<br>Ninja | MinGW 方案 B<br>MinGW Makefiles | MinGW 方案 C<br>Ninja Multi-Config |
+|---|---|---|---|
+| build 目录 | `build-mingw` | `build-mingw-make` | `build-mingw-mc` |
+| 构建工具 | ninja.exe | mingw32-make.exe | ninja.exe |
+| 配置数 | 单配置 | 单配置 | 多配置（Debug/Release 共目录） |
+| 速度 | 最快 | 慢 | 快 |
+| 适用场景 | 日常首选 | 没有 ninja.exe 时备选 | 需频繁切换 Debug/Release |
+
+| | MSVC 方案 A<br>vcvarsall + Ninja | MSVC 方案 B<br>VS Generator | MSVC 方案 C<br>Native Tools + Ninja |
+|---|---|---|---|
+| build 目录 | `build-msvc` | `build-msvc-vs` | `build-msvc` |
+| 需要激活 | 是（call vcvarsall） | 否（CMake 自动检测） | 否（窗口已激活） |
+| 构建工具 | ninja.exe | msbuild.exe | ninja.exe |
+| 配置数 | 单配置（构建不用 `--config`） | 多配置（构建必须 `--config`） | 单配置 |
+| exe 路径 | `build-msvc\` | `build-msvc-vs\Debug\` | `build-msvc\` |
+| 适用场景 | 脚本/自动化首选 | 不手动激活时用 | 交互式操作 |
+
+#### Linux / WSL 段模板（`## 4. 命令行 · Linux / WSL`）
+
+````markdown
+```bash
+cd <目录名>
+mkdir build && cd build
+cmake ..
+cmake --build .
+./<exe名>
+```
+````
+
+> pybind11 项目需指定 pybind11 和 Python 路径：
+>
+> ```bash
+> cmake -Dpybind11_DIR=$(python -c "import pybind11;print(pybind11.get_cmake_dir())") \
+>       -DPython_EXECUTABLE=$(which python) ..
+> ```
+>
+> pybind11 模块（.so）同样必须使用与 Python 相同的编译器。Linux 上的 Python 由 GCC 编译，因此 .so 用 GCC 构建即可。
+
+#### CLion IDE 段模板（`## 5. CLion IDE`）
 
 ````markdown
 1. `File → Open` 选择 `<目录名>/` 目录
@@ -289,26 +428,31 @@ build-msvc\<exe名>.exe
 
 ## 代码规范
 
-8. **纯语法用可运行 `.cpp` + `main()` 展示** — 每个文件能直接编译运行，
-   打印运行结果与目测结论（不用 `assert`）；出错时用 `return 1` 或 `std::exit(1)` 加打印说明，
-   不让程序崩溃中断。
-9. **打印显示要直观** — 结构体逐字段打印，并带上类型或说明：
-   `std::cout << "  x: " << x << " (int)\n";`
-   不要一行 dump 整个对象；多个用例用 `① ② ③` 小标题分隔。
-10. **每段演示封装成 `demoXX_xxx()` 函数** — 如 `demo01_basic()` / `demo02_ranges()`，
+11. **纯语法用可运行 `.cpp` + `main()` 展示** — 每个文件能直接编译运行，
+    打印运行结果与目测结论（不用 `assert`）；出错时用 `return 1` 或 `std::exit(1)` 加打印说明，
+    不让程序崩溃中断。
+12. **打印显示要直观** — 结构体逐字段打印，并带上类型或说明：
+    `std::cout << "  x: " << x << " (int)\n";`
+    不要一行 dump 整个对象；多个用例用 `① ② ③` 小标题分隔。
+13. **每段演示封装成 `demoXX_xxx()` 函数** — 如 `demo01_basic()` / `demo02_ranges()`，
     序号对应注释里的 ① ② ③；`main()` 只留串行调用，实现都在上面。
-11. **demo 产出落到 `data/` 目录**（已被 `.gitignore` 忽略），不用 tmpfile。
-12. **文件顶部注释写清楚**：所属标准库/三方库、C++ 标准版本（如 `// C++20`）、编译/安装方式。
-13. **注释使用中文**。
-14. **给出的 demo 必须是可执行的**，假定实际跑一遍确认输出正常后完成。
-15. **目标受众是 C++ 小白** — 注释要解释"为什么"和"什么意思"，不只写"做了什么"；
+14. **demo 产出落到 `data/` 目录**（已被 `.gitignore` 忽略），不用 tmpfile。
+15. **文件顶部注释写清楚**：所属标准库/三方库、C++ 标准版本（如 `// C++20`）、编译/安装方式。
+16. **注释使用中文，只描述当前状态** — 不引用前面章节（不写"和 vector 一样""前面讲过"），不写操作记录。每个知识点独立解释，保证跳过前面章节也能读懂。
+17. **给出的 demo 必须是可执行的**，假定实际跑一遍确认输出正常后完成。
+18. **目标受众是 C++ 小白** — 注释要解释"为什么"和"什么意思"，不只写"做了什么"；
     每个语法点附一句话说明常见陷阱或与直觉不符的行为（如整数除法截断、前后缀自增区别）。
     `README.md` 作详细原理解释，`.cpp` 是可运行的配套示例代码。
+19. **代码优先简单易懂写法** —
+    - for 循环体必须加花括号，即使只有一行
+    - 防御性检查（如 `empty()`）提前 return，不要放在三元运算符里
+    - 不在 return 中使用三元运算符，拆成 if/else
+    - 不做多余的 `static_cast`（如 `double / size()` 已自动浮点除法）
 
 ## 命名
 
-15. **项目名 `cppcookbook`**（不是 cpp-cookbook）。
-16. **别含顶层命名为 `cpp` 或 `test`** — 会与 ctest 或标准库 `<test>` 混淆概念。
+20. **项目名 `cppcookbook`**（不是 cpp-cookbook）。
+21. **别含顶层命名为 `cpp` 或 `test`** — 会与 ctest 或标准库 `<test>` 混淆概念。
 
 ## Git 提交信息
 

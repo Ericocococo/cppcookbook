@@ -201,8 +201,18 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 │                                           #   其他领域来了就追加 07_ 08_ …
 │
 ├── projects/                               # ─── 阶段性实战项目（综合运用，独立编译）───
-│                                           #   不带数字前缀；每个项目自含 CMakeLists.txt
-│                                           #   例: snake_game/ json_parser/ http_server/
+│   │                                       #   不带数字前缀；每个项目自含 CMakeLists.txt
+│   │                                       #   例: snake_game/ json_parser/ http_server/
+│   │
+│   └── pybind_ext_learning/                # C++ 扩展学习路径（pybind11 八步走）
+│       ├── 01_hello_cpp/                   #   第1步: 纯 C++，确认编译环境
+│       ├── 02_one_function/                #   第2步: 第一个 pybind11 模块（一个函数）
+│       ├── 03_types_and_stl/               #   第3步: 多种类型 + STL 容器自动转换
+│       ├── 04_class_binding/               #   第4步: 类绑定 + .h/.cpp/bindings 三文件分离
+│       ├── 05_build_and_test/              #   第5步: build.py 自动化 + test 脚本
+│       ├── 06_simple_manager/              #   第6步: 单个数据管理器（Load + Query）
+│       ├── 07_data_provider/               #   第7步: 多 Mgr + 二分查找 + 聚合 DataProvider
+│       └── 08_parquet_and_dll/             #   第8步: arrow/parquet 读文件 + 拷贝依赖 dll
 │
 └── 10_ops/                                 # ─── ▲ 工程化（横切；只放"纯工程活动"）───
     ├── 01_build_systems/                       # 构建系统演进：手动编译→Makefile→CMake→vcpkg→企业级

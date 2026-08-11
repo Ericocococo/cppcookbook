@@ -1,5 +1,6 @@
 # 构建输出
 build/
+build_py_vs/
 cmake-build-*/
 build-*/
 out/
@@ -33,3 +34,9 @@ CMakeFiles/
 cmake_install.cmake
 CTestTestfile.cmake
 install_manifest.txt
+
+# pybind_ext_learning 产物
+build_py/
+*.pyd
+*.parquet
+lib/
