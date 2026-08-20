@@ -1,14 +1,15 @@
-# 01_hello_cpp — 第一步：纯 C++
+# 02_cpp_class — 第二步：C++ 类的基础
 
-和 Python 没有任何关系。确认 C++ 编译环境可用。
+学会用 class 把数据和函数打包在一起。和 Python 没有任何关系，纯 C++。
 
 ## 1. 文件
 
 | 文件 | 说明 |
 |:---|:---|
-| `hello.h` | 函数声明（头文件 = 菜单，列出有什么） |
-| `main.cpp` | 函数实现 + main 调用（厨房 = 实际做菜） |
-| `CMakeLists.txt` | 最简 C++ 工程（`add_executable`） |
+| `stock.h` | Stock 类声明（头文件 = 菜单） |
+| `stock.cpp` | Stock 类实现（厨房 = 实际做菜） |
+| `main.cpp` | 创建对象、调方法、多文件编译 demo |
+| `CMakeLists.txt` | 多文件 CMake 工程（`add_executable`） |
 
 ---
 
@@ -33,7 +34,7 @@ MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
 "$CMAKE" --build build-mingw
 
 # 运行
-./build-mingw/hello_cpp.exe
+./build-mingw/stock_demo.exe
 ```
 
 > cmd 三步版：
@@ -46,7 +47,7 @@ D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-
 D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw
 
 :: 运行
-build-mingw\hello_cpp.exe
+build-mingw\stock_demo.exe
 ```
 
 ### 方案 B：MinGW Makefiles（无需 ninja.exe）
@@ -61,20 +62,7 @@ build-mingw\hello_cpp.exe
 "$CMAKE" --build build-mingw-make
 
 # 运行
-./build-mingw-make/hello_cpp.exe
-```
-
-> cmd 三步版：
-
-```bat
-:: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-make -G "MinGW Makefiles" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
-
-:: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-make
-
-:: 运行
-build-mingw-make\hello_cpp.exe
+./build-mingw-make/stock_demo.exe
 ```
 
 ---
@@ -99,7 +87,7 @@ call "%VCVARSALL%" x64
 "%CMAKE%" --build build-msvc
 
 :: 运行
-build-msvc\hello_cpp.exe
+build-msvc\stock_demo.exe
 ```
 
 > 四步版：
@@ -115,12 +103,10 @@ call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\v
 "D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc
 
 :: 运行
-build-msvc\hello_cpp.exe
+build-msvc\stock_demo.exe
 ```
 
 ### 方案 B：Visual Studio 生成器（多配置）
-
-CMake 自动通过 `vswhere.exe` 检测 MSVC 工具链，生成 `.sln` 工程。VS Generator 是多配置，构建须指定 `--config`。
 
 ```bat
 :: 配置（-G "Visual Studio 18 2026" 生成 .sln 工程，-A x64 指定 64 位）
@@ -130,7 +116,7 @@ CMake 自动通过 `vswhere.exe` 检测 MSVC 工具链，生成 `.sln` 工程。
 "%CMAKE%" --build build-msvc-vs --config Release
 
 :: 运行
-build-msvc-vs\Release\hello_cpp.exe
+build-msvc-vs\Release\stock_demo.exe
 ```
 
 > 四步版：
@@ -146,7 +132,7 @@ call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\v
 "D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-vs --config Release
 
 :: 运行
-build-msvc-vs\Release\hello_cpp.exe
+build-msvc-vs\Release\stock_demo.exe
 ```
 
 ---
@@ -154,18 +140,18 @@ build-msvc-vs\Release\hello_cpp.exe
 ## 4. 命令行 · Linux / WSL
 
 ```bash
-cd 01_hello_cpp
+cd 02_cpp_class
 mkdir build && cd build
 cmake ..
 cmake --build .
-./hello_cpp
+./stock_demo
 ```
 
 ---
 
 ## 5. CLion IDE
 
-1. `File → Open` 选择 `01_hello_cpp/` 目录
+1. `File → Open` 选择 `02_cpp_class/` 目录
 2. CLion 自动识别 `CMakeLists.txt`，右下角点击**加载**
 3. 工具栏选择工具链（MinGW 或 Visual Studio）
 4. **构建** `Ctrl+F9`　**运行** `Shift+F10`
@@ -175,28 +161,38 @@ cmake --build .
 ## 6. 预期输出
 
 ```
-========== 第一步：纯 C++ ==========
+========== 第二步：C++ 类的基础 ==========
 
-① add(3, 5) = 8
-② avg({15.50, 15.80, 16.10, 16.40}) = 15.95
-③ split_symbol("600519.SH") = {"600519", "SH"}
+① 股票代码: 600519.SH
+   收盘价: 1500
 
-========== 编译环境正常 ==========
+② set_close(1600) 后: 1600
+
+③ 涨停价: 1760, 跌停价: 1440
+
+④ 多个对象:
+   000001.SZ close=12.5
+   共 3 只股票
+
+========== 类基础完成 ==========
 ```
 
 ---
 
 ## 7. 本步要点
 
-本步的目的不是学 C++ 语法，而是**确认编译工具链正常**：
-
-| 检查项 | 正常标志 |
+| 概念 | 说明 |
 |:---|:---|
-| CMake 可用 | `cmake --version` 有输出 |
-| 编译器可用 | MinGW 的 `g++` 或 MSVC 的 `cl.exe` |
-| C++20 支持 | 结构化绑定 `auto [code, market] = ...` 编译通过 |
-
-> 如果这一步编译不过，先解决编译环境问题。
+| class | 把数据 + 操作数据的方法打包在一起 |
+| 构造函数 | 创建对象时自动调用，必须和类同名 |
+| 成员变量 | 对象里的数据（默认 private） |
+| 成员函数 | 对象能做的事 |
+| public / private | 控制外部能否访问 |
+| .h / .cpp 分离 | 头文件声明"有什么"，cpp 实现"怎么做" |
+| 初始化列表 | `: m_code(...)` 构造时直接初始化，比在 {} 里赋值快 |
+| const & 参数 | 只读引用，不拷贝不修改 |
+| 末尾 const | 函数不修改成员变量 |
+| std::move | 转移所有权，避免拷贝字符串 |
 
 ---
 
@@ -204,14 +200,12 @@ cmake --build .
 
 | 词汇 | 说明 |
 |:---|:---|
-| `const` | 常量修饰符，承诺不修改数据 |
-| `&`（参数中）| 引用传递，不拷贝，直接用原数据 |
-| `const XXX&` | 只读引用，不拷贝也不能改，函数参数最常用写法 |
-| `auto` | 让编译器自动推断类型（C++11） |
-| `auto [a, b] = ...` | 结构化绑定，拆 pair/tuple 到多个变量（C++17） |
-| `std::pair<A, B>` | 打包两个值的容器，用 `.first` `.second` 访问 |
-| `std::vector<T>` | 动态数组，可变长度，用 `push_back()` 追加 |
-| `std::string::npos` | `find()` 没找到时的返回值，表示"未找到" |
-| `substr(pos, len)` | 从 pos 开始取 len 个字符的子串 |
-| `v.empty()` | 判断容器是否为空 |
-| `v.size()` | 返回容器中元素个数 |
+| class | 类，定义对象的蓝图/模具 |
+| object / instance | 对象/实例，按类创建的具体东西 |
+| constructor | 构造函数，创建对象时自动调用 |
+| member | 成员（成员变量 = 数据，成员函数 = 方法） |
+| public | 公有，外部可访问 |
+| private | 私有，只有类内部能访问 |
+| `::` | 作用域运算符，`Stock::code` 表示 Stock 类的 code 函数 |
+| `std::move` | 移动语义，转移资源所有权而非拷贝 |
+| initializer list | 初始化列表，`:` 后面直接初始化成员变量 |

@@ -448,11 +448,17 @@ cmake --build .
     - 防御性检查（如 `empty()`）提前 return，不要放在三元运算符里
     - 不在 return 中使用三元运算符，拆成 if/else
     - 不做多余的 `static_cast`（如 `double / size()` 已自动浮点除法）
+    - **一行一条语句**，不把多条逻辑压在同一行
+20. **`auto` 使用规则** —
+    - 简单类型**显式写**：`size_t dot = symbol.find('.')`，不用 `auto`
+    - 右侧类型很长且函数名已暗示类型时**用 auto**：`auto it = m_data.find(key)`（迭代器）、`auto table = ReadParquetTable(...)`（智能指针/Arrow）
+    - 结构化绑定必须 `auto`：`auto [code, market] = split_symbol(...)`
+    - 原则：读者能一眼看出类型就无所谓，看不出来就显式写
 
 ## 命名
 
-20. **项目名 `cppcookbook`**（不是 cpp-cookbook）。
-21. **别含顶层命名为 `cpp` 或 `test`** — 会与 ctest 或标准库 `<test>` 混淆概念。
+21. **项目名 `cppcookbook`**（不是 cpp-cookbook）。
+22. **别含顶层命名为 `cpp` 或 `test`** — 会与 ctest 或标准库 `<test>` 混淆概念。
 
 ## Git 提交信息
 

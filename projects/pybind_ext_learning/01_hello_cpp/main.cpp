@@ -1,10 +1,25 @@
 // C++20 | 依赖：无
 // 第一步：纯 C++ — 确认编译环境可用，和 Python 没有任何关系。
 //
-// 写一个最简单的 C++ 函数，编译运行，确认工具链正常。
-#include <iostream>
-#include <string>
-#include <vector>
+// 函数声明放在 hello.h（头文件 = 菜单），实现放在 main.cpp（厨房 = 实际做菜）。
+//
+// #include：把指定头文件的内容复制进来，相当于"引入工具箱"
+// 用到了什么就显式 include 什么，不依赖间接传递
+#include <iostream>  // std::cout（控制台输出）
+#include <string>    // std::string（字符串）
+#include <utility>   // std::pair（打包两个值）、结构化绑定 auto [a, b]
+#include <vector>    // std::vector（动态数组）
+
+/* #include "hello.h"：把 hello.h 的内容复制到这里，告诉编译器这三个函数的存在。
+   C++ 编译器一个文件一个文件单独编译，main() 里调用 add(3, 5) 之前必须先知道 add 长什么样
+   （参数类型、返回类型），否则编译器报错"不认识 add"。
+
+   本文件不写也能编译（函数定义在 main() 前面，编译器已经见过了），但如果把函数实现
+   移到另一个 .cpp 文件，不写 #include "hello.h" 编译器就看不到声明，直接报错。
+   养成习惯：函数定义在别的文件时，include 声明所在的 .h。
+
+   "" 先在当前目录找，<> 只在系统/库路径找 */
+#include "hello.h"
 
 // 一个最简单的 C++ 函数
 int add(int a, int b)
@@ -12,6 +27,27 @@ int add(int a, int b)
     return a + b;
 }
 
+/* const 的几种用法（本项目出现的全部 6 种）：
+
+   ① 参数前 const 引用 — 不拷贝、不修改传入的数据（最常用）
+      double avg(const std::vector<double>& v)
+
+   ② 函数末尾 const — 函数不修改对象的成员变量
+      std::string code() const
+
+   ③ for 循环 const auto& 遍历 — 不修改元素、不拷贝（遍历惯用法）
+      for (const auto& r : records)
+
+   ④ const 局部变量 — 变量值不可改
+      const int64_t rows = table->num_rows();
+
+   ⑤ lambda 参数 — lambda 内部不修改捕获的参数
+      [](const X& a, const X& b) { return a.x < b.x; }
+
+   ⑥ const + noexcept — 哈希函数：参数不改 + 对象不改
+      size_t operator()(const Key& k) const noexcept
+        noexcept = 承诺绝不抛异常，编译器可放心优化；违背承诺程序直接终止
+*/
 // vector<double>：动态数组里存 double 类型
 //   vector           = 可变长度的数组
 //   <double>         = 模板参数，告诉 vector 里面装什么类型
@@ -70,8 +106,8 @@ double avg(const std::vector<double>& v)
 std::pair<std::string, std::string> split_symbol(const std::string& symbol)
 {
     /* auto：让编译器自动推断类型，不用手写
-       auto dot = symbol.find('.')  等价于  size_t dot = symbol.find('.') */
-    auto dot = symbol.find('.');
+       size_t dot = symbol.find('.')  ← 简单类型显式写，不用 auto */
+    size_t dot = symbol.find('.');
     if (dot == std::string::npos) {
         return {symbol, ""};
     }

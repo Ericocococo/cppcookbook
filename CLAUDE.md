@@ -29,6 +29,8 @@
 - 防御性检查（如 `empty()`）提前 return，不要放在三元运算符里。
 - 不在 return 中使用三元运算符，拆成 if/else。
 - 不做多余的 `static_cast`（如 `double / size()` 已自动浮点除法）。
+- 一行一条语句，不把多条逻辑压在同一行。
+- `auto`：简单类型显式写（`size_t dot = s.find('.')`），右侧很长时用 auto（迭代器、智能指针、Arrow 类型）。
 
 ## Git 提交说明
 
