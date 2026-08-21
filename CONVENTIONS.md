@@ -182,28 +182,28 @@ MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
 
 ```bash
 # 配置
-"$CMAKE" -B build-mingw -G Ninja \
+"$CMAKE" -B build-mingw-ninja -G Ninja \
   -DCMAKE_CXX_COMPILER="$GXX" \
   -DCMAKE_MAKE_PROGRAM="$NINJA"
 
 # 构建
-"$CMAKE" --build build-mingw
+"$CMAKE" --build build-mingw-ninja
 
 # 运行
-./build-mingw/<exe名>.exe
+./build-mingw-ninja/<exe名>.exe
 ```
 
 > cmd 三步版：
 
 ```bat
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw -G Ninja -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-ninja -G Ninja -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-ninja
 
 :: 运行
-build-mingw\<exe名>.exe
+build-mingw-ninja\<exe名>.exe
 ```
 
 ### 方案 B：MinGW Makefiles（无需 ninja.exe）
@@ -271,13 +271,13 @@ call "%VCVARSALL%" x64
 
 ```bat
 :: 配置
-"%CMAKE%" -B build-msvc -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+"%CMAKE%" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
 
 :: 构建（Ninja 是单配置生成器，不需要 --config）
-"%CMAKE%" --build build-msvc
+"%CMAKE%" --build build-msvc-ninja
 
 :: 运行
-build-msvc\<exe名>.exe
+build-msvc-ninja\<exe名>.exe
 ```
 
 > 四步版（激活、配置、构建、运行各一行，全部内联路径，无变量依赖）：
@@ -287,13 +287,13 @@ build-msvc\<exe名>.exe
 call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 :: 配置
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
 
 :: 构建
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-ninja
 
 :: 运行
-build-msvc\<exe名>.exe
+build-msvc-ninja\<exe名>.exe
 ```
 
 ### 方案 B：Visual Studio 生成器（多配置，无需激活 vcvarsall）
@@ -331,13 +331,13 @@ build-msvc-vs\Release\<exe名>.exe
 
 ```bat
 :: 配置
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
 
 :: 构建
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-ninja
 
 :: 运行
-build-msvc\<exe名>.exe
+build-msvc-ninja\<exe名>.exe
 ```
 ````
 
@@ -345,7 +345,7 @@ build-msvc\<exe名>.exe
 
 | | MinGW 方案 A<br>Ninja | MinGW 方案 B<br>MinGW Makefiles | MinGW 方案 C<br>Ninja Multi-Config |
 |---|---|---|---|
-| build 目录 | `build-mingw` | `build-mingw-make` | `build-mingw-mc` |
+| build 目录 | `build-mingw-ninja` | `build-mingw-make` | `build-mingw-mc` |
 | 构建工具 | ninja.exe | mingw32-make.exe | ninja.exe |
 | 配置数 | 单配置 | 单配置 | 多配置（Debug/Release 共目录） |
 | 速度 | 最快 | 慢 | 快 |
@@ -353,11 +353,11 @@ build-msvc\<exe名>.exe
 
 | | MSVC 方案 A<br>vcvarsall + Ninja | MSVC 方案 B<br>VS Generator | MSVC 方案 C<br>Native Tools + Ninja |
 |---|---|---|---|
-| build 目录 | `build-msvc` | `build-msvc-vs` | `build-msvc` |
+| build 目录 | `build-msvc-ninja` | `build-msvc-vs` | `build-msvc-ninja` |
 | 需要激活 | 是（call vcvarsall） | 否（CMake 自动检测） | 否（窗口已激活） |
 | 构建工具 | ninja.exe | msbuild.exe | ninja.exe |
 | 配置数 | 单配置（构建不用 `--config`） | 多配置（构建必须 `--config`） | 单配置 |
-| exe 路径 | `build-msvc\` | `build-msvc-vs\Debug\` | `build-msvc\` |
+| exe 路径 | `build-msvc-ninja\` | `build-msvc-vs\Debug\` | `build-msvc-ninja\` |
 | 适用场景 | 脚本/自动化首选 | 不手动激活时用 | 交互式操作 |
 
 #### Linux / WSL 段模板（`## 4. 命令行 · Linux / WSL`）

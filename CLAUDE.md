@@ -36,3 +36,5 @@
 
 - subject + body 放在同一个代码块里输出，不要分成两块分别标注。
 - 格式：`<type>(<scope>): <subject>`，body 空一行跟在后面。
+- 只输出提交说明文本，不要执行 `git commit`，由用户手动提交。
+- 不加 `Co-Authored-By` 或任何署名行。

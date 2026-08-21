@@ -121,11 +121,11 @@ cl              & :: → Microsoft (R) C/C++ Optimizing Compiler Version 19.51..
 开始菜单搜索 `x64 Native Tools Command Prompt for VS 2026` 打开，该窗口启动时已自动激活 MSVC 环境，进去后直接三步运行（无需激活步骤）：
 
 ```bat
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc -G Ninja
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-ninja -G Ninja
 
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-ninja
 
-build-msvc\hello_cmake.exe
+build-msvc-ninja\hello_cmake.exe
 ```
 
 **替代方案 B：改用 Visual Studio Generator（CMake 自动检测工具链）**
@@ -134,13 +134,13 @@ build-msvc\hello_cmake.exe
 
 ```bat
 :: 配置
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc -G "Visual Studio 18 2026" -A x64
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-vs -G "Visual Studio 18 2026" -A x64
 
 :: 构建（VS Generator 是多配置，须指定 --config）
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc --config Debug
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-vs --config Debug
 
-:: 运行（exe 输出到 build-msvc\Debug\ 下）
-build-msvc\Debug\hello_cmake.exe
+:: 运行（exe 输出到 build-msvc-vs\Debug\ 下）
+build-msvc-vs\Debug\hello_cmake.exe
 ```
 
 > VS Generator 与 Ninja 的区别：VS Generator 生成 `.sln` / `.vcxproj`，支持多配置（Debug/Release 共用同一个 build 目录）；Ninja 是单配置，速度更快，是 CLion 默认选择。

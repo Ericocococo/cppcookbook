@@ -25,28 +25,28 @@ MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
 
 ```bash
 # 配置
-"$CMAKE" -B build-mingw -G Ninja \
+"$CMAKE" -B build-mingw-ninja -G Ninja \
   -DCMAKE_CXX_COMPILER="$GXX" \
   -DCMAKE_MAKE_PROGRAM="$NINJA"
 
 # 构建
-"$CMAKE" --build build-mingw
+"$CMAKE" --build build-mingw-ninja
 
 # 运行
-./build-mingw/hello_cpp.exe
+./build-mingw-ninja/hello_cpp.exe
 ```
 
 > cmd 三步版：
 
 ```bat
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw -G Ninja -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-ninja -G Ninja -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-ninja
 
 :: 运行
-build-mingw\hello_cpp.exe
+build-mingw-ninja\hello_cpp.exe
 ```
 
 ### 方案 B：MinGW Makefiles（无需 ninja.exe）
@@ -93,13 +93,13 @@ call "%VCVARSALL%" x64
 
 ```bat
 :: 配置
-"%CMAKE%" -B build-msvc -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+"%CMAKE%" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
 
 :: 构建（Ninja 是单配置生成器，配置时已锁定模式，--build 不需要 --config）
-"%CMAKE%" --build build-msvc
+"%CMAKE%" --build build-msvc-ninja
 
 :: 运行
-build-msvc\hello_cpp.exe
+build-msvc-ninja\hello_cpp.exe
 ```
 
 > 四步版：
@@ -109,13 +109,13 @@ build-msvc\hello_cpp.exe
 call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 :: 配置
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
 
 :: 构建
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-ninja
 
 :: 运行
-build-msvc\hello_cpp.exe
+build-msvc-ninja\hello_cpp.exe
 ```
 
 ### 方案 B：Visual Studio 生成器（多配置）
