@@ -4,7 +4,9 @@ import os
 import sys
 
 cur = os.path.dirname(os.path.abspath(__file__))
-for sub in ["lib", "build_py_vs/Release", "build_py/Release", "build_py"]:
+sub_list = ["build_py"]
+# sub_list = ["build_py_vs/Release"]
+for sub in sub_list:
     p = os.path.join(cur, sub)
     if os.path.isdir(p) and p not in sys.path:
         sys.path.insert(0, p)

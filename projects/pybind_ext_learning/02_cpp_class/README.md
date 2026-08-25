@@ -6,10 +6,24 @@
 
 | 文件 | 说明 |
 |:---|:---|
-| `stock.h` | Stock 类声明（头文件 = 菜单） |
-| `stock.cpp` | Stock 类实现（厨房 = 实际做菜） |
-| `main.cpp` | 创建对象、调方法、多文件编译 demo |
+| `stock.h` | 写法 ① Stock 类声明（头文件 = 菜单） |
+| `stock.cpp` | 写法 ① Stock 类实现（厨房 = 实际做菜） |
+| `bond.h` | 写法 ② Bond 类，声明 + 实现全在 .h 里 |
+| `main.cpp` | 写法 ③ Fund 类直接定义在文件里 + 三种写法演示 |
 | `CMakeLists.txt` | 多文件 CMake 工程（`add_executable`） |
+
+共 6 套部署方案（MinGW 3 + MSVC 2 + Linux 1）：
+
+| 平台 | 方案 | 生成器 | build 目录 |
+|:---|:---|:---|:---|
+| MinGW A | Ninja（推荐） | 单配置 | `build-mingw-ninja` |
+| MinGW B | MinGW Makefiles | 单配置 | `build-mingw-make` |
+| MinGW C | Ninja Multi-Config | 多配置 | `build-mingw-mc` |
+| MSVC A | vcvarsall + Ninja（推荐） | 单配置 | `build-msvc-ninja` |
+| MSVC B | Visual Studio Generator | 多配置 | `build-msvc-vs` |
+| Linux/WSL | cmake + make | 单配置 | `build/` |
+
+> **pybind11 注意**：Windows 上的 Python（python.org / Anaconda）都是 MSVC 编译的，pybind11 编译出的 `.pyd` 扩展必须和 Python 解释器用同一套编译器，否则 ABI 不兼容会崩溃。前面 01、02 步是纯 C++，MinGW/MSVC 都能跑；后面涉及 pybind11 的步骤 MinGW 不适用，必须走 MSVC。
 
 ---
 
@@ -63,6 +77,47 @@ build-mingw-ninja\stock_demo.exe
 
 # 运行
 ./build-mingw-make/stock_demo.exe
+```
+
+> cmd 三步版：
+
+```bat
+:: 配置
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-make -G "MinGW Makefiles" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+
+:: 构建
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-make
+
+:: 运行
+build-mingw-make\stock_demo.exe
+```
+
+### 方案 C：Ninja Multi-Config（多配置）
+
+```bash
+# 配置
+"$CMAKE" -B build-mingw-mc -G "Ninja Multi-Config" \
+  -DCMAKE_CXX_COMPILER="$GXX" \
+  -DCMAKE_MAKE_PROGRAM="$NINJA"
+
+# 构建（多配置须指定 --config）
+"$CMAKE" --build build-mingw-mc --config Debug
+
+# 运行
+./build-mingw-mc/Debug/stock_demo.exe
+```
+
+> cmd 三步版：
+
+```bat
+:: 配置
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-mc -G "Ninja Multi-Config" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+
+:: 构建
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-mc --config Debug
+
+:: 运行
+build-mingw-mc\Debug\stock_demo.exe
 ```
 
 ---
@@ -163,15 +218,20 @@ cmake --build .
 ```
 ========== 第二步：C++ 类的基础 ==========
 
-① 股票代码: 600519.SH
-   收盘价: 1500
+① 写法 ①  Stock（.h + .cpp 分离）
+   代码: 600519.SH, 收盘价: 1500
+   set_close(1600) 后: 1600
+   涨停价: 1760, 跌停价: 1440
 
-② set_close(1600) 后: 1600
+② 写法 ②  Bond（全写在 .h 里）
+   名称: 24国债01, 利率: 0.025
+   面值 10000 的年利息: 250
 
-③ 涨停价: 1760, 跌停价: 1440
+③ 写法 ③  Fund（直接写在 main.cpp 里）
+   名称: 沪深300ETF, 净值: 3.85
+   10000 元买入份额: 2597.4
 
 ④ 多个对象:
-   000001.SZ close=12.5
    共 3 只股票
 
 ========== 类基础完成 ==========
@@ -179,7 +239,64 @@ cmake --build .
 
 ---
 
-## 7. 本步要点
+## 7. 栈与堆
+
+物理上都是同一条内存条（RAM），区别是操作系统怎么管理：
+
+```
+┌──────────────────────────────────┐  高地址
+│            栈（Stack）            │  ← 从高地址往下长
+│  系统自动管理，固定大小（约 1-8 MB）│
+│  函数调用时压入，返回时弹出         │
+│              ↓ 往下长              │
+├──────────────────────────────────┤
+│           空闲区域                │
+├──────────────────────────────────┤
+│              ↑ 往上长              │
+│            堆（Heap）             │  ← 从低地址往上长
+│  程序员手动管理（new/delete）      │
+├──────────────────────────────────┤
+│         代码 + 全局变量            │
+└──────────────────────────────────┘  低地址
+```
+
+**为什么栈快：**
+
+| 操作 | 栈 | 堆 |
+|:---|:---|:---|
+| 分配 | 栈指针减 8（1 条指令） | 找空闲区域、记录大小、标记占用（几十条指令） |
+| 释放 | 栈指针加 8（1 条指令） | 标记释放、合并相邻空闲块（几十条指令） |
+| 类比 | 桌上放东西，伸手就拿 | 去仓库领东西，要登记、找货架 |
+
+**和 std::move 的关系：**
+
+```
+double m_nav = 3.85;
+  → 8 字节直接存在栈上，拷贝就是复制 8 字节，已经最快，move 没意义
+
+std::string m_name = "沪深300ETF";
+  → 栈上存指针+长度+容量，实际字符数组在堆上
+  → 拷贝要在堆上新开内存、逐字节复制（慢）
+  → move 只把指针转给新主人，不动堆内存（快）
+```
+
+基本类型（int/double/bool）不需要 move，string/vector/map 等管理堆内存的类型用 move 更快。
+
+---
+
+## 8. 定义类的三种写法
+
+| 写法 | 本项目示例 | 适用场景 |
+|:---|:---|:---|
+| .h 声明 + .cpp 实现 | Stock（stock.h + stock.cpp） | 多文件共用，改实现只重编一个 .cpp |
+| 全写在 .h 里 | Bond（bond.h） | 模板类必须这样；小类也常用 |
+| 直接写在 .cpp 里 | Fund（main.cpp 里） | 只有当前文件用，不需要拆文件 |
+
+`.h` 里能写实现，不是只能写声明——"只写声明"是约定习惯，不是语法限制。`#include` 本质就是把 `.h` 的内容复制粘贴到 `.cpp` 里。
+
+---
+
+## 9. 本步要点
 
 | 概念 | 说明 |
 |:---|:---|
@@ -196,7 +313,7 @@ cmake --build .
 
 ---
 
-## 8. 英文及缩写说明
+## 10. 英文及缩写说明
 
 | 词汇 | 说明 |
 |:---|:---|

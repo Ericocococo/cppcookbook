@@ -49,6 +49,23 @@ def get_pybind11_dir(python_exe: str) -> str:
         sys.exit(1)
 
 
+def _vs_generator():
+    """用 vswhere 检测已安装的 VS 版本，返回 CMake 生成器参数列表。"""
+    vswhere = os.path.join(
+        os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)"),
+        "Microsoft Visual Studio", "Installer", "vswhere.exe",
+    )
+    try:
+        import json
+        out = subprocess.check_output([vswhere, "-latest", "-format", "json"], text=True)
+        vs = json.loads(out)[0]
+        major = vs["installationVersion"].split(".")[0]
+        year = vs["catalog"]["productLineVersion"]
+        return ["-G", f"Visual Studio {major} {year}", "-A", "x64"]
+    except Exception:
+        return []
+
+
 def find_pyd() -> str:
     """在 build_py 目录下递归查找编译出的 .pyd，返回完整路径。
 
@@ -92,6 +109,7 @@ def build():
         print("正在配置 CMake...")
         cmd = [
             "cmake",
+        ] + _vs_generator() + [
             f"-Dpybind11_DIR={pybind11_dir}",
             f"-DPython_EXECUTABLE={python_exe}",
             "-DBUILD_PYBIND=ON",

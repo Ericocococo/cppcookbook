@@ -77,9 +77,50 @@ D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build b
 build-mingw-make\hello_cpp.exe
 ```
 
+### 方案 C：Ninja Multi-Config（多配置）
+
+```bash
+# 配置
+"$CMAKE" -B build-mingw-mc -G "Ninja Multi-Config" \
+  -DCMAKE_CXX_COMPILER="$GXX" \
+  -DCMAKE_MAKE_PROGRAM="$NINJA"
+
+# 构建（多配置须指定 --config）
+"$CMAKE" --build build-mingw-mc --config Debug
+
+# 运行
+./build-mingw-mc/Debug/hello_cpp.exe
+```
+
+> cmd 三步版：
+
+```bat
+:: 配置
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-mc -G "Ninja Multi-Config" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+
+:: 构建
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-mc --config Debug
+
+:: 运行
+build-mingw-mc\Debug\hello_cpp.exe
+```
+
 ---
 
 ## 3. 命令行 · MSVC（cmd）
+
+### vcvarsall 注入的 4 个环境变量
+
+| 变量 | 给谁用 | 找什么 | 示例路径（MSVC 14.51 / Win10 SDK 26100） |
+|:---|:---|:---|:---|
+| PATH | cmd 命令 | cl.exe / link.exe / ninja / cmake | `...\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\` |
+| INCLUDE | cl.exe（编译器） | 头文件 | `...\VC\Tools\MSVC\14.51.36231\include\`<br>`...\Windows Kits\10\Include\10.0.26100.0\ucrt\` 等 |
+| LIB | link.exe（链接器） | .lib 库文件 | `...\VC\Tools\MSVC\14.51.36231\lib\x64\`<br>`...\Windows Kits\10\Lib\10.0.26100.0\ucrt\x64\` 等 |
+| LIBPATH | .NET 工具 | 程序集 | 本项目用不到 |
+
+- `call` 必须写在当前 cmd 会话里——`call` 让变量修改留在当前窗口；直接运行则只存在临时进程，退出就没了
+- 不激活直接调 cl.exe 会报"找不到头文件"：cl.exe 找到 cl 自身但 INCLUDE 没注入，`#include <iostream>` 无从解析
+- link.exe 依赖 LIB 找 `libcmt.lib` 等库文件，LIB 没注入则链接失败
 
 ```bat
 set CMAKE=D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
@@ -180,6 +221,13 @@ cmake --build .
 ① add(3, 5) = 8
 ② avg({15.50, 15.80, 16.10, 16.40}) = 15.95
 ③ split_symbol("600519.SH") = {"600519", "SH"}
+
+④ 指针 vs 引用:
+   指针: *p = 1600 后 close = 1600
+   引用: r = 1700 后 close = 1700
+   指针参数: update_close(&close, 1800) 后 close = 1800
+   引用参数: update_close_ref(close, 1900) 后 close = 1900
+   值传递参数: update_close_copy(close, 2000) 返回 2000，close 仍 = 1900
 
 ========== 编译环境正常 ==========
 ```

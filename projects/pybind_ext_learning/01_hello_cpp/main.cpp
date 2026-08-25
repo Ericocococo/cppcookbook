@@ -27,27 +27,30 @@ int add(int a, int b)
     return a + b;
 }
 
-/* const 的几种用法（本项目出现的全部 6 种）：
+/* const 在不同位置含义不同（本项目出现的全部 6 种）：
 
-   ① 参数前 const 引用 — 不拷贝、不修改传入的数据（最常用）
-      double avg(const std::vector<double>& v)
+   ┌────────────────────────────┬────────────────────────────┬──────────────────────────────────────────┐
+   │ 位置                       │ 含义                       │ 示例                                     │
+   ├────────────────────────────┼────────────────────────────┼──────────────────────────────────────────┤
+   │ ① 参数前 const 引用        │ 不拷贝、不修改传入的数据   │ avg(const vector<double>& v)              │
+   │ ② 成员函数末尾 const       │ 不修改对象的成员变量       │ code() const                             │
+   │ ③ for 循环 const auto&     │ 遍历时不修改元素、不拷贝   │ for (const auto& r : v)                  │
+   │ ④ const 局部变量           │ 变量值初始化后不可改       │ const int64_t rows = ...                  │
+   │ ⑤ lambda 参数              │ lambda 内部不修改参数      │ [](const X& a) { ... }                   │
+   │ ⑥ const + noexcept         │ 参数不改 + 对象不改        │ operator()(const K& k) const noexcept    │
+   └────────────────────────────┴────────────────────────────┴──────────────────────────────────────────┘
 
-   ② 函数末尾 const — 函数不修改对象的成员变量
-      std::string code() const
+   ② 成员函数末尾 const 只有成员函数能用，普通函数没有。
+   因为它的含义是"不修改 this 指向的对象"——普通函数没有 this。
+   普通函数想表达"不修改参数"，用 ① 参数前 const。
 
-   ③ for 循环 const auto& 遍历 — 不修改元素、不拷贝（遍历惯用法）
-      for (const auto& r : records)
+   ① 和 ② 的区别：
+     avg(const vector<double>& v)            ← ① 参数前：不修改传进来的 v
+     std::string code() const                ← ② 末尾：不修改对象自身的成员变量
+     两个可以同时出现：
+     operator()(const Key& k) const          ← 参数 k 不改（①），对象也不改（②）
 
-   ④ const 局部变量 — 变量值不可改
-      const int64_t rows = table->num_rows();
-
-   ⑤ lambda 参数 — lambda 内部不修改捕获的参数
-      [](const X& a, const X& b) { return a.x < b.x; }
-
-   ⑥ const + noexcept — 哈希函数：参数不改 + 对象不改
-      size_t operator()(const Key& k) const noexcept
-        noexcept = 承诺绝不抛异常，编译器可放心优化；违背承诺程序直接终止
-*/
+   noexcept = 承诺绝不抛异常，编译器可放心优化；违背承诺程序直接终止 */
 // vector<double>：动态数组里存 double 类型
 //   vector           = 可变长度的数组
 //   <double>         = 模板参数，告诉 vector 里面装什么类型
@@ -62,6 +65,24 @@ int add(int a, int b)
 //     prices.empty();                  // 是否为空 → false
 //
 // const & = 只读引用，避免拷贝整个数组
+
+// 引用（T&）vs 指针（T*）：
+//   T& → 引用，给原变量起别名，直接用（函数参数最常用，调用时不加 & *）
+//   T* → 指针，存原变量的地址，用 -> 或 * 访问
+// ┌──────────┬──────────────────────────┬──────────────────────────┐
+// │          │ 引用 &                    │ 指针 *                   │
+// ├──────────┼──────────────────────────┼──────────────────────────┤
+// │ 是什么    │ 别名，就是原变量            │ 存地址，不是变量本身          │
+// │ 怎么访问  │ 直接写名字                 │ this->m_code（-> 通过指针访问）│
+// │ 能否为空  │ 不能，必须绑定一个变量        │ 可以是 nullptr             │
+// │ 能否换绑  │ 不能                      │ 可以，重新指向别的变量        │
+// └──────────┴──────────────────────────┴──────────────────────────┘
+// & 和 * 各自都有两个作用，看位置区分：
+//   类型后面 &（double& r）→ 引用；变量前面 &（&close）→ 取地址
+//   类型后面 *（double* p）→ 指针；变量前面 *（*p）→ 解引用
+// 取地址 & 产生指针；引用 & 内部就是个指针，只是编译器隐藏了 * 和 & 细节
+// 为什么函数参数用 & 不用 *：调用直接传变量，函数内直接用，省事
+// 为什么 this 是指针：C++ 语法规定 this 就是指针，编译器内部机制，改不了
 double avg(const std::vector<double>& v)
 {
     if (v.empty()) return 0.0;
@@ -80,6 +101,29 @@ double avg(const std::vector<double>& v)
         sum += x;
     }
     return sum / v.size();
+}
+
+// 指针参数：函数内通过 *p 修改调用方的变量
+//   调用时必须传地址：update_close(&close, 1600.0)，& 是取地址符
+void update_close(double* p, double v)
+{
+    *p = v;
+}
+
+// 引用参数：r 是调用方变量的别名，直接修改
+//   调用直接传变量：update_close_ref(close, 1600.0)，不用 & 也不用 *
+void update_close_ref(double& r, double v)
+{
+    r = v;
+}
+
+// 值传递参数：r 是副本，函数内修改不影响调用方
+//   想拿回修改结果必须靠返回值：double after = update_close_copy(close, 2000.0)
+//   对比：引用/指针能改到调用方，值传递改不到
+double update_close_copy(double r, double v)
+{
+    r = v;
+    return r;
 }
 
 // pair<A, B>：打包两个值的容器
@@ -139,6 +183,26 @@ int main()
        market = result.second; */
     auto [code, market] = split_symbol("600519.SH");
     std::cout << "③ split_symbol(\"600519.SH\") = {\"" << code << "\", \"" << market << "\"}\n";
+
+    // ④ 指针 vs 引用：
+    //   double* p = &close   → & 是取地址符，把 close 的地址存进 p
+    //   *p = 1600.0          → * 是解引用，通过 p 找到 close 并修改
+    //   引用（&）是别名直接用；指针（*）存地址，要 * 或 -> 才能访问
+    std::cout << "\n④ 指针 vs 引用:\n";
+    double close = 1500.0;
+    double* p = &close;
+    *p = 1600.0;
+    std::cout << "   指针: *p = 1600 后 close = " << close << "\n";
+    double& r = close;
+    r = 1700.0;
+    std::cout << "   引用: r = 1700 后 close = " << close << "\n";
+    update_close(&close, 1800.0);
+    std::cout << "   指针参数: update_close(&close, 1800) 后 close = " << close << "\n";
+    update_close_ref(close, 1900.0);
+    std::cout << "   引用参数: update_close_ref(close, 1900) 后 close = " << close << "\n";
+    double after = update_close_copy(close, 2000.0);
+    std::cout << "   值传递参数: update_close_copy(close, 2000) 返回 " << after
+              << "，close 仍 = " << close << "\n";
 
     std::cout << "\n========== 编译环境正常 ==========\n";
     return 0;

@@ -29,6 +29,7 @@ D:\ProgramData\anaconda3\envs\quant311\python test_parquet.py               # 3.
 ```
 
 > `build.py` 内部传入 vcpkg toolchain 路径，自动定位 MSVC + pybind11 + Python。
+> 内部通过 `vswhere` 自动检测 VS 版本，使用 **VS Generator（方案 B，多配置）**，构建时传 `--config Release`。
 
 ---
 

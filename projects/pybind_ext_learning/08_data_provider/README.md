@@ -33,6 +33,7 @@
 CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
 GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
 NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
 ```
 
 ### 方案 A：Ninja（推荐）
@@ -63,6 +64,62 @@ D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build b
 build-mingw-ninja\data_provider_ext.exe
 ```
 
+### 方案 B：MinGW Makefiles（无需 ninja.exe）
+
+```bash
+# 配置
+"$CMAKE" -B build-mingw-make -G "MinGW Makefiles" \
+  -DCMAKE_CXX_COMPILER="$GXX" \
+  -DCMAKE_MAKE_PROGRAM="$MAKE"
+
+# 构建
+"$CMAKE" --build build-mingw-make
+
+# 运行
+./build-mingw-make/data_provider_ext.exe
+```
+
+> cmd 三步版：
+
+```bat
+:: 配置
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-make -G "MinGW Makefiles" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+
+:: 构建
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-make
+
+:: 运行
+build-mingw-make\data_provider_ext.exe
+```
+
+### 方案 C：Ninja Multi-Config（多配置）
+
+```bash
+# 配置
+"$CMAKE" -B build-mingw-mc -G "Ninja Multi-Config" \
+  -DCMAKE_CXX_COMPILER="$GXX" \
+  -DCMAKE_MAKE_PROGRAM="$NINJA"
+
+# 构建（多配置须指定 --config）
+"$CMAKE" --build build-mingw-mc --config Debug
+
+# 运行
+./build-mingw-mc/Debug/data_provider_ext.exe
+```
+
+> cmd 三步版：
+
+```bat
+:: 配置
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-mc -G "Ninja Multi-Config" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+
+:: 构建
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-mc --config Debug
+
+:: 运行
+build-mingw-mc\Debug\data_provider_ext.exe
+```
+
 ---
 
 ## 3. 命令行 · MSVC（cmd）
@@ -75,12 +132,58 @@ set VCVARSALL=D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary
 
 :: 激活
 call "%VCVARSALL%" x64
+```
 
+#### 方案 A：vcvarsall + Ninja（推荐，单配置）
+
+```bat
 "%CMAKE%" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
 
 "%CMAKE%" --build build-msvc-ninja
 
 build-msvc-ninja\data_provider_ext.exe
+```
+
+> 四步版：
+
+```bat
+:: 激活
+call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+
+:: 配置
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+
+:: 构建
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-ninja
+
+:: 运行
+build-msvc-ninja\data_provider_ext.exe
+```
+
+#### 方案 B：Visual Studio 生成器（多配置）
+
+```bat
+"%CMAKE%" -B build-msvc-vs -G "Visual Studio 18 2026" -A x64
+
+"%CMAKE%" --build build-msvc-vs --config Release
+
+build-msvc-vs\Release\data_provider_ext.exe
+```
+
+> 四步版：
+
+```bat
+:: 激活
+call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+
+:: 配置
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-vs -G "Visual Studio 18 2026" -A x64
+
+:: 构建
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-vs --config Release
+
+:: 运行
+build-msvc-vs\Release\data_provider_ext.exe
 ```
 
 ### pybind11 Python 模块
@@ -90,7 +193,7 @@ D:\ProgramData\anaconda3\envs\quant311\python build.py --dest lib
 D:\ProgramData\anaconda3\envs\quant311\python test_bindings.py
 ```
 
-> `build.py` 内部自动定位 MSVC + pybind11 + Python，传入 `-DBUILD_PYBIND=ON` 配置编译。
+> `build.py` 内部通过 `vswhere` 自动检测 VS 版本，使用 **VS Generator（方案 B，多配置）**，传入 `-DBUILD_PYBIND=ON` 配置编译。
 
 ---
 

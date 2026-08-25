@@ -18,6 +18,9 @@
 #include <string>
 #include <vector>
 
+// 命名空间别名：给长名字起短名字，py:: 就是 pybind11::
+//   没有别名：pybind11::arg("v")、pybind11::init<>()
+//   有了别名：py::arg("v")、py::init<>()
 namespace py = pybind11;
 
 // ---- 多种基本类型 ----
