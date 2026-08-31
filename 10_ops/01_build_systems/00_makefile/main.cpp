@@ -6,7 +6,8 @@
 #include "math_utils.h"
 #include "logger.h"
 
-int main() {
+int main()
+{
     Logger log("main");
 
     log.info("程序启动");

@@ -8,18 +8,18 @@
 
 ## 与 Python Cookbook 的对应关系
 
-| Python Cookbook | C++ Cookbook | 说明 |
-|-----------------|--------------|------|
-| `01_language` | `01_language` | 语言本身，稳定 |
-| `02_algorithms` | `02_algorithms` | 算法与模式，稳定 |
-| `03_stdlib` | `03_stl` | 标准库（C++ 叫 STL） |
-| `04_libraries` | `04_libraries` | 通用三方库 |
-| `05_frameworks` | `05_frameworks` | 领域大型开源框架 |
-| `06_extending` | `06_extending` | 互操作与语言扩展（方向相反：Python 用 C++ 加速；C++ 嵌入脚本/导出绑定） |
-| `07_backend` | `07_systems` | 无限增长① 系统编程 |
-| `08_data` | `08_hpc` | 无限增长② 高性能计算 |
-| `09_ai` | `09_domain` | 无限增长③ 领域应用（最大） |
-| `10_ops` | `10_ops` | 无限增长④ 工程化（内容大不同：CMake/调试/分析） |
+| Python Cookbook | C++ Cookbook    | 说明                                           |
+|-----------------|-----------------|----------------------------------------------|
+| `01_language`   | `01_language`   | 语言本身，稳定                                      |
+| `02_algorithms` | `02_algorithms` | 算法与模式，稳定                                     |
+| `03_stdlib`     | `03_stl`        | 标准库（C++ 叫 STL）                               |
+| `04_libraries`  | `04_libraries`  | 通用三方库                                        |
+| `05_frameworks` | `05_frameworks` | 领域大型开源框架                                     |
+| `06_extending`  | `06_extending`  | 互操作与语言扩展（方向相反：Python 用 C++ 加速；C++ 嵌入脚本/导出绑定） |
+| `07_backend`    | `07_systems`    | 无限增长① 系统编程                                   |
+| `08_data`       | `08_hpc`        | 无限增长② 高性能计算                                  |
+| `09_ai`         | `09_domain`     | 无限增长③ 领域应用（最大）                               |
+| `10_ops`        | `10_ops`        | 无限增长④ 工程化（内容大不同：CMake/调试/分析）                 |
 
 ---
 
@@ -229,36 +229,37 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 
 ## 根级文件说明
 
-| 文件 | 作用 | 说明 |
-|------|------|------|
-| `README.md` | 总索引 | 每个系列一句话导航，新人从这里进 |
-| `STRUCTURE.md` | 目录设计文档 | 顶层分桶原则、完整目录树、扩展策略（本文件） |
-| `CONVENTIONS.md` | 项目规范 | 命名、注释、提交、代码风格约定 |
-| `CMakeLists.txt` | 仓库根标记 | 仅供 CLion 识别仓库根目录；各子目录是独立 CMake 工程，互不依赖 |
-| `Makefile` | 命令快捷表 | `make fmt` / `make lint`；只是命令运行器，不负责 C++ 构建 |
-| `.clang-format` | 统一格式规则 | 基于 Google 风格 + C++20 + 4 空格缩进，`make fmt` 全格式化 |
-| `.clang-tidy` | 静态分析规则 | modernize / bugprone / readability / performance 检查集 |
-| `.gitignore` | git 忽略 | `build/` / `.cache/` / `*.o` / `*.pdb` / 大二进制 |
+| 文件               | 作用     | 说明                                                   |
+|------------------|--------|------------------------------------------------------|
+| `README.md`      | 总索引    | 每个系列一句话导航，新人从这里进                                     |
+| `STRUCTURE.md`   | 目录设计文档 | 顶层分桶原则、完整目录树、扩展策略（本文件）                               |
+| `CONVENTIONS.md` | 项目规范   | 命名、注释、提交、代码风格约定                                      |
+| `CMakeLists.txt` | 仓库根标记  | 仅供 CLion 识别仓库根目录；各子目录是独立 CMake 工程，互不依赖               |
+| `Makefile`       | 命令快捷表  | `make fmt` / `make lint`；只是命令运行器，不负责 C++ 构建          |
+| `.clang-format`  | 统一格式规则 | 基于 Google 风格 + C++20 + 4 空格缩进，`make fmt` 全格式化        |
+| `.clang-tidy`    | 静态分析规则 | modernize / bugprone / readability / performance 检查集 |
+| `.gitignore`     | git 忽略 | `build/` / `.cache/` / `*.o` / `*.pdb` / 大二进制        |
 
-> **各子目录是独立工程**：每个知识点子目录含自己的 `CMakeLists.txt`，在 CLion 里单独打开/构建，互不依赖。根目录的 `CMakeLists.txt` 不负责任何构建，`Makefile` 只做格式化和 lint 的快捷入口。
+> **各子目录是独立工程**：每个知识点子目录含自己的 `CMakeLists.txt`，在 CLion 里单独打开/构建，互不依赖。根目录的
+`CMakeLists.txt` 不负责任何构建，`Makefile` 只做格式化和 lint 的快捷入口。
 
 ---
 
 ## 各大库速记
 
-| 库 | 属性 | 一句话 |
-|----|------|--------|
-| `01_language` | 稳定 | C++ 语法本身，basics→oop→templates→modern→memory→expert 递进 |
-| `02_algorithms` | 稳定 | ★数据结构/经典算法/设计模式（GoF in Modern C++）|
-| `03_stl` | 稳定 | 装机自带，查手册最多的角落 |
-| `04_libraries` | 缓慢增长 | vcpkg/conan 装完即用，跨领域工具库 |
+| 库               | 属性    | 一句话                                                       |
+|-----------------|-------|-----------------------------------------------------------|
+| `01_language`   | 稳定    | C++ 语法本身，basics→oop→templates→modern→memory→expert 递进     |
+| `02_algorithms` | 稳定    | ★数据结构/经典算法/设计模式（GoF in Modern C++）                        |
+| `03_stl`        | 稳定    | 装机自带，查手册最多的角落                                             |
+| `04_libraries`  | 缓慢增长  | vcpkg/conan 装完即用，跨领域工具库                                   |
 | `05_frameworks` | 按领域增长 | ★领域级完整系统（vnpy/ROS2/flecs…），学架构+使用+二次开发；通用 web 框架在 backend |
-| `06_extending` | 稳定 | C++ ↔ Python/Lua/Wasm/JNI 互操作，作为被调用方或调用方 |
-| `07_systems` | 无限增长 | 系统编程：网络/IPC/POSIX/嵌入式/高性能服务 |
-| `08_hpc` | 无限增长 | 高性能计算：SIMD/OpenMP/TBB/CUDA/数值/内存优化 |
-| `09_domain` | 无限增长 | 领域应用：游戏/图形/AI推理/音视频/量化/机器人 |
-| `10_ops` | 无限增长 | 工程化横切（纯工程活动）：CMake/调试/分析/包管理 |
-| `projects` | 按需增长 | 阶段性实战项目，综合运用多个知识点，每个项目独立编译 |
+| `06_extending`  | 稳定    | C++ ↔ Python/Lua/Wasm/JNI 互操作，作为被调用方或调用方                  |
+| `07_systems`    | 无限增长  | 系统编程：网络/IPC/POSIX/嵌入式/高性能服务                               |
+| `08_hpc`        | 无限增长  | 高性能计算：SIMD/OpenMP/TBB/CUDA/数值/内存优化                        |
+| `09_domain`     | 无限增长  | 领域应用：游戏/图形/AI推理/音视频/量化/机器人                                |
+| `10_ops`        | 无限增长  | 工程化横切（纯工程活动）：CMake/调试/分析/包管理                              |
+| `projects`      | 按需增长  | 阶段性实战项目，综合运用多个知识点，每个项目独立编译                                |
 
 ---
 
@@ -268,9 +269,12 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 2. **文件顶部注释写明 C++ 标准版本 + 依赖**——三方库 API 变动大（如 Asio standalone vs Boost.Asio）。
 3. **依赖统一写进 `vcpkg.json`**——换机 `vcpkg install` 全装。
 4. **所有层级目录统一带两位数字前缀 `01_ 02_ ...`**——顺序即导航；插入新目录就重排序号，幅度大就整体重组。
-5. **`04_libraries` 与 `10_ops` 分工**——"某个库怎么用"（含 cli/log/test 工具库）归 `04_libraries`；"纯工程活动/流程"（CMake 构建/CI/静态分析/交叉编译）归 `10_ops`，两边不重复。
-6. **`05_frameworks` 只放领域级完整系统**——通用 web 框架（drogon/crow）在 `07_systems/05_server`；序列化/CLI 等工具库在 `04_libraries`。
-7. **`projects/` 放阶段性实战项目**——综合运用多个知识点的独立小项目（如贪吃蛇、JSON 解析器、mini HTTP 服务器），每个项目自含 `CMakeLists.txt`，不带数字前缀。
+5. **`04_libraries` 与 `10_ops` 分工**——"某个库怎么用"（含 cli/log/test 工具库）归 `04_libraries`；"纯工程活动/流程"（CMake
+   构建/CI/静态分析/交叉编译）归 `10_ops`，两边不重复。
+6. **`05_frameworks` 只放领域级完整系统**——通用 web 框架（drogon/crow）在 `07_systems/05_server`；序列化/CLI 等工具库在
+   `04_libraries`。
+7. **`projects/` 放阶段性实战项目**——综合运用多个知识点的独立小项目（如贪吃蛇、JSON 解析器、mini HTTP 服务器），每个项目自含
+   `CMakeLists.txt`，不带数字前缀。
 
 ---
 

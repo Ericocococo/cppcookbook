@@ -6,7 +6,8 @@
 #include <iostream>
 #include <vector>
 
-int main() {
+int main()
+{
     std::cout << "预设构建演示\n";
 
     // ASan 会在堆越界时报错

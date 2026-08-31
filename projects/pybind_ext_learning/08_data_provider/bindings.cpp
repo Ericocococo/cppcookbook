@@ -15,8 +15,7 @@
 namespace py = pybind11;
 
 // 聚合类: 模拟框架中的 CDataProvider，持有各 Mgr 并暴露统一接口
-class DataProvider
-{
+class DataProvider {
     CFHSGMgr m_fhsg;
     CUpDownLimitMgr m_up_down_limit;
     CPlateMgr m_plate;
@@ -24,36 +23,33 @@ class DataProvider
 public:
     // ---- Load ----
 
-    void load_fhsg(const std::string& symbol, const std::vector<FHSGRecord>& records)
-    {
+    void load_fhsg(const std::string& symbol, const std::vector<FHSGRecord>& records) {
         m_fhsg.Load(symbol, records);
     }
 
-    void load_up_down_limit(const std::string& symbol, const std::vector<UpDownLimitRecord>& records)
-    {
+    void load_up_down_limit(const std::string& symbol, const std::vector<UpDownLimitRecord>& records) {
         m_up_down_limit.Load(symbol, records);
     }
 
-    void load_plate_component(const std::string& name, const std::vector<std::string>& symbols)
-    {
+    void load_plate_component(const std::string& name, const std::vector<std::string>& symbols) {
         m_plate.LoadPlateComponent(name, symbols);
     }
 
-    void load_stock_concept(const std::string& name, const std::vector<std::string>& symbols)
-    {
+    void load_stock_concept(const std::string& name, const std::vector<std::string>& symbols) {
         m_plate.LoadStockConcept(name, symbols);
     }
 
     // ---- Query ----
 
     // 返回 dict of lists，Python 侧直接 pd.DataFrame(result)
-    py::dict get_divid_factors(const std::string& symbol,
-                               int64_t start_ns, int64_t end_ns, int64_t cur_ns) const
-    {
+    py::dict get_divid_factors(
+        const std::string& symbol,
+        int64_t start_ns,
+        int64_t end_ns,
+        int64_t cur_ns) const {
         auto records = m_fhsg.Query(symbol, start_ns, end_ns, cur_ns);
         py::list ex_dates, bonuses, trans_adds, cash_divis;
-        for (const auto& r : records)
-        {
+        for (const auto& r : records) {
             ex_dates.append(r.ex_divi_date_ns);
             bonuses.append(r.bonus);
             trans_adds.append(r.trans_add);
@@ -67,8 +63,7 @@ public:
         return result;
     }
 
-    py::dict get_up_down_limit(const std::string& symbol, int64_t cur_ns) const
-    {
+    py::dict get_up_down_limit(const std::string& symbol, int64_t cur_ns) const {
         auto r = m_up_down_limit.QueryLatest(symbol, cur_ns);
         py::dict result;
         result["up_price"] = r.up_price;
@@ -76,31 +71,30 @@ public:
         return result;
     }
 
-    std::vector<std::string> get_sector_list() const
-    {
+    std::vector<std::string> get_sector_list() const {
         return m_plate.GetSectorList();
     }
 
-    std::vector<std::string> get_stock_list_in_sector(const std::string& sector) const
-    {
+    std::vector<std::string> get_stock_list_in_sector(const std::string& sector) const {
         return m_plate.GetStockListInSector(sector);
     }
 
-    std::unordered_map<std::string, bool> get_instrument_type(const std::string& symbol) const
-    {
+    std::unordered_map<std::string, bool> get_instrument_type(const std::string& symbol) const {
         return ClassifyInstrumentType(symbol);
     }
 };
 
-PYBIND11_MODULE(data_provider_ext, m)
-{
+PYBIND11_MODULE(data_provider_ext, m) {
     m.doc() = "扩展数据提供者 — C++ 数据管理器的 Python 绑定";
 
     // FHSGRecord: Python 侧可构造并传入
     py::class_<FHSGRecord>(m, "FHSGRecord")
-        .def(py::init<int64_t, double, double, double>(),
-             py::arg("ex_divi_date_ns"), py::arg("bonus"),
-             py::arg("trans_add"), py::arg("cash_divi"))
+        .def(
+            py::init<int64_t, double, double, double>(),
+            py::arg("ex_divi_date_ns"),
+            py::arg("bonus"),
+            py::arg("trans_add"),
+            py::arg("cash_divi"))
         .def_readwrite("ex_divi_date_ns", &FHSGRecord::ex_divi_date_ns)
         .def_readwrite("bonus", &FHSGRecord::bonus)
         .def_readwrite("trans_add", &FHSGRecord::trans_add)
@@ -108,8 +102,11 @@ PYBIND11_MODULE(data_provider_ext, m)
 
     // UpDownLimitRecord
     py::class_<UpDownLimitRecord>(m, "UpDownLimitRecord")
-        .def(py::init<int64_t, double, double>(),
-             py::arg("datetime_ns"), py::arg("up_price"), py::arg("down_price"))
+        .def(
+            py::init<int64_t, double, double>(),
+            py::arg("datetime_ns"),
+            py::arg("up_price"),
+            py::arg("down_price"))
         .def_readwrite("datetime_ns", &UpDownLimitRecord::datetime_ns)
         .def_readwrite("up_price", &UpDownLimitRecord::up_price)
         .def_readwrite("down_price", &UpDownLimitRecord::down_price);
@@ -118,22 +115,46 @@ PYBIND11_MODULE(data_provider_ext, m)
     py::class_<DataProvider>(m, "DataProvider")
         .def(py::init<>())
         // Load
-        .def("load_fhsg", &DataProvider::load_fhsg,
-             py::arg("symbol"), py::arg("records"))
-        .def("load_up_down_limit", &DataProvider::load_up_down_limit,
-             py::arg("symbol"), py::arg("records"))
-        .def("load_plate_component", &DataProvider::load_plate_component,
-             py::arg("name"), py::arg("symbols"))
-        .def("load_stock_concept", &DataProvider::load_stock_concept,
-             py::arg("name"), py::arg("symbols"))
+        .def(
+            "load_fhsg",
+            &DataProvider::load_fhsg,
+            py::arg("symbol"),
+            py::arg("records"))
+        .def(
+            "load_up_down_limit",
+            &DataProvider::load_up_down_limit,
+            py::arg("symbol"),
+            py::arg("records"))
+        .def(
+            "load_plate_component",
+            &DataProvider::load_plate_component,
+            py::arg("name"),
+            py::arg("symbols"))
+        .def(
+            "load_stock_concept",
+            &DataProvider::load_stock_concept,
+            py::arg("name"),
+            py::arg("symbols"))
         // Query
-        .def("get_divid_factors", &DataProvider::get_divid_factors,
-             py::arg("symbol"), py::arg("start_ns"), py::arg("end_ns"), py::arg("cur_ns"))
-        .def("get_up_down_limit", &DataProvider::get_up_down_limit,
-             py::arg("symbol"), py::arg("cur_ns"))
+        .def(
+            "get_divid_factors",
+            &DataProvider::get_divid_factors,
+            py::arg("symbol"),
+            py::arg("start_ns"),
+            py::arg("end_ns"),
+            py::arg("cur_ns"))
+        .def(
+            "get_up_down_limit",
+            &DataProvider::get_up_down_limit,
+            py::arg("symbol"),
+            py::arg("cur_ns"))
         .def("get_sector_list", &DataProvider::get_sector_list)
-        .def("get_stock_list_in_sector", &DataProvider::get_stock_list_in_sector,
-             py::arg("sector"))
-        .def("get_instrument_type", &DataProvider::get_instrument_type,
-             py::arg("symbol"));
+        .def(
+            "get_stock_list_in_sector",
+            &DataProvider::get_stock_list_in_sector,
+            py::arg("sector"))
+        .def(
+            "get_instrument_type",
+            &DataProvider::get_instrument_type,
+            py::arg("symbol"));
 }

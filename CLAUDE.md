@@ -6,7 +6,8 @@
 
 ## README 格式
 
-- 每个含 .cpp 的目录的 README.md 必须包含 `## 2. 命令行 · MinGW（Git Bash）` 和 `## 3. 命令行 · MSVC（cmd）` 和 `## 4. 命令行 · Linux / WSL` 章节。
+- 每个含 .cpp 的目录的 README.md 必须包含 `## 2. 命令行 · MinGW（Git Bash）` 和 `## 3. 命令行 · MSVC（cmd）` 和
+  `## 4. 命令行 · Linux / WSL` 章节。
 - MSVC 包含方案 A（vcvarsall + Ninja）和方案 B（VS Generator），每个方案附自己的四步版，紧跟各自方案不堆在末尾。
 - MinGW 包含方案 A（Ninja）、方案 B（MinGW Makefiles）、方案 C（Ninja Multi-Config），每个附 cmd 三步版。
 - 所有内联版全部用绝对路径，无变量依赖，可直接复制粘贴。
@@ -24,6 +25,10 @@
 - 每个知识点在自己的位置独立解释，保证跳过前面章节也能读懂。
 - 不同知识点的注释之间用空行隔开，不要挤成一大块连续注释。
 
+## 代码示例
+
+- 写示例代码时，把常用写法加上，不只演示最基本的用法。
+
 ## 代码可读性
 
 - for 循环体必须加花括号，即使只有一行。
@@ -40,3 +45,4 @@
 - 格式：`<type>(<scope>): <subject>`，body 空一行跟在后面。
 - 只输出提交说明文本，不要执行 `git commit`，由用户手动提交。
 - 不加 `Co-Authored-By` 或任何署名行。
+- 提交说明只描述当前这次要提交的内容，不要把之前已提交的变更重复写进来。

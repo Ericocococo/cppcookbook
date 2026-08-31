@@ -4,18 +4,19 @@
 
 ## 1. 文件
 
-| 文件 | 说明 |
-|:---|:---|
-| `basic.cpp` | 绑定源文件：3 个普通函数 + 1 个类（含属性/方法） |
+| 文件               | 说明                                   |
+|:-----------------|:-------------------------------------|
+| `basic.cpp`      | 绑定源文件：3 个普通函数 + 1 个类（含属性/方法）         |
 | `CMakeLists.txt` | pybind11 标准工程（`pybind11_add_module`） |
-| `build.py` | 一键编译脚本（`--dest lib` 拷贝 .pyd 到指定目录） |
-| `test_basic.py` | 验证脚本：函数 / 类 / 属性 / STL 容器转换 |
+| `build.py`       | 一键编译脚本（`--dest lib` 拷贝 .pyd 到指定目录）   |
+| `test_basic.py`  | 验证脚本：函数 / 类 / 属性 / STL 容器转换          |
 
 ---
 
 ## 2. 命令行 · MinGW（Git Bash）
 
-> pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux 构建见 § 4。
+> pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux
+> 构建见 § 4。
 
 ---
 
@@ -54,13 +55,13 @@ D:\ProgramData\anaconda3\envs\quant311\python test_basic.py
 
 ## 6. 本步要点
 
-| 绑定 | C++ 侧 | Python 侧 |
-|:---|:---|:---|
-| 普通函数 | `m.def("add", &add)` | `bb.add(3, 5)` |
-| 带默认参数名 | `py::arg("a"), py::arg("b")` | `bb.add(b=5, a=3)` 可关键字传参 |
-| STL 容器 | `#include <pybind11/stl.h>` | `list` ↔ `vector`，`dict` ↔ `map` 自动转换 |
-| 类 | `py::class_<Stock>(m, "Stock")` | `s = bb.Stock(...)` |
-| 只读属性 | `def_property_readonly("close", ...)` | `s.close`（不是方法，不能加括号） |
+| 绑定     | C++ 侧                                 | Python 侧                              |
+|:-------|:--------------------------------------|:--------------------------------------|
+| 普通函数   | `m.def("add", &add)`                  | `bb.add(3, 5)`                        |
+| 带默认参数名 | `py::arg("a"), py::arg("b")`          | `bb.add(b=5, a=3)` 可关键字传参             |
+| STL 容器 | `#include <pybind11/stl.h>`           | `list` ↔ `vector`，`dict` ↔ `map` 自动转换 |
+| 类      | `py::class_<Stock>(m, "Stock")`       | `s = bb.Stock(...)`                   |
+| 只读属性   | `def_property_readonly("close", ...)` | `s.close`（不是方法，不能加括号）                 |
 
 ---
 

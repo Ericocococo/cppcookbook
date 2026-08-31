@@ -4,7 +4,8 @@
 
 #include <iostream>
 
-int main() {
+int main()
+{
     std::cout << "BUILD_TYPE = " << BUILD_TYPE << "\n";
 
 #ifdef MY_DEBUG

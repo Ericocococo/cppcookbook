@@ -11,7 +11,8 @@
 // int main()：程序从这里开始执行，有且只有一个
 // int：表示 main 向操作系统返回一个整数
 // return 0：表示"程序正常结束"；非零表示出错
-void demo01_structure() {
+void demo01_structure()
+{
     std::cout << "\n① 程序结构\n";
     std::cout << "  #include <iostream>  → 引入输入输出工具箱\n";
     std::cout << "  int main()           → 程序入口，有且只有一个\n";
@@ -21,7 +22,8 @@ void demo01_structure() {
 }
 
 // ② 注释：给人看的说明，编译器完全忽略
-void demo02_comments() {
+void demo02_comments()
+{
     std::cout << "\n② 注释\n";
 
     // 单行注释：// 到行尾
@@ -39,50 +41,52 @@ void demo02_comments() {
 }
 
 // ③ 变量：存储数据的命名空间
-void demo03_variables() {
+void demo03_variables()
+{
     std::cout << "\n③ 变量（类型 变量名 = 初始值;）\n";
 
     // 声明变量：类型 变量名 = 初始值
-    int    age    = 18;
+    int age = 18;
     double height = 1.75;
-    bool   passed = true;
-    char   grade  = 'A';          // 单个字符用单引号
-    std::string name = "小白";    // 字符串用双引号
+    bool passed = true;
+    char grade = 'A'; // 单个字符用单引号
+    std::string name = "小白"; // 字符串用双引号
 
-    std::cout << "  int    age    = " << age    << "\n";
+    std::cout << "  int    age    = " << age << "\n";
     std::cout << "  double height = " << height << "\n";
     std::cout << "  bool   passed = " << passed << "（1=true）\n";
-    std::cout << "  char   grade  = " << grade  << "\n";
-    std::cout << "  string name   = " << name   << "\n";
+    std::cout << "  char   grade  = " << grade << "\n";
+    std::cout << "  string name   = " << name << "\n";
 
     // 未初始化的局部变量：值是随机的！不要用
     // int bad;
     // std::cout << bad;  // 危险：打印随机垃圾值
 
     // 变量名规则：字母/数字/下划线，不能以数字开头，区分大小写
-    int count1 = 1;   // 合法
-    int Count1 = 2;   // 合法（和 count1 是不同变量！大小写不同）
+    int count1 = 1; // 合法
+    int Count1 = 2; // 合法（和 count1 是不同变量！大小写不同）
     // int 1count = 3;  // 非法：不能以数字开头
     std::cout << "  count1=" << count1 << "  Count1=" << Count1
-              << "（不同变量，大小写敏感）\n";
+        << "（不同变量，大小写敏感）\n";
 }
 
 // ④ cout：向终端打印
-void demo04_cout() {
+void demo04_cout()
+{
     std::cout << "\n④ cout 打印\n";
 
     // std::cout：标准输出流
     // std:: = "去标准库里找"；cout = console output（控制台输出）
     // << = 流插入运算符，把右边内容送进输出流
 
-    std::cout << "  文字字符串\n";              // 打印文字
-    std::cout << "  数字: " << 42 << "\n";     // 打印数字
-    std::cout << "  混合: " << "age=" << 18 << "\n";  // 链式
+    std::cout << "  文字字符串\n"; // 打印文字
+    std::cout << "  数字: " << 42 << "\n"; // 打印数字
+    std::cout << "  混合: " << "age=" << 18 << "\n"; // 链式
 
     // 换行方式
-    std::cout << "  行1\n";          // \n：换行符（推荐，快）
-    std::cout << "  行2" << "\n";    // 同上
-    std::cout << "  行3" << std::endl;  // std::endl：换行+刷新缓冲区（慢一点）
+    std::cout << "  行1\n"; // \n：换行符（推荐，快）
+    std::cout << "  行2" << "\n"; // 同上
+    std::cout << "  行3" << std::endl; // std::endl：换行+刷新缓冲区（慢一点）
 
     // 打印特殊字符
     std::cout << "  转义字符：\n";
@@ -98,7 +102,8 @@ void demo04_cout() {
 }
 
 // ⑤ 作用域：变量的"有效范围"
-void demo05_scope() {
+void demo05_scope()
+{
     std::cout << "\n⑤ 作用域\n";
 
     int outer = 10;
@@ -111,7 +116,7 @@ void demo05_scope() {
         std::cout << "  内层也能访问外层 outer=" << outer << "\n";
 
         // 内层可以重新声明同名变量（屏蔽外层）
-        int outer = 999;   // 这个是新的 outer，屏蔽外层的
+        int outer = 999; // 这个是新的 outer，屏蔽外层的
         std::cout << "  内层重声明 outer=" << outer << "（屏蔽外层）\n";
     }
     // 这里 inner 不存在，outer 恢复为外层的值
@@ -120,7 +125,8 @@ void demo05_scope() {
 }
 
 // ⑥ 基本输入（cin）
-void demo06_cin() {
+void demo06_cin()
+{
     std::cout << "\n⑥ cin（从键盘读输入）\n";
 
     // >> 运算符：读单个整数，遇空白停止
@@ -145,7 +151,8 @@ void demo06_cin() {
     std::cout << "  你输入了: \"" << line << "\"\n";
 }
 
-int main() {
+int main()
+{
     std::cout << "=== 00_hello_world: 程序结构 ===";
     demo01_structure();
     demo02_comments();

@@ -4,19 +4,20 @@
 
 ## 1. 文件
 
-| 文件 | 说明 |
-|:---|:---|
-| `fhsg_mgr.h` | CFHSGMgr 声明 + FHSGRecord 结构体 |
-| `fhsg_mgr.cpp` | Load（存入 map）+ Query（按 symbol 查）|
-| `bindings.cpp` | pybind11 绑定 |
-| `build.py` | 编译脚本 |
-| `test_fhsg.py` | 验证脚本 |
+| 文件             | 说明                              |
+|:---------------|:--------------------------------|
+| `fhsg_mgr.h`   | CFHSGMgr 声明 + FHSGRecord 结构体    |
+| `fhsg_mgr.cpp` | Load（存入 map）+ Query（按 symbol 查） |
+| `bindings.cpp` | pybind11 绑定                     |
+| `build.py`     | 编译脚本                            |
+| `test_fhsg.py` | 验证脚本                            |
 
 ---
 
 ## 2. 命令行 · MinGW（Git Bash）
 
-> pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux 构建见 § 4。
+> pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux
+> 构建见 § 4。
 
 ---
 
@@ -68,21 +69,21 @@ Load(records)                   Query("600519.SH")
 
 ## 7. 本步新学了什么
 
-| 上一步（06） | 本步新增 |
-|:---|:---|
-| 绑定现有的类 | **设计并实现一个数据管理器**（Load + Query + map 存储） |
-| 一个类 | 两个类（FHSGRecord 结构体 + CFHSGMgr 管理器） |
-| 无 | `def_readwrite` 直接暴露成员变量（FHSGRecord 的字段） |
-| 无 | `py::init<>()` 无参构造函数 |
+| 上一步（06） | 本步新增                                     |
+|:--------|:-----------------------------------------|
+| 绑定现有的类  | **设计并实现一个数据管理器**（Load + Query + map 存储）  |
+| 一个类     | 两个类（FHSGRecord 结构体 + CFHSGMgr 管理器）       |
+| 无       | `def_readwrite` 直接暴露成员变量（FHSGRecord 的字段） |
+| 无       | `py::init<>()` 无参构造函数                    |
 
 ---
 
 ## 8. 和下一步的区别
 
-| 本步 | 下一步（08_data_provider） |
-|:---|:---|
-| 1 个 Mgr | 多个 Mgr（FHSG + 涨跌停 + 板块 + 分类） |
+| 本步                      | 下一步（08_data_provider）             |
+|:------------------------|:----------------------------------|
+| 1 个 Mgr                 | 多个 Mgr（FHSG + 涨跌停 + 板块 + 分类）      |
 | `std::string` 做 map key | `SymbolKey`（定长 16 字节 array，避免堆分配） |
-| 线性扫描 | `upper_bound` 二分查找 |
-| 无时间过滤 | `cur_ns` 防未来函数 |
-| 只有 pybind 模块 | 纯 C++ exe + pybind 双构建 |
+| 线性扫描                    | `upper_bound` 二分查找                |
+| 无时间过滤                   | `cur_ns` 防未来函数                    |
+| 只有 pybind 模块            | 纯 C++ exe + pybind 双构建            |

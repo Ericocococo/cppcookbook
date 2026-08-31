@@ -9,12 +9,12 @@
 
 专业名词、英文缩写必须解释，让读者不查文档也能读懂。解释方式按场景选一种：
 
-| 场景 | 写法 | 示例 |
-|------|------|------|
-| 一句话能说清 | 行内注释 | `// RAII：资源获取即初始化` |
-| 需要多句说明 | `.cpp` 文件顶部注释块 | 见下方模板 |
+| 场景       | 写法                               | 示例                                               |
+|----------|----------------------------------|--------------------------------------------------|
+| 一句话能说清   | 行内注释                             | `// RAII：资源获取即初始化`                               |
+| 需要多句说明   | `.cpp` 文件顶部注释块                   | 见下方模板                                            |
 | 目录/库的术语表 | 该目录的 `README.md` 末尾 `## 术语速查` 表格 | 见 [01_language/README.md](01_language/README.md) |
-| 全局通用缩写 | 本约定末尾 `## 全局术语表` | 见下方 |
+| 全局通用缩写   | 本约定末尾 `## 全局术语表`                 | 见下方                                              |
 
 **`.cpp` 文件顶部注释模板：**
 
@@ -27,7 +27,8 @@
 
 ### 代码中英文词汇的注释规则
 
-面向小白读者，代码里出现的**英文关键字、标准库名称、API 名**，凡是名字本身不能自解释的，必须在行内注释中加中文说明。判断标准：初学者看到这个英文名，能否在 3 秒内猜出它的作用？不能就加注释。
+面向小白读者，代码里出现的**英文关键字、标准库名称、API 名**，凡是名字本身不能自解释的，必须在行内注释中加中文说明。判断标准：初学者看到这个英文名，能否在
+3 秒内猜出它的作用？不能就加注释。
 
 **需要注释的典型场景：**
 
@@ -78,12 +79,12 @@ std::cout << x;    // 不需要：cout = 输出流
    以 `01_language/04_modern/01_move_semantics/` 为范例。
 6. **每个含 `.cpp` 的目录（含叶子目录）都必须有 `README.md`**，中间层目录不加 —
    上级目录的 `README.md` 列出子目录一行摘要；叶子目录的 `README.md` 包含以下五个带序号的 `##` 章节：
-   - **`## 1. 文件`**：列出 `main.cpp` / `CMakeLists.txt` 及各文件用途
-   - **`## 2. 命令行 · MinGW（Git Bash）`**：变量块 + 方案A bash变量版 + cmd内联三步版
-   - **`## 3. 命令行 · MSVC（cmd）`**：方案A 变量版 + 四步版内联
-   - **`## 4. CLion IDE`**：File→Open→加载→Ctrl+F9/Shift+F10
-   - **`## 5. 英文及缩写说明`**：本文件代码中出现的所有英文关键字、API 名、缩写，逐条列表解释
-   - 构建命令格式以 [`10_ops/01_build_systems/01_hello/README.md`](10_ops/01_build_systems/01_hello/README.md) 为标准模板
+    - **`## 1. 文件`**：列出 `main.cpp` / `CMakeLists.txt` 及各文件用途
+    - **`## 2. 命令行 · MinGW（Git Bash）`**：变量块 + 方案A bash变量版 + cmd内联三步版
+    - **`## 3. 命令行 · MSVC（cmd）`**：方案A 变量版 + 四步版内联
+    - **`## 4. CLion IDE`**：File→Open→加载→Ctrl+F9/Shift+F10
+    - **`## 5. 英文及缩写说明`**：本文件代码中出现的所有英文关键字、API 名、缩写，逐条列表解释
+    - 构建命令格式以 [`10_ops/01_build_systems/01_hello/README.md`](10_ops/01_build_systems/01_hello/README.md) 为标准模板
 7. **英文缩写、缩写、非一般词必须解释** — 包括英文缩写（`RAII`/`CRTP`/`TMP`/`SFINAE`/`UB`/`ABI`），
    中文缩写、框架内术语（`ECS`/`DDS`）等，让读者不查文档也能读懂。
    解释位置：短的一句话放行内注释，较长放 `README.md` 里。
@@ -154,19 +155,20 @@ call "%VCVARSALL%" x64
 
 ### README 部署命令标准格式
 
-所有含构建步骤的 README 必须按以下结构写，参考完整范例：[`10_ops/01_build_systems/01_hello/README.md`](10_ops/01_build_systems/01_hello/README.md)。
+所有含构建步骤的 README 必须按以下结构写，参考完整范例：[
+`10_ops/01_build_systems/01_hello/README.md`](10_ops/01_build_systems/01_hello/README.md)。
 
 **路径常量（直接复制，不要改）：**
 
-| 变量 | 路径 |
-|------|------|
-| `CMAKE`（MinGW 段用）| `D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe` |
-| `GXX` | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe` |
-| `NINJA` | `D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe` |
-| `MAKE` | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe` |
-| `CMAKE`（MSVC 段用）| `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` |
-| `VCVARSALL` | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat` |
-| MSVC Ninja | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe` |
+| 变量                | 路径                                                                                                                       |
+|-------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `CMAKE`（MinGW 段用） | `D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe`                                                 |
+| `GXX`             | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe`                                                           |
+| `NINJA`           | `D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe`                                                     |
+| `MAKE`            | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe`                                                  |
+| `CMAKE`（MSVC 段用）  | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` |
+| `VCVARSALL`       | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat`                                 |
+| MSVC Ninja        | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe`     |
 
 #### MinGW 段模板（`## 2. 命令行 · MinGW（Git Bash）`）
 
@@ -343,22 +345,22 @@ build-msvc-ninja\<exe名>.exe
 
 #### 生成器对比
 
-| | MinGW 方案 A<br>Ninja | MinGW 方案 B<br>MinGW Makefiles | MinGW 方案 C<br>Ninja Multi-Config |
-|---|---|---|---|
-| build 目录 | `build-mingw-ninja` | `build-mingw-make` | `build-mingw-mc` |
-| 构建工具 | ninja.exe | mingw32-make.exe | ninja.exe |
-| 配置数 | 单配置 | 单配置 | 多配置（Debug/Release 共目录） |
-| 速度 | 最快 | 慢 | 快 |
-| 适用场景 | 日常首选 | 没有 ninja.exe 时备选 | 需频繁切换 Debug/Release |
+|          | MinGW 方案 A<br>Ninja | MinGW 方案 B<br>MinGW Makefiles | MinGW 方案 C<br>Ninja Multi-Config |
+|----------|---------------------|-------------------------------|----------------------------------|
+| build 目录 | `build-mingw-ninja` | `build-mingw-make`            | `build-mingw-mc`                 |
+| 构建工具     | ninja.exe           | mingw32-make.exe              | ninja.exe                        |
+| 配置数      | 单配置                 | 单配置                           | 多配置（Debug/Release 共目录）           |
+| 速度       | 最快                  | 慢                             | 快                                |
+| 适用场景     | 日常首选                | 没有 ninja.exe 时备选              | 需频繁切换 Debug/Release              |
 
-| | MSVC 方案 A<br>vcvarsall + Ninja | MSVC 方案 B<br>VS Generator | MSVC 方案 C<br>Native Tools + Ninja |
-|---|---|---|---|
-| build 目录 | `build-msvc-ninja` | `build-msvc-vs` | `build-msvc-ninja` |
-| 需要激活 | 是（call vcvarsall） | 否（CMake 自动检测） | 否（窗口已激活） |
-| 构建工具 | ninja.exe | msbuild.exe | ninja.exe |
-| 配置数 | 单配置（构建不用 `--config`） | 多配置（构建必须 `--config`） | 单配置 |
-| exe 路径 | `build-msvc-ninja\` | `build-msvc-vs\Debug\` | `build-msvc-ninja\` |
-| 适用场景 | 脚本/自动化首选 | 不手动激活时用 | 交互式操作 |
+|          | MSVC 方案 A<br>vcvarsall + Ninja | MSVC 方案 B<br>VS Generator | MSVC 方案 C<br>Native Tools + Ninja |
+|----------|--------------------------------|---------------------------|-----------------------------------|
+| build 目录 | `build-msvc-ninja`             | `build-msvc-vs`           | `build-msvc-ninja`                |
+| 需要激活     | 是（call vcvarsall）              | 否（CMake 自动检测）             | 否（窗口已激活）                          |
+| 构建工具     | ninja.exe                      | msbuild.exe               | ninja.exe                         |
+| 配置数      | 单配置（构建不用 `--config`）           | 多配置（构建必须 `--config`）      | 单配置                               |
+| exe 路径   | `build-msvc-ninja\`            | `build-msvc-vs\Debug\`    | `build-msvc-ninja\`               |
+| 适用场景     | 脚本/自动化首选                       | 不手动激活时用                   | 交互式操作                             |
 
 #### Linux / WSL 段模板（`## 4. 命令行 · Linux / WSL`）
 
@@ -451,7 +453,8 @@ cmake --build .
     - **一行一条语句**，不把多条逻辑压在同一行
 20. **`auto` 使用规则** —
     - 简单类型**显式写**：`size_t dot = symbol.find('.')`，不用 `auto`
-    - 右侧类型很长且函数名已暗示类型时**用 auto**：`auto it = m_data.find(key)`（迭代器）、`auto table = ReadParquetTable(...)`（智能指针/Arrow）
+    - 右侧类型很长且函数名已暗示类型时**用 auto**：`auto it = m_data.find(key)`（迭代器）、
+      `auto table = ReadParquetTable(...)`（智能指针/Arrow）
     - 结构化绑定必须 `auto`：`auto [code, market] = split_symbol(...)`
     - 原则：读者能一眼看出类型就无所谓，看不出来就显式写
 
@@ -471,28 +474,30 @@ cmake --build .
 ```
 
 **subject（首行）**
+
 - 格式：`<type>(<scope>): <描述>`
 - scope 可选，填改动所在目录名去掉数字前缀，如 `ops`、`stl`、`language`
 - 描述用中文，动词开头，不加句号，不超过 72 字
 
 **body（正文）**
+
 - 可选，与 subject 空一行隔开
 - 说清楚"为什么"，不复述"改了什么"（diff 已经说明了改了什么）
 - 每行不超过 72 字
 
-| type | 含义 | 例子 |
-|------|------|------|
-| **feat** | 新功能，用户能感知的新能力 | `feat(stl): 新增 ranges 管道示例` |
-| **fix** | 修 bug | `fix(cmake): 修复链接顺序错误` |
-| docs | 只改文档、注释、README | `docs: 补充目录设计说明` |
-| style | 格式、空格，不改逻辑 | `style: 统一 type 打印格式` |
-| **refactor** | 重构，既不加功能也不修 bug | `refactor(stl): 拆分 demo 函数` |
-| **perf** | 性能优化，功能不变 | `perf(hpc): 换用 SIMD 向量化` |
-| test | 加/改测试代码 | `test: 补全 containers 边界用例` |
-| build | 改构建系统、依赖 | `build: 升级 vcpkg baseline` |
-| ci | 改 CI 流水线 | `ci: 新增 Windows 测试 job` |
-| **chore** | 杂务，不在 src 和测试 | `chore: 删除旧目录设计文档` |
-| revert | 回滚某次提交 | `revert: revert "feat: xxx"` |
+| type         | 含义              | 例子                           |
+|--------------|-----------------|------------------------------|
+| **feat**     | 新功能，用户能感知的新能力   | `feat(stl): 新增 ranges 管道示例`  |
+| **fix**      | 修 bug           | `fix(cmake): 修复链接顺序错误`       |
+| docs         | 只改文档、注释、README  | `docs: 补充目录设计说明`             |
+| style        | 格式、空格，不改逻辑      | `style: 统一 type 打印格式`        |
+| **refactor** | 重构，既不加功能也不修 bug | `refactor(stl): 拆分 demo 函数`  |
+| **perf**     | 性能优化，功能不变       | `perf(hpc): 换用 SIMD 向量化`     |
+| test         | 加/改测试代码         | `test: 补全 containers 边界用例`   |
+| build        | 改构建系统、依赖        | `build: 升级 vcpkg baseline`   |
+| ci           | 改 CI 流水线        | `ci: 新增 Windows 测试 job`      |
+| **chore**    | 杂务，不在 src 和测试   | `chore: 删除旧目录设计文档`           |
+| revert       | 回滚某次提交          | `revert: revert "feat: xxx"` |
 
 加粗为高频 type，其他按需使用。
 
@@ -510,49 +515,49 @@ cmake --build .
 
 ### 语言与编译
 
-| 缩写 | 全称 | 说明 |
-|------|------|------|
-| RAII | Resource Acquisition Is Initialization | 资源获取即初始化，析构时自动释放 |
-| CRTP | Curiously Recurring Template Pattern | 奇异递归模板模式，实现静态多态 |
-| SFINAE | Substitution Failure Is Not An Error | 模板替换失败不报错，用于编译期条件选择 |
-| TMP | Template Metaprogramming | 模板元编程，编译期计算 |
-| UB | Undefined Behavior | 未定义行为，编译器无任何保证 |
-| ABI | Application Binary Interface | 二进制接口，名称修饰、调用约定等 |
-| ODR | One Definition Rule | 单一定义规则 |
-| POD | Plain Old Data | 无虚函数、无用户定义构造的简单数据 |
-| CTAD | Class Template Argument Deduction | 类模板参数推导（C++17）|
-| ADL | Argument-Dependent Lookup | 参数依赖查找 |
-| NVI | Non-Virtual Interface | 非虚接口模式，模板方法的 C++ 惯用法 |
-| EBO | Empty Base Optimization | 空基类优化 |
+| 缩写     | 全称                                     | 说明                   |
+|--------|----------------------------------------|----------------------|
+| RAII   | Resource Acquisition Is Initialization | 资源获取即初始化，析构时自动释放     |
+| CRTP   | Curiously Recurring Template Pattern   | 奇异递归模板模式，实现静态多态      |
+| SFINAE | Substitution Failure Is Not An Error   | 模板替换失败不报错，用于编译期条件选择  |
+| TMP    | Template Metaprogramming               | 模板元编程，编译期计算          |
+| UB     | Undefined Behavior                     | 未定义行为，编译器无任何保证       |
+| ABI    | Application Binary Interface           | 二进制接口，名称修饰、调用约定等     |
+| ODR    | One Definition Rule                    | 单一定义规则               |
+| POD    | Plain Old Data                         | 无虚函数、无用户定义构造的简单数据    |
+| CTAD   | Class Template Argument Deduction      | 类模板参数推导（C++17）       |
+| ADL    | Argument-Dependent Lookup              | 参数依赖查找               |
+| NVI    | Non-Virtual Interface                  | 非虚接口模式，模板方法的 C++ 惯用法 |
+| EBO    | Empty Base Optimization                | 空基类优化                |
 
 ### 构建与工具链
 
-| 缩写 | 全称 | 说明 |
-|------|------|------|
-| LTO / IPO | Link-Time / Interprocedural Optimization | 链接期优化，跨编译单元内联 |
-| PGO | Profile-Guided Optimization | 基于运行时 profile 的优化 |
-| ASan | AddressSanitizer | 内存错误检测（越界/UAF/double-free）|
-| UBSan | UndefinedBehaviorSanitizer | 未定义行为检测 |
-| TSan | ThreadSanitizer | 数据竞争检测 |
-| MSan | MemorySanitizer | 未初始化内存读检测 |
-| UAF | Use-After-Free | 释放后使用，常见内存安全漏洞 |
+| 缩写        | 全称                                       | 说明                         |
+|-----------|------------------------------------------|----------------------------|
+| LTO / IPO | Link-Time / Interprocedural Optimization | 链接期优化，跨编译单元内联              |
+| PGO       | Profile-Guided Optimization              | 基于运行时 profile 的优化          |
+| ASan      | AddressSanitizer                         | 内存错误检测（越界/UAF/double-free） |
+| UBSan     | UndefinedBehaviorSanitizer               | 未定义行为检测                    |
+| TSan      | ThreadSanitizer                          | 数据竞争检测                     |
+| MSan      | MemorySanitizer                          | 未初始化内存读检测                  |
+| UAF       | Use-After-Free                           | 释放后使用，常见内存安全漏洞             |
 
 ### 并发与系统
 
-| 缩写 | 全称 | 说明 |
-|------|------|------|
-| NUMA | Non-Uniform Memory Access | 非统一内存访问，多 CPU 插槽架构 |
-| CAS | Compare-And-Swap | 比较并交换，lock-free 的基础原语 |
-| SIMD | Single Instruction Multiple Data | 单指令多数据，向量化计算 |
-| IPC | Inter-Process Communication | 进程间通信（管道/共享内存/消息队列）|
+| 缩写    | 全称                                  | 说明                    |
+|-------|-------------------------------------|-----------------------|
+| NUMA  | Non-Uniform Memory Access           | 非统一内存访问，多 CPU 插槽架构    |
+| CAS   | Compare-And-Swap                    | 比较并交换，lock-free 的基础原语 |
+| SIMD  | Single Instruction Multiple Data    | 单指令多数据，向量化计算          |
+| IPC   | Inter-Process Communication         | 进程间通信（管道/共享内存/消息队列）   |
 | POSIX | Portable Operating System Interface | 可移植操作系统接口，Unix 标准 API |
 
 ### 领域
 
-| 缩写 | 全称 | 说明 |
-|------|------|------|
-| ECS | Entity-Component-System | 实体-组件-系统，游戏引擎架构模式 |
-| DDS | Data Distribution Service | 数据分发服务，ROS2 底层通信中间件 |
-| ONNX | Open Neural Network Exchange | 开放神经网络交换格式 |
-| FFT | Fast Fourier Transform | 快速傅里叶变换 |
-| PBR | Physically Based Rendering | 基于物理的渲染 |
+| 缩写   | 全称                           | 说明                  |
+|------|------------------------------|---------------------|
+| ECS  | Entity-Component-System      | 实体-组件-系统，游戏引擎架构模式   |
+| DDS  | Data Distribution Service    | 数据分发服务，ROS2 底层通信中间件 |
+| ONNX | Open Neural Network Exchange | 开放神经网络交换格式          |
+| FFT  | Fast Fourier Transform       | 快速傅里叶变换             |
+| PBR  | Physically Based Rendering   | 基于物理的渲染             |

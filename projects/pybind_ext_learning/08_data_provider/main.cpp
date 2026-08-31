@@ -10,8 +10,7 @@
 #include <string>
 
 // 纳秒时间戳辅助：YYYYMMDD → 近似 ns（仅用于 demo，不处理时区）
-static int64_t date_to_ns(int yyyymmdd)
-{
+static int64_t date_to_ns(int yyyymmdd) {
     int y = yyyymmdd / 10000;
     int m = (yyyymmdd / 100) % 100;
     int d = yyyymmdd % 100;
@@ -23,36 +22,38 @@ static int64_t date_to_ns(int yyyymmdd)
 }
 
 // ---- demo01: 分红送股查询（区间过滤 + cur_ns 防未来函数）----
-void demo01_fhsg_query()
-{
+void demo01_fhsg_query() {
     std::cout << "① 分红送股查询（CFHSGMgr）\n";
 
     CFHSGMgr mgr;
     // 加载茅台 2023~2025 三年的分红记录
-    mgr.Load("600519.SH", {
-                 {date_to_ns(20230616), 0.0, 0.0, 25.979}, // 2023 年中期
-                 {date_to_ns(20240621), 0.0, 0.0, 30.876}, // 2024 年中期
-                 {date_to_ns(20250620), 0.0, 0.0, 32.500}, // 2025 年中期
-             });
+    mgr.Load(
+        "600519.SH",
+        {
+            {date_to_ns(20230616), 0.0, 0.0, 25.979}, // 2023 年中期
+            {date_to_ns(20240621), 0.0, 0.0, 30.876}, // 2024 年中期
+            {date_to_ns(20250620), 0.0, 0.0, 32.500}, // 2025 年中期
+        });
 
     // 场景 A: 当前 bar 在 2024-12-31，查 2023~2025 全部
     // 预期: 只返回 2023 和 2024 两条（2025 的被 cur_ns 截止）
-    auto result = mgr.Query("600519.SH",
-                            date_to_ns(20230101),
-                            date_to_ns(20251231),
-                            date_to_ns(20241231)); // ← cur_ns
+    auto result = mgr.Query(
+        "600519.SH",
+        date_to_ns(20230101),
+        date_to_ns(20251231),
+        date_to_ns(20241231)); // ← cur_ns
     std::cout << "  cur_ns=2024-12-31, 查到 " << result.size() << " 条（预期 2）\n";
-    for (const auto& r : result)
-    {
+    for (const auto& r : result) {
         std::cout << "    派息=" << r.cash_divi << "\n";
     }
 
     // 场景 B: 当前 bar 推进到 2025-12-31
     // 预期: 返回全部 3 条
-    auto result2 = mgr.Query("600519.SH",
-                             date_to_ns(20230101),
-                             date_to_ns(20251231),
-                             date_to_ns(20251231));
+    auto result2 = mgr.Query(
+        "600519.SH",
+        date_to_ns(20230101),
+        date_to_ns(20251231),
+        date_to_ns(20251231));
     std::cout << "  cur_ns=2025-12-31, 查到 " << result2.size() << " 条（预期 3）\n";
 
     // 场景 C: 查不存在的标的
@@ -61,19 +62,20 @@ void demo01_fhsg_query()
 }
 
 // ---- demo02: 涨跌停价查询（二分查找 QueryLatest）----
-void demo02_up_down_limit()
-{
+void demo02_up_down_limit() {
     std::cout << "② 涨跌停价查询（CUpDownLimitMgr — 二分查找）\n";
 
     CUpDownLimitMgr mgr;
     // 加载平安银行连续 5 天的涨跌停价
-    mgr.Load("000001.SZ", {
-                 {date_to_ns(20250101), 15.50, 12.68},
-                 {date_to_ns(20250102), 15.80, 12.92},
-                 {date_to_ns(20250103), 16.10, 13.18},
-                 {date_to_ns(20250106), 16.40, 13.42},
-                 {date_to_ns(20250107), 16.70, 13.66},
-             });
+    mgr.Load(
+        "000001.SZ",
+        {
+            {date_to_ns(20250101), 15.50, 12.68},
+            {date_to_ns(20250102), 15.80, 12.92},
+            {date_to_ns(20250103), 16.10, 13.18},
+            {date_to_ns(20250106), 16.40, 13.42},
+            {date_to_ns(20250107), 16.70, 13.66},
+        });
 
     // 查 1/3 当天的涨跌停（QueryLatest: 取 <= cur_ns 的最后一条）
     auto r = mgr.QueryLatest("000001.SZ", date_to_ns(20250103));
@@ -89,8 +91,7 @@ void demo02_up_down_limit()
 }
 
 // ---- demo03: 板块查询 ----
-void demo03_sector()
-{
+void demo03_sector() {
     std::cout << "③ 板块查询（CPlateMgr）\n";
 
     CPlateMgr mgr;
@@ -101,8 +102,7 @@ void demo03_sector()
     // 板块列表（行业 + 概念合并去重）
     auto sectors = mgr.GetSectorList();
     std::cout << "  板块总数: " << sectors.size() << " → ";
-    for (const auto& s : sectors)
-    {
+    for (const auto& s : sectors) {
         std::cout << s << " ";
     }
     std::cout << "\n";
@@ -110,8 +110,7 @@ void demo03_sector()
     // 查成份股（先查行业板块，未命中再查概念）
     auto stks = mgr.GetStockListInSector("银行");
     std::cout << "  银行成份股: " << stks.size() << " 只 →";
-    for (const auto& s : stks)
-    {
+    for (const auto& s : stks) {
         std::cout << " " << s;
     }
     std::cout << "\n";
@@ -122,12 +121,10 @@ void demo03_sector()
 }
 
 // ---- demo04: 证券类型（静态分类）----
-void demo04_instrument_type()
-{
+void demo04_instrument_type() {
     std::cout << "④ 证券类型（ClassifyInstrumentType — 纯函数）\n";
 
-    struct TestCase
-    {
+    struct TestCase {
         std::string symbol;
         std::string expected;
     };
@@ -137,8 +134,7 @@ void demo04_instrument_type()
         {"000300.SH", "index"}, {"399001.SZ", "index"},
         {"430047.BJ", "stock"},
     };
-    for (const auto& tc : cases)
-    {
+    for (const auto& tc : cases) {
         auto types = ClassifyInstrumentType(tc.symbol);
         bool ok = types.count(tc.expected) > 0;
         std::string mark = ok ? " ✓" : " ✗";
@@ -150,8 +146,7 @@ void demo04_instrument_type()
     std::cout << "  AAPL → 空(" << unknown.size() << ")\n";
 }
 
-int main()
-{
+int main() {
     std::cout << "========== 扩展数据提供者最小实现 ==========\n\n";
     demo01_fhsg_query();
     demo02_up_down_limit();

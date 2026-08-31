@@ -5,11 +5,13 @@
 #include <iostream>
 #include "core/engine.h"
 
-int main() {
+int main()
+{
     std::cout << "① 多模块依赖链：app → core → utils\n";
 
     std::string inputs[] = {"  hello, cmake!  ", "  enterprise build  ", "  c++ cookbook  "};
-    for (const auto& s : inputs) {
+    for (const auto& s : inputs)
+    {
         std::cout << "  \"" << s << "\"  →  \"" << core::process(s) << "\"\n";
     }
 

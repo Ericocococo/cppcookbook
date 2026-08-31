@@ -4,10 +4,10 @@
 
 ## 1. 文件
 
-| 文件 | 说明 |
-|:---|:---|
-| `hello.h` | 函数声明（头文件 = 菜单，列出有什么） |
-| `main.cpp` | 函数实现 + main 调用（厨房 = 实际做菜） |
+| 文件               | 说明                          |
+|:-----------------|:----------------------------|
+| `hello.h`        | 函数声明（头文件 = 菜单，列出有什么）        |
+| `main.cpp`       | 函数实现 + main 调用（厨房 = 实际做菜）   |
 | `CMakeLists.txt` | 最简 C++ 工程（`add_executable`） |
 
 ---
@@ -111,12 +111,12 @@ build-mingw-mc\Debug\hello_cpp.exe
 
 ### vcvarsall 注入的 4 个环境变量
 
-| 变量 | 给谁用 | 找什么 | 示例路径（MSVC 14.51 / Win10 SDK 26100） |
-|:---|:---|:---|:---|
-| PATH | cmd 命令 | cl.exe / link.exe / ninja / cmake | `...\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\` |
-| INCLUDE | cl.exe（编译器） | 头文件 | `...\VC\Tools\MSVC\14.51.36231\include\`<br>`...\Windows Kits\10\Include\10.0.26100.0\ucrt\` 等 |
-| LIB | link.exe（链接器） | .lib 库文件 | `...\VC\Tools\MSVC\14.51.36231\lib\x64\`<br>`...\Windows Kits\10\Lib\10.0.26100.0\ucrt\x64\` 等 |
-| LIBPATH | .NET 工具 | 程序集 | 本项目用不到 |
+| 变量      | 给谁用           | 找什么                               | 示例路径（MSVC 14.51 / Win10 SDK 26100）                                                             |
+|:--------|:--------------|:----------------------------------|:-----------------------------------------------------------------------------------------------|
+| PATH    | cmd 命令        | cl.exe / link.exe / ninja / cmake | `...\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\`                                               |
+| INCLUDE | cl.exe（编译器）   | 头文件                               | `...\VC\Tools\MSVC\14.51.36231\include\`<br>`...\Windows Kits\10\Include\10.0.26100.0\ucrt\` 等 |
+| LIB     | link.exe（链接器） | .lib 库文件                          | `...\VC\Tools\MSVC\14.51.36231\lib\x64\`<br>`...\Windows Kits\10\Lib\10.0.26100.0\ucrt\x64\` 等 |
+| LIBPATH | .NET 工具       | 程序集                               | 本项目用不到                                                                                         |
 
 - `call` 必须写在当前 cmd 会话里——`call` 让变量修改留在当前窗口；直接运行则只存在临时进程，退出就没了
 - 不激活直接调 cl.exe 会报"找不到头文件"：cl.exe 找到 cl 自身但 INCLUDE 没注入，`#include <iostream>` 无从解析
@@ -209,7 +209,7 @@ cmake --build .
 1. `File → Open` 选择 `01_hello_cpp/` 目录
 2. CLion 自动识别 `CMakeLists.txt`，右下角点击**加载**
 3. 工具栏选择工具链（MinGW 或 Visual Studio）
-4. **构建** `Ctrl+F9`　**运行** `Shift+F10`
+4. **构建** `Ctrl+F9`**运行** `Shift+F10`
 
 ---
 
@@ -238,10 +238,10 @@ cmake --build .
 
 本步的目的不是学 C++ 语法，而是**确认编译工具链正常**：
 
-| 检查项 | 正常标志 |
-|:---|:---|
-| CMake 可用 | `cmake --version` 有输出 |
-| 编译器可用 | MinGW 的 `g++` 或 MSVC 的 `cl.exe` |
+| 检查项      | 正常标志                                   |
+|:---------|:---------------------------------------|
+| CMake 可用 | `cmake --version` 有输出                  |
+| 编译器可用    | MinGW 的 `g++` 或 MSVC 的 `cl.exe`        |
 | C++20 支持 | 结构化绑定 `auto [code, market] = ...` 编译通过 |
 
 > 如果这一步编译不过，先解决编译环境问题。
@@ -250,16 +250,16 @@ cmake --build .
 
 ## 8. 英文及缩写说明
 
-| 词汇 | 说明 |
-|:---|:---|
-| `const` | 常量修饰符，承诺不修改数据 |
-| `&`（参数中）| 引用传递，不拷贝，直接用原数据 |
-| `const XXX&` | 只读引用，不拷贝也不能改，函数参数最常用写法 |
-| `auto` | 让编译器自动推断类型（C++11） |
-| `auto [a, b] = ...` | 结构化绑定，拆 pair/tuple 到多个变量（C++17） |
-| `std::pair<A, B>` | 打包两个值的容器，用 `.first` `.second` 访问 |
-| `std::vector<T>` | 动态数组，可变长度，用 `push_back()` 追加 |
-| `std::string::npos` | `find()` 没找到时的返回值，表示"未找到" |
-| `substr(pos, len)` | 从 pos 开始取 len 个字符的子串 |
-| `v.empty()` | 判断容器是否为空 |
-| `v.size()` | 返回容器中元素个数 |
+| 词汇                  | 说明                               |
+|:--------------------|:---------------------------------|
+| `const`             | 常量修饰符，承诺不修改数据                    |
+| `&`（参数中）            | 引用传递，不拷贝，直接用原数据                  |
+| `const XXX&`        | 只读引用，不拷贝也不能改，函数参数最常用写法           |
+| `auto`              | 让编译器自动推断类型（C++11）                |
+| `auto [a, b] = ...` | 结构化绑定，拆 pair/tuple 到多个变量（C++17）  |
+| `std::pair<A, B>`   | 打包两个值的容器，用 `.first` `.second` 访问 |
+| `std::vector<T>`    | 动态数组，可变长度，用 `push_back()` 追加     |
+| `std::string::npos` | `find()` 没找到时的返回值，表示"未找到"        |
+| `substr(pos, len)`  | 从 pos 开始取 len 个字符的子串             |
+| `v.empty()`         | 判断容器是否为空                         |
+| `v.size()`          | 返回容器中元素个数                        |

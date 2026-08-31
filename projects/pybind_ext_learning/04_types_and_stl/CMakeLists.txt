@@ -5,11 +5,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(MSVC)
+if (MSVC)
     add_compile_options(/W4 /utf-8)
-else()
+else ()
     add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
+endif ()
 
 # find_package：让 CMake 去电脑上找 pybind11 装在哪里，找到了才能继续
 # REQUIRED：没找到就报错退出（相当于 Python 的 import，没装就报错）

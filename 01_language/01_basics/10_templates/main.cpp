@@ -9,27 +9,30 @@
 #include <type_traits>   // is_integral_v 等
 
 // ① 函数模板：一份代码适用多种类型
-template<typename T>
-T maxVal(T a, T b) {
+template <typename T>
+T maxVal(T a, T b)
+{
     return (a > b) ? a : b;
 }
 
 // 多个类型参数
-template<typename T1, typename T2>
-void printPair(const T1& a, const T2& b) {
+template <typename T1, typename T2>
+void printPair(const T1& a, const T2& b)
+{
     std::cout << "  (" << a << ", " << b << ")\n";
 }
 
-void demo01_function_template() {
+void demo01_function_template()
+{
     std::cout << "\n① 函数模板\n";
 
     // 编译器自动推断 T
-    std::cout << "  maxVal(3, 5)       = " << maxVal(3, 5)     << "（T=int）\n";
-    std::cout << "  maxVal(3.14, 2.71) = " << maxVal(3.14,2.71)<< "（T=double）\n";
+    std::cout << "  maxVal(3, 5)       = " << maxVal(3, 5) << "（T=int）\n";
+    std::cout << "  maxVal(3.14, 2.71) = " << maxVal(3.14, 2.71) << "（T=double）\n";
     std::cout << "  maxVal('a', 'z')   = " << maxVal('a', 'z') << "（T=char）\n";
 
     // 显式指定类型
-    std::cout << "  maxVal<double>(3, 5) = " << maxVal<double>(3,5) << "\n";
+    std::cout << "  maxVal<double>(3, 5) = " << maxVal<double>(3, 5) << "\n";
 
     // 多类型参数
     std::cout << "  printPair(1, 3.14): ";
@@ -41,39 +44,47 @@ void demo01_function_template() {
 }
 
 // ② 类模板
-template<typename T>
-class Stack {
+template <typename T>
+class Stack
+{
     std::vector<T> data_;
+
 public:
     void push(const T& val) { data_.push_back(val); }
 
-    T pop() {
+    T pop()
+    {
         if (data_.empty()) throw std::runtime_error("栈为空");
         T val = data_.back();
         data_.pop_back();
         return val;
     }
 
-    const T& top() const {
+    const T& top() const
+    {
         if (data_.empty()) throw std::runtime_error("栈为空");
         return data_.back();
     }
 
-    bool   empty() const { return data_.empty(); }
-    size_t size()  const { return data_.size(); }
+    bool empty() const { return data_.empty(); }
+    size_t size() const { return data_.size(); }
 };
 
-void demo02_class_template() {
+void demo02_class_template()
+{
     std::cout << "\n② 类模板\n";
 
     Stack<int> si;
-    si.push(1); si.push(2); si.push(3);
+    si.push(1);
+    si.push(2);
+    si.push(3);
     std::cout << "  Stack<int>: push 1 2 3\n";
     std::cout << "    top=" << si.top() << "  size=" << si.size() << "\n";
     std::cout << "    pop=" << si.pop() << "  剩余=" << si.size() << "\n";
 
     Stack<std::string> ss;
-    ss.push("hello"); ss.push("world");
+    ss.push("hello");
+    ss.push("world");
     std::cout << "  Stack<string>: top=" << ss.top() << "\n";
 
     // C++17 类模板参数推断（CTAD）
@@ -81,20 +92,23 @@ void demo02_class_template() {
 }
 
 // ③ 全特化：为特定类型提供完全不同的实现
-template<typename T>
+template <typename T>
 std::string describe(T) { return "未知类型"; }
 
-template<>  // 全特化：T = bool
-std::string describe<bool>(bool val) {
+template <> // 全特化：T = bool
+std::string describe<bool>(bool val)
+{
     return val ? "布尔值:真" : "布尔值:假";
 }
 
-template<>  // 全特化：T = std::string
-std::string describe<std::string>(std::string val) {
+template <> // 全特化：T = std::string
+std::string describe<std::string>(std::string val)
+{
     return "字符串:\"" + val + "\"  长度=" + std::to_string(val.size());
 }
 
-void demo03_specialization() {
+void demo03_specialization()
+{
     std::cout << "\n③ 全特化\n";
     std::cout << "  describe(42)=" << describe(42) << "\n";
     std::cout << "  describe(true)=" << describe(true) << "\n";
@@ -102,17 +116,23 @@ void demo03_specialization() {
 }
 
 // ④ 非类型模板参数：用编译期常量作为模板参数
-template<typename T, size_t N>
-class FixedArray {
+template <typename T, size_t N>
+class FixedArray
+{
     T data_[N];
+
 public:
-    FixedArray() : data_{} {}
+    FixedArray() : data_{}
+    {
+    }
+
     T& operator[](size_t i) { return data_[i]; }
     const T& operator[](size_t i) const { return data_[i]; }
     size_t size() const { return N; }
 };
 
-void demo04_nontype_param() {
+void demo04_nontype_param()
+{
     std::cout << "\n④ 非类型模板参数\n";
     FixedArray<int, 5> arr;
     for (size_t i = 0; i < arr.size(); ++i) arr[i] = (int)i * 10;
@@ -124,39 +144,48 @@ void demo04_nontype_param() {
 
 // ⑤ 模板与 concepts（C++20）：约束模板参数
 // requires 关键字：指定类型必须满足的条件
-template<typename T>
-    requires std::is_arithmetic_v<T>   // T 必须是算术类型（int/float等）
+template <typename T>
+    requires std::is_arithmetic_v<T> // T 必须是算术类型（int/float等）
 T average(T a, T b) { return (a + b) / 2; }
 
-void demo05_concepts() {
+void demo05_concepts()
+{
     std::cout << "\n⑤ Concepts（C++20）\n";
-    std::cout << "  average(3, 5)   = " << average(3, 5)     << "\n";
+    std::cout << "  average(3, 5)   = " << average(3, 5) << "\n";
     std::cout << "  average(1.5,2.5)= " << average(1.5, 2.5) << "\n";
     // average("hi","lo");  // 编译错误：string 不满足 is_arithmetic_v
     std::cout << "  average(\"hi\",\"lo\") 编译错误：string 不满足算术类型约束\n";
 }
 
 // ⑥ if constexpr（C++17）：编译期条件，不同类型走不同代码路径
-template<typename T>
-void process(T val) {
-    if constexpr (std::is_integral_v<T>) {
+template <typename T>
+void process(T val)
+{
+    if constexpr (std::is_integral_v<T>)
+    {
         std::cout << "  整数，二进制表示最低8位=0x"
-                  << std::hex << (val & 0xFF) << std::dec << "\n";
-    } else if constexpr (std::is_floating_point_v<T>) {
+            << std::hex << (val & 0xFF) << std::dec << "\n";
+    }
+    else if constexpr (std::is_floating_point_v<T>)
+    {
         std::cout << "  浮点，取整=" << static_cast<long long>(val) << "\n";
-    } else {
+    }
+    else
+    {
         std::cout << "  其他类型: " << val << "\n";
     }
 }
 
-void demo06_if_constexpr() {
+void demo06_if_constexpr()
+{
     std::cout << "\n⑥ if constexpr + 类型特性\n";
     process(255);
     process(3.14);
     process(std::string("hello"));
 }
 
-int main() {
+int main()
+{
     std::cout << "=== 10_templates: 模板 ===";
     demo01_function_template();
     demo02_class_template();

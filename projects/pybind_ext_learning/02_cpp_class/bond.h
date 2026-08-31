@@ -5,9 +5,10 @@
 
 #include <string>
 
-class Bond {
-    std::string m_name;   // 债券名称
-    double      m_rate;   // 票面利率（如 0.035 = 3.5%）
+class Bond
+{
+    std::string m_name; // 债券名称
+    double m_rate; // 票面利率（如 0.035 = 3.5%）
 
 public:
     Bond(std::string name, double rate)

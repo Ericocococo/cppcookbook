@@ -15,30 +15,25 @@
 //
 //   返回类型可省略，编译器自动推导
 // ============================================================================
-void demo01_basic()
-{
+void demo01_basic() {
     std::cout << "\n① 基本语法\n";
 
     // 最简 lambda：无参数、无捕获
-    auto hello = []()
-    {
+    auto hello = []() {
         std::cout << "  hello lambda\n";
     };
     hello();
 
     // 带参数
-    auto add = [](int a, int b)
-    {
+    auto add = [](int a, int b) {
         return a + b;
     };
     int sum = add(3, 5);
     std::cout << "  add(3, 5) = " << sum << "\n";
 
     // 显式指定返回类型（通常不需要，编译器能推导）
-    auto divide = [](double a, double b) -> double
-    {
-        if (b == 0)
-        {
+    auto divide = [](double a, double b) -> double {
+        if (b == 0) {
             return 0.0;
         }
         return a / b;
@@ -58,24 +53,21 @@ void demo01_basic()
 //   [=, &x] 默认按值，x 按引用
 //   [&, x]  默认按引用，x 按值
 // ============================================================================
-void demo02_capture()
-{
+void demo02_capture() {
     std::cout << "\n② 捕获列表\n";
 
     int x = 10;
     int y = 20;
 
     // 按值捕获 x：lambda 内拿到的是拷贝
-    auto by_value = [x]()
-    {
+    auto by_value = [x]() {
         std::cout << "  [x] 按值捕获: x=" << x << "\n";
         // x = 99;  // 编译错误：按值捕获默认是 const
     };
     by_value();
 
     // 按引用捕获 x：lambda 内修改会影响外部
-    auto by_ref = [&x]()
-    {
+    auto by_ref = [&x]() {
         x = 99;
         std::cout << "  [&x] 按引用捕获: x 改为 " << x << "\n";
     };
@@ -83,15 +75,13 @@ void demo02_capture()
     std::cout << "  外部 x = " << x << "（被 lambda 修改了）\n";
 
     // 按值捕获所有
-    auto capture_all_value = [=]()
-    {
+    auto capture_all_value = [=]() {
         std::cout << "  [=] 按值捕获所有: x=" << x << " y=" << y << "\n";
     };
     capture_all_value();
 
     // 按引用捕获所有
-    auto capture_all_ref = [&]()
-    {
+    auto capture_all_ref = [&]() {
         x = 100;
         y = 200;
     };
@@ -102,15 +92,13 @@ void demo02_capture()
 // ============================================================================
 // ③ mutable：允许修改按值捕获的变量（修改的是拷贝，不影响外部）
 // ============================================================================
-void demo03_mutable()
-{
+void demo03_mutable() {
     std::cout << "\n③ mutable\n";
 
     int count = 0;
 
     // 按值捕获 count，加 mutable 后可以在 lambda 内修改拷贝
-    auto counter = [count]() mutable
-    {
+    auto counter = [count]() mutable {
         count++;
         std::cout << "  lambda 内 count = " << count << "\n";
     };
@@ -124,13 +112,11 @@ void demo03_mutable()
 // ============================================================================
 // ④ 泛型 lambda（C++14）：参数用 auto，类似函数模板
 // ============================================================================
-void demo04_generic()
-{
+void demo04_generic() {
     std::cout << "\n④ 泛型 lambda\n";
 
     // auto 参数，编译器对每种类型生成一个版本
-    auto print = [](const auto& value)
-    {
+    auto print = [](const auto& value) {
         std::cout << "  " << value << "\n";
     };
 
@@ -142,50 +128,54 @@ void demo04_generic()
 // ============================================================================
 // ⑤ lambda 作为函数参数（STL 算法最常见的用法）
 // ============================================================================
-void demo05_stl()
-{
+void demo05_stl() {
     std::cout << "\n⑤ lambda + STL 算法\n";
 
     std::vector<int> nums = {5, 2, 8, 1, 9, 3, 7};
 
     // sort：自定义比较规则
-    std::sort(nums.begin(), nums.end(), [](int a, int b)
-    {
-        return a > b;
-    });
+    std::sort(
+        nums.begin(),
+        nums.end(),
+        [](int a, int b) {
+            return a > b;
+        });
     std::cout << "  降序排序: ";
-    for (int n : nums)
-    {
+    for (int n : nums) {
         std::cout << n << " ";
     }
     std::cout << "\n";
 
     // count_if：统计满足条件的元素个数
-    int even_count = std::count_if(nums.begin(), nums.end(), [](int n)
-    {
-        return n % 2 == 0;
-    });
+    int even_count = std::count_if(
+        nums.begin(),
+        nums.end(),
+        [](int n) {
+            return n % 2 == 0;
+        });
     std::cout << "  偶数个数: " << even_count << "\n";
 
     // for_each：对每个元素执行操作
     std::cout << "  每个元素 +10: ";
-    std::for_each(nums.begin(), nums.end(), [](int& n)
-    {
-        n += 10;
-    });
-    for (int n : nums)
-    {
+    std::for_each(
+        nums.begin(),
+        nums.end(),
+        [](int& n) {
+            n += 10;
+        });
+    for (int n : nums) {
         std::cout << n << " ";
     }
     std::cout << "\n";
 
     // find_if：查找第一个满足条件的元素
-    auto it = std::find_if(nums.begin(), nums.end(), [](int n)
-    {
-        return n > 15;
-    });
-    if (it != nums.end())
-    {
+    auto it = std::find_if(
+        nums.begin(),
+        nums.end(),
+        [](int n) {
+            return n > 15;
+        });
+    if (it != nums.end()) {
         std::cout << "  第一个 >15 的元素: " << *it << "\n";
     }
 }
@@ -193,8 +183,7 @@ void demo05_stl()
 // ============================================================================
 // ⑥ lambda 存到 std::function（可以做回调、存到容器里）
 // ============================================================================
-void demo06_function()
-{
+void demo06_function() {
     std::cout << "\n⑥ std::function\n";
 
     // std::function 可以存任意可调用对象（lambda、函数指针、仿函数）
@@ -214,8 +203,7 @@ void demo06_function()
     };
 
     std::cout << "  ops 批量执行 (10, 3): ";
-    for (const auto& f : ops)
-    {
+    for (const auto& f : ops) {
         std::cout << f(10, 3) << " ";
     }
     std::cout << "\n";
@@ -224,16 +212,13 @@ void demo06_function()
 // ============================================================================
 // ⑦ 立即调用的 lambda（IIFE）
 // ============================================================================
-void demo07_iife()
-{
+void demo07_iife() {
     std::cout << "\n⑦ 立即调用的 lambda（IIFE）\n";
 
     // 定义后立即调用，常用于复杂的 const 初始化
-    const int value = []
-    {
+    const int value = [] {
         int result = 0;
-        for (int i = 1; i <= 10; i++)
-        {
+        for (int i = 1; i <= 10; i++) {
             result += i;
         }
         return result;
@@ -242,8 +227,7 @@ void demo07_iife()
     std::cout << "  1+2+...+10 = " << value << "\n";
 }
 
-int main()
-{
+int main() {
     std::cout << "=== lambda 表达式 ===\n";
 
     demo01_basic();

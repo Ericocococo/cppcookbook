@@ -19,8 +19,7 @@
 using SymbolKey = std::array<char, 16>;
 
 // 字符串 → 定长 SymbolKey
-inline SymbolKey ToSymbolKey(const std::string& s)
-{
+inline SymbolKey ToSymbolKey(const std::string& s) {
     SymbolKey k{};
     auto len = std::min(s.size(), k.size() - 1);
     std::copy_n(s.data(), len, k.begin());
@@ -33,14 +32,12 @@ inline SymbolKey ToSymbolKey(const std::string& s)
    末尾：const              — 不修改这个对象的成员
    末尾：noexcept           — 承诺不抛异常，纯数学运算没有失败的可能
    unordered_map<Key, Value, Hash> 的第三个模板参数就是哈希函数类型 */
-struct SymbolKeyHash
-{
-    size_t operator()(const SymbolKey& k) const noexcept
-    {
+struct SymbolKeyHash {
+    size_t operator()(const SymbolKey& k) const noexcept {
         size_t h = 14695981039346656037ULL;
-        for (char c : k)
-        {
-            if (c == 0) break;
+        for (char c : k) {
+            if (c == 0)
+                break;
             h ^= static_cast<size_t>(static_cast<unsigned char>(c));
             h *= 1099511628211ULL;
         }
@@ -50,24 +47,24 @@ struct SymbolKeyHash
 
 // ---- 分红送股 ----
 
-struct FHSGRecord
-{
+struct FHSGRecord {
     int64_t ex_divi_date_ns; // 除权除息日（纳秒时间戳）
     double bonus; // 送股
     double trans_add; // 转增
     double cash_divi; // 派息
 };
 
-class CFHSGMgr
-{
+class CFHSGMgr {
 public:
     // 批量加载（symbol → 多条记录，自动按日期升序排序）
     void Load(const std::string& symbol, std::vector<FHSGRecord> records);
 
     // 查询 [start_ns, min(end_ns, cur_ns)] 区间内的分红记录
-    std::vector<FHSGRecord> Query(const std::string& symbol,
-                                  int64_t start_ns, int64_t end_ns,
-                                  int64_t cur_ns) const;
+    std::vector<FHSGRecord> Query(
+        const std::string& symbol,
+        int64_t start_ns,
+        int64_t end_ns,
+        int64_t cur_ns) const;
 
 private:
     std::unordered_map<SymbolKey, std::vector<FHSGRecord>, SymbolKeyHash> m_data;
@@ -75,15 +72,13 @@ private:
 
 // ---- 涨跌停价 ----
 
-struct UpDownLimitRecord
-{
+struct UpDownLimitRecord {
     int64_t datetime_ns;
     double up_price; // 涨停价
     double down_price; // 跌停价
 };
 
-class CUpDownLimitMgr
-{
+class CUpDownLimitMgr {
 public:
     // 批量加载（symbol → 多条记录，自动按时间升序排序）
     void Load(const std::string& symbol, std::vector<UpDownLimitRecord> records);
@@ -97,8 +92,7 @@ private:
 
 // ---- 板块 ----
 
-class CPlateMgr
-{
+class CPlateMgr {
 public:
     // 加载行业板块成份股
     void LoadPlateComponent(const std::string& plate_name, std::vector<std::string> symbols);

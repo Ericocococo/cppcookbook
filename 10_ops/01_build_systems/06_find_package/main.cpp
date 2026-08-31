@@ -5,9 +5,11 @@
 #include <iostream>
 #include <thread>
 
-int main() {
+int main()
+{
     std::cout << "① std::thread 依赖 Threads::Threads\n";
-    std::thread t([] {
+    std::thread t([]
+    {
         std::cout << "  子线程 id: " << std::this_thread::get_id() << "\n";
     });
     t.join();

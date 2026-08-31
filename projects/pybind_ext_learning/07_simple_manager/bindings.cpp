@@ -6,8 +6,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(fhsg_demo, m)
-{
+PYBIND11_MODULE(fhsg_demo, m) {
     m.doc() = "第七步：单个数据管理器（Load + Query）";
 
     // py::init<>()         → 无参构造，编译器自动生成的 FHSGRecord()
@@ -28,10 +27,11 @@ PYBIND11_MODULE(fhsg_demo, m)
         //   [x]     按值捕获 x
         //   [&x]    按引用捕获 x
         // 这里 [] 空捕获，因为只用到了参数 r，不需要外部变量 TODO:lambda
-        .def("__repr__", [](const FHSGRecord& r)
-        {
-            return "<FHSG " + r.symbol + " cash_divi=" + std::to_string(r.cash_divi) + ">";
-        });
+        .def(
+            "__repr__",
+            [](const FHSGRecord& r) {
+                return "<FHSG " + r.symbol + " cash_divi=" + std::to_string(r.cash_divi) + ">";
+            });
 
     py::class_<CFHSGMgr>(m, "CFHSGMgr")
         .def(py::init<>())

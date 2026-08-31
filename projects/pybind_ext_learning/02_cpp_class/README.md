@@ -4,26 +4,28 @@
 
 ## 1. 文件
 
-| 文件 | 说明 |
-|:---|:---|
-| `stock.h` | 写法 ① Stock 类声明（头文件 = 菜单） |
-| `stock.cpp` | 写法 ① Stock 类实现（厨房 = 实际做菜） |
-| `bond.h` | 写法 ② Bond 类，声明 + 实现全在 .h 里 |
-| `main.cpp` | 写法 ③ Fund 类直接定义在文件里 + 三种写法演示 |
+| 文件               | 说明                             |
+|:-----------------|:-------------------------------|
+| `stock.h`        | 写法 ① Stock 类声明（头文件 = 菜单）       |
+| `stock.cpp`      | 写法 ① Stock 类实现（厨房 = 实际做菜）      |
+| `bond.h`         | 写法 ② Bond 类，声明 + 实现全在 .h 里     |
+| `main.cpp`       | 写法 ③ Fund 类直接定义在文件里 + 三种写法演示   |
 | `CMakeLists.txt` | 多文件 CMake 工程（`add_executable`） |
 
 共 6 套部署方案（MinGW 3 + MSVC 2 + Linux 1）：
 
-| 平台 | 方案 | 生成器 | build 目录 |
-|:---|:---|:---|:---|
-| MinGW A | Ninja（推荐） | 单配置 | `build-mingw-ninja` |
-| MinGW B | MinGW Makefiles | 单配置 | `build-mingw-make` |
-| MinGW C | Ninja Multi-Config | 多配置 | `build-mingw-mc` |
-| MSVC A | vcvarsall + Ninja（推荐） | 单配置 | `build-msvc-ninja` |
-| MSVC B | Visual Studio Generator | 多配置 | `build-msvc-vs` |
-| Linux/WSL | cmake + make | 单配置 | `build/` |
+| 平台        | 方案                      | 生成器 | build 目录            |
+|:----------|:------------------------|:----|:--------------------|
+| MinGW A   | Ninja（推荐）               | 单配置 | `build-mingw-ninja` |
+| MinGW B   | MinGW Makefiles         | 单配置 | `build-mingw-make`  |
+| MinGW C   | Ninja Multi-Config      | 多配置 | `build-mingw-mc`    |
+| MSVC A    | vcvarsall + Ninja（推荐）   | 单配置 | `build-msvc-ninja`  |
+| MSVC B    | Visual Studio Generator | 多配置 | `build-msvc-vs`     |
+| Linux/WSL | cmake + make            | 单配置 | `build/`            |
 
-> **pybind11 注意**：Windows 上的 Python（python.org / Anaconda）都是 MSVC 编译的，pybind11 编译出的 `.pyd` 扩展必须和 Python 解释器用同一套编译器，否则 ABI 不兼容会崩溃。前面 01、02 步是纯 C++，MinGW/MSVC 都能跑；后面涉及 pybind11 的步骤 MinGW 不适用，必须走 MSVC。
+> **pybind11 注意**：Windows 上的 Python（python.org / Anaconda）都是 MSVC 编译的，pybind11 编译出的 `.pyd` 扩展必须和
+> Python 解释器用同一套编译器，否则 ABI 不兼容会崩溃。前面 01、02 步是纯 C++，MinGW/MSVC 都能跑；后面涉及 pybind11 的步骤 MinGW
+> 不适用，必须走 MSVC。
 
 ---
 
@@ -209,7 +211,7 @@ cmake --build .
 1. `File → Open` 选择 `02_cpp_class/` 目录
 2. CLion 自动识别 `CMakeLists.txt`，右下角点击**加载**
 3. 工具栏选择工具链（MinGW 或 Visual Studio）
-4. **构建** `Ctrl+F9`　**运行** `Shift+F10`
+4. **构建** `Ctrl+F9`**运行** `Shift+F10`
 
 ---
 
@@ -262,11 +264,11 @@ cmake --build .
 
 **为什么栈快：**
 
-| 操作 | 栈 | 堆 |
-|:---|:---|:---|
+| 操作 | 栈             | 堆                      |
+|:---|:--------------|:-----------------------|
 | 分配 | 栈指针减 8（1 条指令） | 找空闲区域、记录大小、标记占用（几十条指令） |
-| 释放 | 栈指针加 8（1 条指令） | 标记释放、合并相邻空闲块（几十条指令） |
-| 类比 | 桌上放东西，伸手就拿 | 去仓库领东西，要登记、找货架 |
+| 释放 | 栈指针加 8（1 条指令） | 标记释放、合并相邻空闲块（几十条指令）    |
+| 类比 | 桌上放东西，伸手就拿    | 去仓库领东西，要登记、找货架         |
 
 **和 std::move 的关系：**
 
@@ -286,11 +288,11 @@ std::string m_name = "沪深300ETF";
 
 ## 8. 定义类的三种写法
 
-| 写法 | 本项目示例 | 适用场景 |
-|:---|:---|:---|
+| 写法              | 本项目示例                      | 适用场景                |
+|:----------------|:---------------------------|:--------------------|
 | .h 声明 + .cpp 实现 | Stock（stock.h + stock.cpp） | 多文件共用，改实现只重编一个 .cpp |
-| 全写在 .h 里 | Bond（bond.h） | 模板类必须这样；小类也常用 |
-| 直接写在 .cpp 里 | Fund（main.cpp 里） | 只有当前文件用，不需要拆文件 |
+| 全写在 .h 里        | Bond（bond.h）               | 模板类必须这样；小类也常用       |
+| 直接写在 .cpp 里     | Fund（main.cpp 里）           | 只有当前文件用，不需要拆文件      |
 
 `.h` 里能写实现，不是只能写声明——"只写声明"是约定习惯，不是语法限制。`#include` 本质就是把 `.h` 的内容复制粘贴到 `.cpp` 里。
 
@@ -298,31 +300,31 @@ std::string m_name = "沪深300ETF";
 
 ## 9. 本步要点
 
-| 概念 | 说明 |
-|:---|:---|
-| class | 把数据 + 操作数据的方法打包在一起 |
-| 构造函数 | 创建对象时自动调用，必须和类同名 |
-| 成员变量 | 对象里的数据（默认 private） |
-| 成员函数 | 对象能做的事 |
-| public / private | 控制外部能否访问 |
-| .h / .cpp 分离 | 头文件声明"有什么"，cpp 实现"怎么做" |
-| 初始化列表 | `: m_code(...)` 构造时直接初始化，比在 {} 里赋值快 |
-| const & 参数 | 只读引用，不拷贝不修改 |
-| 末尾 const | 函数不修改成员变量 |
-| std::move | 转移所有权，避免拷贝字符串 |
+| 概念               | 说明                                  |
+|:-----------------|:------------------------------------|
+| class            | 把数据 + 操作数据的方法打包在一起                  |
+| 构造函数             | 创建对象时自动调用，必须和类同名                    |
+| 成员变量             | 对象里的数据（默认 private）                  |
+| 成员函数             | 对象能做的事                              |
+| public / private | 控制外部能否访问                            |
+| .h / .cpp 分离     | 头文件声明"有什么"，cpp 实现"怎么做"              |
+| 初始化列表            | `: m_code(...)` 构造时直接初始化，比在 {} 里赋值快 |
+| const & 参数       | 只读引用，不拷贝不修改                         |
+| 末尾 const         | 函数不修改成员变量                           |
+| std::move        | 转移所有权，避免拷贝字符串                       |
 
 ---
 
 ## 10. 英文及缩写说明
 
-| 词汇 | 说明 |
-|:---|:---|
-| class | 类，定义对象的蓝图/模具 |
-| object / instance | 对象/实例，按类创建的具体东西 |
-| constructor | 构造函数，创建对象时自动调用 |
-| member | 成员（成员变量 = 数据，成员函数 = 方法） |
-| public | 公有，外部可访问 |
-| private | 私有，只有类内部能访问 |
-| `::` | 作用域运算符，`Stock::code` 表示 Stock 类的 code 函数 |
-| `std::move` | 移动语义，转移资源所有权而非拷贝 |
-| initializer list | 初始化列表，`:` 后面直接初始化成员变量 |
+| 词汇                | 说明                                       |
+|:------------------|:-----------------------------------------|
+| class             | 类，定义对象的蓝图/模具                             |
+| object / instance | 对象/实例，按类创建的具体东西                          |
+| constructor       | 构造函数，创建对象时自动调用                           |
+| member            | 成员（成员变量 = 数据，成员函数 = 方法）                  |
+| public            | 公有，外部可访问                                 |
+| private           | 私有，只有类内部能访问                              |
+| `::`              | 作用域运算符，`Stock::code` 表示 Stock 类的 code 函数 |
+| `std::move`       | 移动语义，转移资源所有权而非拷贝                         |
+| initializer list  | 初始化列表，`:` 后面直接初始化成员变量                    |

@@ -11,12 +11,13 @@
 #include "bond.h"   // 写法 ②：全写在 .h 里（Bond）
 
 // 写法 ③：直接定义在当前文件里，不需要 .h（只有本文件用）
-class Fund {
+class Fund
+{
     // class 成员默认 private，外部不能直接访问（struct 默认 public）
-    std::string m_name;   // m_ 前缀是命名习惯，表示 member（成员变量）
-    double      m_nav;    // 净值（NAV = Net Asset Value）
+    std::string m_name; // m_ 前缀是命名习惯，表示 member（成员变量）
+    double m_nav; // 净值（NAV = Net Asset Value）
 
-public:  // 以下成员外部可以访问
+public: // 以下成员外部可以访问
 
     /* 构造函数：函数名必须和类名一致，没有返回类型
        Fund(std::string name, double nav)   ← name、nav 是形参，调用时值拷贝传入
@@ -60,7 +61,7 @@ int main()
     Stock s("600519.SH", 1500.0);
     std::cout << "① 写法 ①  Stock（.h + .cpp 分离）\n";
     std::cout << "   代码: " << s.code()
-              << ", 收盘价: " << s.close_price() << "\n";
+        << ", 收盘价: " << s.close_price() << "\n";
 
     s.set_close(1600.0);
     std::cout << "   set_close(1600) 后: " << s.close_price() << "\n";
@@ -74,7 +75,7 @@ int main()
     double interest = b.annual_interest(10000.0);
     std::cout << "\n② 写法 ②  Bond（全写在 .h 里）\n";
     std::cout << "   名称: " << b.name()
-              << ", 利率: " << b.rate() << "\n";
+        << ", 利率: " << b.rate() << "\n";
     std::cout << "   面值 10000 的年利息: " << interest << "\n";
 
     // ───── 写法 ③ Fund：直接定义在 main.cpp 里 ─────
@@ -83,7 +84,7 @@ int main()
     double shares = f.buy_shares(10000.0);
     std::cout << "\n③ 写法 ③  Fund（直接写在 main.cpp 里）\n";
     std::cout << "   名称: " << f.name()
-              << ", 净值: " << f.nav() << "\n";
+        << ", 净值: " << f.nav() << "\n";
     std::cout << "   10000 元买入份额: " << shares << "\n";
 
     // ───── 多个对象 ─────

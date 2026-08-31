@@ -19,8 +19,8 @@ target_compile_definitions(utils_iface INTERFACE UTILS_VERSION=2)
 add_library(core STATIC core.cpp)
 target_include_directories(core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_compile_options(core PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/W4 /utf-8>
-    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra>
+        $<$<CXX_COMPILER_ID:MSVC>:/W4 /utf-8>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra>
 )
 
 # ③ 可执行文件：只需链接 core，include 路径自动继承（PUBLIC）

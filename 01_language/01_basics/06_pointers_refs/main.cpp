@@ -6,11 +6,12 @@
 #include <memory>    // unique_ptr / shared_ptr / weak_ptr
 
 // ① 引用：变量的别名
-void demo01_reference() {
+void demo01_reference()
+{
     std::cout << "\n① 引用\n";
 
     int a = 10;
-    int& ref = a;   // 引用必须初始化，之后不能改变绑定
+    int& ref = a; // 引用必须初始化，之后不能改变绑定
 
     std::cout << "  a=" << a << "  地址=" << &a << "\n";
     std::cout << "  ref=" << ref << "  地址=" << &ref << "（同一地址！）\n";
@@ -32,16 +33,17 @@ void demo01_reference() {
 }
 
 // ② 指针：存储地址
-void demo02_pointer() {
+void demo02_pointer()
+{
     std::cout << "\n② 指针\n";
 
     int a = 10;
-    int* p = &a;    // & 取地址；* 声明指针
+    int* p = &a; // & 取地址；* 声明指针
     std::cout << "  a=" << a << "  &a=" << &a << "\n";
     std::cout << "  p=" << p << "（存的是 a 的地址）\n";
     std::cout << "  *p=" << *p << "（解引用，得到 a 的值）\n";
 
-    *p = 999;       // 通过指针修改值
+    *p = 999; // 通过指针修改值
     std::cout << "  *p=999 后 a=" << a << "\n";
 
     // 未初始化指针：危险！值不确定
@@ -59,7 +61,8 @@ void demo02_pointer() {
 }
 
 // ③ const 指针四种形式（从右往左读）
-void demo03_const_pointer() {
+void demo03_const_pointer()
+{
     std::cout << "\n③ const 指针（从右往左读）\n";
 
     int a = 10, b = 20;
@@ -67,12 +70,12 @@ void demo03_const_pointer() {
     // const int* p：指向 const 的指针——不能改值，能改指向
     const int* p1 = &a;
     // *p1 = 99;   // 错误
-    p1 = &b;       // 可以
+    p1 = &b; // 可以
     std::cout << "  const int* p1（不能改值，能改指向）: *p1=" << *p1 << "\n";
 
     // int* const p：const 指针——能改值，不能改指向
     int* const p2 = &a;
-    *p2 = 99;      // 可以
+    *p2 = 99; // 可以
     // p2 = &b;    // 错误
     std::cout << "  int* const p2（能改值，不能改指向）: *p2=" << *p2 << "\n";
 
@@ -87,11 +90,12 @@ void demo03_const_pointer() {
 }
 
 // ④ 指针算术：+1 移动一个元素大小
-void demo04_pointer_arithmetic() {
+void demo04_pointer_arithmetic()
+{
     std::cout << "\n④ 指针算术\n";
 
     int arr[] = {10, 20, 30, 40, 50};
-    int* p = arr;   // 数组名 = 首元素地址
+    int* p = arr; // 数组名 = 首元素地址
 
     std::cout << "  *p=" << *p << "（arr[0]）\n";
     ++p;
@@ -105,47 +109,49 @@ void demo04_pointer_arithmetic() {
 
     // 指针差：两指针相减得到元素个数（不是字节数）
     int* first = arr;
-    int* last  = arr + 4;
+    int* last = arr + 4;
     std::cout << "  last - first = " << (last - first)
-              << "（元素个数，不是字节数）\n";
+        << "（元素个数，不是字节数）\n";
 
     // 注意：指针算术只在同一数组内有意义，越界是未定义行为
 }
 
 // ⑤ void* 指针：万能指针
-void demo05_void_pointer() {
+void demo05_void_pointer()
+{
     std::cout << "\n⑤ void* 指针（万能指针）\n";
 
-    int    n = 42;
+    int n = 42;
     double d = 3.14;
 
-    void* vp = &n;   // void* 可以指向任何类型
+    void* vp = &n; // void* 可以指向任何类型
     std::cout << "  void* vp=&n: vp=" << vp << "\n";
     // *vp = 1;  // 错误：void* 不能解引用
-    int* ip = static_cast<int*>(vp);   // 需要强转才能解引用
+    int* ip = static_cast<int*>(vp); // 需要强转才能解引用
     std::cout << "  static_cast<int*>(vp): *ip=" << *ip << "\n";
 
-    vp = &d;   // 改为指向 double
+    vp = &d; // 改为指向 double
     std::cout << "  void* 可以指向任何类型，但解引用前必须转为正确类型\n";
     std::cout << "  （C 的 malloc/memcpy 大量用 void*，C++ 推荐用模板替代）\n";
 }
 
 // ⑥ new / delete：动态内存
-void demo06_dynamic_memory() {
+void demo06_dynamic_memory()
+{
     std::cout << "\n⑥ new / delete\n";
 
     // 分配单个对象
     int* p = new int(42);
     std::cout << "  new int(42): *p=" << *p << "\n";
-    delete p;      // 必须释放！
-    p = nullptr;   // 释放后置空，防悬空指针
+    delete p; // 必须释放！
+    p = nullptr; // 释放后置空，防悬空指针
 
     // 分配数组
-    int* arr = new int[5]{1,2,3,4,5};
+    int* arr = new int[5]{1, 2, 3, 4, 5};
     std::cout << "  new int[5]: ";
     for (int i = 0; i < 5; ++i) std::cout << arr[i] << " ";
     std::cout << "\n";
-    delete[] arr;  // 数组用 delete[]，不能用 delete
+    delete[] arr; // 数组用 delete[]，不能用 delete
     arr = nullptr;
 
     // 常见错误
@@ -158,7 +164,8 @@ void demo06_dynamic_memory() {
 }
 
 // ⑦ 智能指针（C++11）：自动释放内存
-void demo07_smart_pointers() {
+void demo07_smart_pointers()
+{
     std::cout << "\n⑦ 智能指针\n";
 
     // unique_ptr：独占所有权，离开作用域自动释放
@@ -166,27 +173,29 @@ void demo07_smart_pointers() {
         auto up = std::make_unique<int>(10);
         std::cout << "  unique_ptr: *up=" << *up << "\n";
         // 不能复制，只能移动
-        auto up2 = std::move(up);   // up 变为 nullptr
+        auto up2 = std::move(up); // up 变为 nullptr
         std::cout << "  move 后 up=" << up.get()
-                  << "  *up2=" << *up2 << "\n";
-    }   // up2 离开作用域，自动 delete
+            << "  *up2=" << *up2 << "\n";
+    } // up2 离开作用域，自动 delete
     std::cout << "  unique_ptr 已自动释放\n";
 
     // shared_ptr：共享所有权，引用计数
     auto sp1 = std::make_shared<int>(99);
     std::cout << "  shared_ptr: *sp1=" << *sp1
-              << "  引用数=" << sp1.use_count() << "\n";
+        << "  引用数=" << sp1.use_count() << "\n";
     {
-        auto sp2 = sp1;   // 共享，引用数+1
+        auto sp2 = sp1; // 共享，引用数+1
         std::cout << "  sp2=sp1 后引用数=" << sp1.use_count() << "\n";
-    }   // sp2 离开，引用数-1
+    } // sp2 离开，引用数-1
     std::cout << "  sp2 离开后引用数=" << sp1.use_count() << "\n";
 
     // weak_ptr：弱引用，不增加引用计数，用于解决循环引用
     std::weak_ptr<int> wp = sp1;
     std::cout << "  weak_ptr: expired=" << wp.expired()
-              << "（false=指向的对象还活着）\n";
-    if (auto locked = wp.lock()) {   // lock() 尝试转为 shared_ptr
+        << "（false=指向的对象还活着）\n";
+    if (auto locked = wp.lock())
+    {
+        // lock() 尝试转为 shared_ptr
         std::cout << "  lock() 成功: *locked=" << *locked << "\n";
     }
 
@@ -196,7 +205,8 @@ void demo07_smart_pointers() {
     std::cout << "    观察不拥有 → weak_ptr（解决循环引用）\n";
 }
 
-int main() {
+int main()
+{
     std::cout << "=== 06_pointers_refs: 指针与引用 ===";
     demo01_reference();
     demo02_pointer();

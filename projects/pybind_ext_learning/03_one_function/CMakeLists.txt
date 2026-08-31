@@ -8,11 +8,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # /W4 = MSVC 最高实用警告级别；/utf-8 = 源码和输出都用 UTF-8
 # -Wall -Wextra -Wpedantic = GCC/Clang 的全面警告
 # pybind11_add_module 不会自动设这些（它只管头文件路径、.pyd 后缀等）
-if(MSVC)
+if (MSVC)
     add_compile_options(/W4 /utf-8)
-else()
+else ()
     add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
+endif ()
 
 # find_package：让 CMake 去电脑上找 pybind11，找到了才能继续；REQUIRED：没找到就报错退出
 # 找到后创建 pybind11::headers 目标，内部已配好 include 路径：

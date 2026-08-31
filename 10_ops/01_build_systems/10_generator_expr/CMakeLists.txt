@@ -12,27 +12,27 @@ add_executable(app main.cpp)
 
 # ① 按编译器类型设置选项
 target_compile_options(app PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/W4 /utf-8>
-    $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra>
-    $<$<CXX_COMPILER_ID:Clang>:-Wall -Wextra -Wno-unused-parameter>
+        $<$<CXX_COMPILER_ID:MSVC>:/W4 /utf-8>
+        $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra>
+        $<$<CXX_COMPILER_ID:Clang>:-Wall -Wextra -Wno-unused-parameter>
 )
 
 # ② 按构建类型设置宏
 target_compile_definitions(app PRIVATE
-    $<$<CONFIG:Debug>:MY_DEBUG=1>
-    $<$<CONFIG:Release>:MY_RELEASE=1>
-    BUILD_TYPE="$<CONFIG>"
+        $<$<CONFIG:Debug>:MY_DEBUG=1>
+        $<$<CONFIG:Release>:MY_RELEASE=1>
+        BUILD_TYPE="$<CONFIG>"
 )
 
 # ③ BUILD_INTERFACE vs INSTALL_INTERFACE
 add_library(iface INTERFACE)
 target_include_directories(iface INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
 )
 target_link_libraries(app PRIVATE iface)
 
 # ④ 复合条件
 target_compile_definitions(app PRIVATE
-    $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:GNU>>:GCC_DEBUG=1>
+        $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:GNU>>:GCC_DEBUG=1>
 )

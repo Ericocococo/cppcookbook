@@ -4,17 +4,18 @@
 
 ## 1. 文件
 
-| 文件 | 说明 |
-|:---|:---|
-| `hello.cpp` | 一个 `add(a, b)` 函数 + PYBIND11_MODULE 绑定 |
-| `CMakeLists.txt` | 最简 pybind11 工程（`pybind11_add_module`） |
-| `test_hello.py` | 验证脚本 |
+| 文件               | 说明                                     |
+|:-----------------|:---------------------------------------|
+| `hello.cpp`      | 一个 `add(a, b)` 函数 + PYBIND11_MODULE 绑定 |
+| `CMakeLists.txt` | 最简 pybind11 工程（`pybind11_add_module`）  |
+| `test_hello.py`  | 验证脚本                                   |
 
 ---
 
 ## 2. 命令行 · MinGW（Git Bash）
 
-> pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux 构建见 § 4。
+> pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux
+> 构建见 § 4。
 
 ---
 
@@ -136,17 +137,18 @@ print(hello.__doc__)       # → "第三步：最小 pybind11 模块"
 
 ## 7. 本步要点
 
-| 概念 | 说明 |
-|:---|:---|
-| `#include <pybind11/pybind11.h>` | pybind11 唯一必须的头文件 |
-| `PYBIND11_MODULE(hello, m)` | 入口宏：`hello` = Python 模块名，`m` = 模块对象 |
-| `m.def("add", &add)` | 把 C++ 函数指针注册为 Python 函数 |
-| `pybind11_add_module(hello hello.cpp)` | CMake 中生成 Python 模块的一行命令 |
-| 产物 `hello.cp311-win_amd64.pyd` | Windows 上的 Python C 扩展模块（等同于 Linux 的 `.so`） |
+| 概念                                     | 说明                                          |
+|:---------------------------------------|:--------------------------------------------|
+| `#include <pybind11/pybind11.h>`       | pybind11 唯一必须的头文件                           |
+| `PYBIND11_MODULE(hello, m)`            | 入口宏：`hello` = Python 模块名，`m` = 模块对象         |
+| `m.def("add", &add)`                   | 把 C++ 函数指针注册为 Python 函数                     |
+| `pybind11_add_module(hello hello.cpp)` | CMake 中生成 Python 模块的一行命令                    |
+| 产物 `hello.cp311-win_amd64.pyd`         | Windows 上的 Python C 扩展模块（等同于 Linux 的 `.so`） |
 
 ---
 
 ## 8. 常见问题
 
 - **DLL load failed**：编译器与 Python 的运行时不匹配（见 § 2 说明），确认使用 MSVC 编译
-- **cmake 找不到 pybind11**：检查 `-Dpybind11_DIR` 路径是否正确，用 `python -c "import pybind11; print(pybind11.get_cmake_dir())"` 获取
+- **cmake 找不到 pybind11**：检查 `-Dpybind11_DIR` 路径是否正确，用
+  `python -c "import pybind11; print(pybind11.get_cmake_dir())"` 获取

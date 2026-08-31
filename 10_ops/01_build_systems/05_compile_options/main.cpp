@@ -4,7 +4,8 @@
 
 #include <iostream>
 
-int main() {
+int main()
+{
     std::cout << "① APP_VERSION = " << APP_VERSION << "\n";
 
 #ifdef DEBUG_BUILD

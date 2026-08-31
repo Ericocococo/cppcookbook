@@ -11,7 +11,9 @@
       "name": "debug",
       "displayName": "Debug",
       "inherits": "base",
-      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
     },
     {
       "name": "release",
@@ -33,8 +35,17 @@
     }
   ],
   "buildPresets": [
-    { "name": "debug",   "configurePreset": "debug"   },
-    { "name": "release", "configurePreset": "release" },
-    { "name": "asan",    "configurePreset": "asan"    }
+    {
+      "name": "debug",
+      "configurePreset": "debug"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "asan",
+      "configurePreset": "asan"
+    }
   ]
 }

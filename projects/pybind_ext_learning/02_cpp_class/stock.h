@@ -32,10 +32,11 @@
 #include <string>
 #include <utility>  // pair
 
-class Stock {
+class Stock
+{
     // 成员变量（数据）：默认 private，外部不能直接访问
-    std::string m_code;   // 股票代码
-    double      m_close;  // 收盘价
+    std::string m_code; // 股票代码
+    double m_close; // 收盘价
 
 public:
     // 以下都是成员函数（方法），外部可以调用

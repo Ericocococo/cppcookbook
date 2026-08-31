@@ -5,7 +5,8 @@
 #include <iostream>
 #include "math_utils.h"
 
-int main() {
+int main()
+{
     std::cout << "① 多源文件\n";
     std::cout << "  add(3, 4)      = " << add(3, 4) << "\n";
     std::cout << "  multiply(3, 4) = " << multiply(3, 4) << "\n";

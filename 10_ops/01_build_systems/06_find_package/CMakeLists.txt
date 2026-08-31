@@ -19,10 +19,10 @@ add_executable(app main.cpp)
 # 链接：通过 target 名传递所有编译/链接属性
 target_link_libraries(app PRIVATE Threads::Threads)
 
-if(ZLIB_FOUND)
+if (ZLIB_FOUND)
     target_link_libraries(app PRIVATE ZLIB::ZLIB)
     target_compile_definitions(app PRIVATE HAS_ZLIB)
     message(STATUS "ZLIB 已找到，版本：${ZLIB_VERSION_STRING}")
-else()
+else ()
     message(STATUS "ZLIB 未找到，相关功能禁用")
-endif()
+endif ()

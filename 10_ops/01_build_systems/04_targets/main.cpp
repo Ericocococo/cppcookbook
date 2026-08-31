@@ -5,7 +5,8 @@
 #include <iostream>
 #include "core.h"
 
-int main() {
+int main()
+{
     std::cout << "① target_include_directories PUBLIC 传播\n";
     std::cout << "  " << greet("CMake") << "\n";
 

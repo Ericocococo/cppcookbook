@@ -4,17 +4,18 @@
 
 ## 1. 文件
 
-| 文件 | 说明 |
-|:---|:---|
-| `types.cpp` | 4 个函数：avg / greet / count_letters / split_symbol |
-| `CMakeLists.txt` | 和第三步一样的 pybind11 工程 |
-| `test_types.py` | 验证脚本 |
+| 文件               | 说明                                               |
+|:-----------------|:-------------------------------------------------|
+| `types.cpp`      | 4 个函数：avg / greet / count_letters / split_symbol |
+| `CMakeLists.txt` | 和第三步一样的 pybind11 工程                              |
+| `test_types.py`  | 验证脚本                                             |
 
 ---
 
 ## 2. 命令行 · MinGW（Git Bash）
 
-> pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux 构建见 § 4。
+> pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux
+> 构建见 § 4。
 
 ---
 
@@ -132,12 +133,12 @@ t.split_symbol("600519.SH")   # → ['600519', 'SH']（C++ vector → Python lis
 
 ## 7. 本步新学了什么
 
-| 上一步 | 本步新增 |
-|:---|:---|
-| 只有 `int` 参数 | `double` / `string` / `vector` / `map` 全部支持 |
-| 无 | `#include <pybind11/stl.h>` — 加这一行，STL 容器自动和 Python list/dict 互转 |
-| 无 | `py::arg("name") = "世界"` — 带默认值的关键字参数 |
-| 返回 `int` | 返回 `map` / `vector`，pybind11 自动转为 `dict` / `list` |
+| 上一步         | 本步新增                                                             |
+|:------------|:-----------------------------------------------------------------|
+| 只有 `int` 参数 | `double` / `string` / `vector` / `map` 全部支持                      |
+| 无           | `#include <pybind11/stl.h>` — 加这一行，STL 容器自动和 Python list/dict 互转 |
+| 无           | `py::arg("name") = "世界"` — 带默认值的关键字参数                            |
+| 返回 `int`    | 返回 `map` / `vector`，pybind11 自动转为 `dict` / `list`                |
 
 ---
 

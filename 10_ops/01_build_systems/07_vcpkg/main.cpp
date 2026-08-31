@@ -6,7 +6,8 @@
 #include <nlohmann/json.hpp>
 #include <fmt/core.h>
 
-int main() {
+int main()
+{
     std::cout << "① nlohmann_json\n";
     nlohmann::json j = {
         {"name", "cppcookbook"},

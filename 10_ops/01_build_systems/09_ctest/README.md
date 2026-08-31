@@ -15,7 +15,8 @@ build/
 └── test_edge.exe     ← ctest 管理的测试程序
 ```
 
-`ctest` 的价值在于：统一运行所有测试、统计通过/失败数、CI 里自动拦截失败。**随手验证直接运行 `test_basic.exe` 即可，ctest 是工程化/CI 阶段才用的。**
+`ctest` 的价值在于：统一运行所有测试、统计通过/失败数、CI 里自动拦截失败。**随手验证直接运行 `test_basic.exe` 即可，ctest
+是工程化/CI 阶段才用的。**
 
 ---
 
@@ -166,21 +167,24 @@ ctest --test-dir build-msvc-ninja --output-on-failure -L edge
 
 ### 方案 B：Visual Studio Generator（无需激活 vcvarsall）
 
-CMake 自动检测 MSVC 工具链；Generator 是多配置，构建时须指定 `--config`，输出到 `build-msvc-vs\Debug\`。`-A x64` 是 VS Generator 专用的目标平台参数（x64 = 64 位），不加默认为 Win32（32 位）；Ninja Generator 不支持此参数，目标架构由 `vcvarsall.bat x64` 决定。
+CMake 自动检测 MSVC 工具链；Generator 是多配置，构建时须指定 `--config`，输出到 `build-msvc-vs\Debug\`。`-A x64` 是 VS
+Generator 专用的目标平台参数（x64 = 64 位），不加默认为 Win32（32 位）；Ninja Generator 不支持此参数，目标架构由
+`vcvarsall.bat x64` 决定。
 
 **CMake 怎么找到 MSVC 工具链：**
 
-1. **`vswhere.exe`**（主要手段）：VS 安装时在固定位置放置 `C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe`，CMake 启动时调用它查询所有已安装的 VS 实例路径和版本。
+1. **`vswhere.exe`**（主要手段）：VS 安装时在固定位置放置
+   `C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe`，CMake 启动时调用它查询所有已安装的 VS 实例路径和版本。
 2. **Windows 注册表**：VS 安装时写入注册表，CMake 作为备用查询手段。
 
 **为什么 VS Generator 不需要 vcvarsall，Ninja 却需要：**
 
-| | VS Generator | Ninja Generator |
-|---|---|---|
-| CMake 生成的产物 | `.sln` / `.vcxproj` | `build.ninja` |
-| 实际构建由谁执行 | MSBuild | ninja → 直接调 cl.exe |
-| 编译器环境由谁设置 | MSBuild 通过 vswhere 自行配置 | 无人设置，依赖调用方提前准备 |
-| 需要 vcvarsall | 不需要 | 需要 |
+|              | VS Generator            | Ninja Generator    |
+|--------------|-------------------------|--------------------|
+| CMake 生成的产物  | `.sln` / `.vcxproj`     | `build.ninja`      |
+| 实际构建由谁执行     | MSBuild                 | ninja → 直接调 cl.exe |
+| 编译器环境由谁设置    | MSBuild 通过 vswhere 自行配置 | 无人设置，依赖调用方提前准备     |
+| 需要 vcvarsall | 不需要                     | 需要                 |
 
 ```bat
 set CMAKE=D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
@@ -210,39 +214,42 @@ ctest --test-dir build-msvc-vs -C Debug --output-on-failure
 
 **`-A` 可选值：**
 
-| 值 | 说明 |
-|---|---|
-| `x64` | 64 位 x86（Intel/AMD），现代 Windows 项目标准选择 |
-| `Win32` | 32 位 x86，不指定 `-A` 时的默认值 |
-| `ARM` | ARM 32 位，嵌入式 / 旧版 Windows on ARM |
-| `ARM64` | ARM 64 位，Surface Pro X、新款 ARM PC |
+| 值         | 说明                                         |
+|-----------|--------------------------------------------|
+| `x64`     | 64 位 x86（Intel/AMD），现代 Windows 项目标准选择      |
+| `Win32`   | 32 位 x86，不指定 `-A` 时的默认值                    |
+| `ARM`     | ARM 32 位，嵌入式 / 旧版 Windows on ARM           |
+| `ARM64`   | ARM 64 位，Surface Pro X、新款 ARM PC           |
 | `ARM64EC` | ARM64 兼容模式（可混合加载 x64 DLL），Windows 11 过渡期使用 |
 
 **VS Generator 专用参数：**
 
-| 参数 | 说明 |
-|---|---|
-| `-G "Visual Studio 18 2026"` | 指定 Generator，版本号须与本机 VS 一致 |
-| `-A x64` | 目标平台；不指定默认 Win32（32 位）；可选值：`x64`、`Win32`、`ARM`、`ARM64`、`ARM64EC` |
-| `--config Debug/Release` | 构建时指定配置，VS Generator 是多配置，**不用** `-DCMAKE_BUILD_TYPE` |
+| 参数                           | 说明                                                               |
+|------------------------------|------------------------------------------------------------------|
+| `-G "Visual Studio 18 2026"` | 指定 Generator，版本号须与本机 VS 一致                                       |
+| `-A x64`                     | 目标平台；不指定默认 Win32（32 位）；可选值：`x64`、`Win32`、`ARM`、`ARM64`、`ARM64EC` |
+| `--config Debug/Release`     | 构建时指定配置，VS Generator 是多配置，**不用** `-DCMAKE_BUILD_TYPE`            |
 
-其他通用配置参数（`-DCMAKE_INSTALL_PREFIX`、`-DCMAKE_TOOLCHAIN_FILE`、`-DCMAKE_EXPORT_COMPILE_COMMANDS` 等）见 [cmake_syntax.md § 0.1 配置阶段](../cmake_syntax.md)。
+其他通用配置参数（`-DCMAKE_INSTALL_PREFIX`、`-DCMAKE_TOOLCHAIN_FILE`、`-DCMAKE_EXPORT_COMPILE_COMMANDS`
+等）见 [cmake_syntax.md § 0.1 配置阶段](../cmake_syntax.md)。
 
 **生成的 build 目录中各 `.vcxproj` 的作用：**
 
-| 文件 | 作用 |
-|---|---|
-| `calc.vcxproj` | 静态库，对应 `add_library(calc STATIC ...)` |
-| `test_basic.vcxproj` | 基础测试目标，对应 `add_executable(test_basic ...)` |
-| `test_edge.vcxproj` | 边界测试目标，对应 `add_executable(test_edge ...)` |
-| `ALL_BUILD.vcxproj` | 构建所有目标，等价于 `cmake --build`，VS 里默认 Build 触发的就是它 |
+| 文件                   | 作用                                                                        |
+|----------------------|---------------------------------------------------------------------------|
+| `calc.vcxproj`       | 静态库，对应 `add_library(calc STATIC ...)`                                     |
+| `test_basic.vcxproj` | 基础测试目标，对应 `add_executable(test_basic ...)`                                |
+| `test_edge.vcxproj`  | 边界测试目标，对应 `add_executable(test_edge ...)`                                 |
+| `ALL_BUILD.vcxproj`  | 构建所有目标，等价于 `cmake --build`，VS 里默认 Build 触发的就是它                            |
 | `ZERO_CHECK.vcxproj` | 监控 `CMakeLists.txt` 修改时间；检测到变化时自动重新运行 cmake 配置，刷新 `.vcxproj`，无需手动重跑 cmake |
 
 用 VS 打开工程：双击 `ctest_demo.slnx`（VS 2022 17.x+ 的新格式）或 `ctest_demo.sln`，解决方案加载后各项目均可见。
 
 ### 方案 C：x64 Native Tools Command Prompt + Ninja（无需激活 vcvarsall）
 
-开始菜单搜索 `x64 Native Tools Command Prompt for VS 2026` 打开。窗口启动时自动运行激活脚本（效果等同于 `call vcvarsall.bat x64`），已把 cl.exe / link.exe / ninja.exe / cmake.exe 加入当前会话 PATH，并注入 INCLUDE / LIB / LIBPATH。进去后三步运行：
+开始菜单搜索 `x64 Native Tools Command Prompt for VS 2026` 打开。窗口启动时自动运行激活脚本（效果等同于
+`call vcvarsall.bat x64`），已把 cl.exe / link.exe / ninja.exe / cmake.exe 加入当前会话 PATH，并注入 INCLUDE / LIB /
+LIBPATH。进去后三步运行：
 
 ```bat
 :: 配置
@@ -259,23 +266,23 @@ ctest --test-dir build-msvc-ninja --output-on-failure
 
 ## 3. 对比
 
-| | MinGW 方案 A<br>Ninja | MinGW 方案 B<br>MinGW Makefiles | MinGW 方案 C<br>Ninja Multi-Config |
-|---|---|---|---|
-| build 目录 | `build-mingw-ninja` | `build-mingw-make` | `build-mingw-ninja-mc` |
-| 构建工具 | ninja.exe | mingw32-make.exe | ninja.exe |
-| 配置数 | 单配置 | 单配置 | 多配置（Debug/Release 共目录） |
-| 速度 | 最快 | 慢 | 快 |
-| 测试命令 | `ctest --test-dir build-mingw-ninja` | `ctest --test-dir build-mingw-make` | `ctest --test-dir build-mingw-ninja-mc -C Debug` |
-| 适用场景 | 日常首选 | 没有 ninja.exe 时备选 | 需频繁切换 Debug/Release |
+|          | MinGW 方案 A<br>Ninja                  | MinGW 方案 B<br>MinGW Makefiles       | MinGW 方案 C<br>Ninja Multi-Config                 |
+|----------|--------------------------------------|-------------------------------------|--------------------------------------------------|
+| build 目录 | `build-mingw-ninja`                  | `build-mingw-make`                  | `build-mingw-ninja-mc`                           |
+| 构建工具     | ninja.exe                            | mingw32-make.exe                    | ninja.exe                                        |
+| 配置数      | 单配置                                  | 单配置                                 | 多配置（Debug/Release 共目录）                           |
+| 速度       | 最快                                   | 慢                                   | 快                                                |
+| 测试命令     | `ctest --test-dir build-mingw-ninja` | `ctest --test-dir build-mingw-make` | `ctest --test-dir build-mingw-ninja-mc -C Debug` |
+| 适用场景     | 日常首选                                 | 没有 ninja.exe 时备选                    | 需频繁切换 Debug/Release                              |
 
-| | MSVC 方案 A<br>vcvarsall + Ninja | MSVC 方案 B<br>VS Generator | MSVC 方案 C<br>Native Tools + Ninja |
-|---|---|---|---|
-| build 目录 | `build-msvc-ninja` | `build-msvc-vs` | `build-msvc-ninja` |
-| 需要激活 | 是（call vcvarsall） | 否 | 否（窗口自动激活） |
-| 构建工具 | ninja.exe | msbuild.exe | ninja.exe |
-| 配置数 | 单配置 | 多配置（--config） | 单配置 |
-| 测试命令 | `ctest --test-dir build-msvc-ninja` | `ctest --test-dir build-msvc-vs -C Debug` | `ctest --test-dir build-msvc-ninja` |
-| 适用场景 | 脚本/自动化首选 | 不想手动激活 | 交互式操作 |
+|          | MSVC 方案 A<br>vcvarsall + Ninja      | MSVC 方案 B<br>VS Generator                 | MSVC 方案 C<br>Native Tools + Ninja   |
+|----------|-------------------------------------|-------------------------------------------|-------------------------------------|
+| build 目录 | `build-msvc-ninja`                  | `build-msvc-vs`                           | `build-msvc-ninja`                  |
+| 需要激活     | 是（call vcvarsall）                   | 否                                         | 否（窗口自动激活）                           |
+| 构建工具     | ninja.exe                           | msbuild.exe                               | ninja.exe                           |
+| 配置数      | 单配置                                 | 多配置（--config）                             | 单配置                                 |
+| 测试命令     | `ctest --test-dir build-msvc-ninja` | `ctest --test-dir build-msvc-vs -C Debug` | `ctest --test-dir build-msvc-ninja` |
+| 适用场景     | 脚本/自动化首选                            | 不想手动激活                                    | 交互式操作                               |
 
 ---
 

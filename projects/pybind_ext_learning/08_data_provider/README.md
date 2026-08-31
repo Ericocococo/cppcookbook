@@ -13,15 +13,15 @@
 
 ## 1. 文件
 
-| 文件 | 说明 |
-|:---|:---|
-| `data_mgrs.h` | Mgr 类声明 + 数据结构（FHSGRecord / UpDownLimitRecord 等） |
-| `data_mgrs.cpp` | Mgr 类实现：Load（排序存储）+ Query（区间过滤 / 二分查找） |
-| `main.cpp` | 4 个 C++ demo：分红送股 / 涨跌停价 / 板块 / 证券类型 |
-| `bindings.cpp` | pybind11 绑定：DataProvider 聚合类 + 记录类型暴露给 Python |
-| `test_bindings.py` | Python 侧验证脚本：Load → Query → pd.DataFrame |
-| `build.py` | 一键编译脚本（参考框架 build_engine.py）：定位 pybind11 → 配置 → 编译 → 拷贝 .pyd |
-| `CMakeLists.txt` | 纯 C++ exe（默认）+ pybind11 模块（`-DBUILD_PYBIND=ON`） |
+| 文件                 | 说明                                                           |
+|:-------------------|:-------------------------------------------------------------|
+| `data_mgrs.h`      | Mgr 类声明 + 数据结构（FHSGRecord / UpDownLimitRecord 等）             |
+| `data_mgrs.cpp`    | Mgr 类实现：Load（排序存储）+ Query（区间过滤 / 二分查找）                       |
+| `main.cpp`         | 4 个 C++ demo：分红送股 / 涨跌停价 / 板块 / 证券类型                         |
+| `bindings.cpp`     | pybind11 绑定：DataProvider 聚合类 + 记录类型暴露给 Python                |
+| `test_bindings.py` | Python 侧验证脚本：Load → Query → pd.DataFrame                     |
+| `build.py`         | 一键编译脚本（参考框架 build_engine.py）：定位 pybind11 → 配置 → 编译 → 拷贝 .pyd |
+| `CMakeLists.txt`   | 纯 C++ exe（默认）+ pybind11 模块（`-DBUILD_PYBIND=ON`）              |
 
 ---
 
@@ -267,7 +267,8 @@ python test_bindings.py
 
 ### 7.1 问题背景
 
-量化回测引擎每个 bar 需要查询多种辅助数据（分红送股、涨跌停价、板块成份股、证券类型等）。原始实现在 Python 侧每次调用都读 parquet 文件 + pandas 过滤，存在两个问题：
+量化回测引擎每个 bar 需要查询多种辅助数据（分红送股、涨跌停价、板块成份股、证券类型等）。原始实现在 Python 侧每次调用都读
+parquet 文件 + pandas 过滤，存在两个问题：
 
 1. **性能**：回测 5000 标的 × 2500 bar，每次都读文件+内存过滤，开销大
 2. **未来函数**：Python 实现未统一做时间截止过滤，查询可能返回"未来"数据导致回测结果失真
@@ -312,11 +313,11 @@ python test_bindings.py
     └─────────────────────────────────────┘
 ```
 
-| 选型 | 理由 |
-|:---|:---|
-| `SymbolKey`（`std::array<char,16>`）而非 `std::string` | 定长 16 字节，避免堆分配，哈希更快；股票代码最长 `688981.SH`（9 字节）足够 |
-| `vector<Record>` 按时间升序 | 支持 `upper_bound` 二分查找 O(log N)，QueryLatest 取 `<= cur_ns` 的最后一条 |
-| `unordered_map` 而非 `map` | 按 symbol 查找 O(1) 均摊，回测中每 bar 多次查找性能关键 |
+| 选型                                                 | 理由                                                             |
+|:---------------------------------------------------|:---------------------------------------------------------------|
+| `SymbolKey`（`std::array<char,16>`）而非 `std::string` | 定长 16 字节，避免堆分配，哈希更快；股票代码最长 `688981.SH`（9 字节）足够                 |
+| `vector<Record>` 按时间升序                             | 支持 `upper_bound` 二分查找 O(log N)，QueryLatest 取 `<= cur_ns` 的最后一条 |
+| `unordered_map` 而非 `map`                           | 按 symbol 查找 O(1) 均摊，回测中每 bar 多次查找性能关键                          |
 
 ### 7.4 cur_ns 防未来函数
 
@@ -370,36 +371,37 @@ C++ 层                          Python 层
 
 绑定要点：
 
-| C++ 返回类型 | pybind11 转换 | Python 侧接收 |
-|:---|:---|:---|
-| `vector<string>` | pybind11/stl 自动转 | `list[str]` |
-| `unordered_map<string,bool>` | pybind11/stl 自动转 | `dict[str, bool]` |
-| `vector<FHSGRecord>` | 绑定中手动转为 dict of lists | `dict`，可直接 `pd.DataFrame(result)` |
+| C++ 返回类型                     | pybind11 转换           | Python 侧接收                        |
+|:-----------------------------|:----------------------|:----------------------------------|
+| `vector<string>`             | pybind11/stl 自动转      | `list[str]`                       |
+| `unordered_map<string,bool>` | pybind11/stl 自动转      | `dict[str, bool]`                 |
+| `vector<FHSGRecord>`         | 绑定中手动转为 dict of lists | `dict`，可直接 `pd.DataFrame(result)` |
 
-`vector<Record>` 不直接暴露给 Python（逐条构造 dict 开销大），而是在绑定层转为 dict of lists（列式），Python 侧一行 `pd.DataFrame()` 即可。
+`vector<Record>` 不直接暴露给 Python（逐条构造 dict 开销大），而是在绑定层转为 dict of lists（列式），Python 侧一行
+`pd.DataFrame()` 即可。
 
 ---
 
 ## 8. 与实际框架的对应关系
 
-| demo 中 | 框架中 | 差异 |
-|:---|:---|:---|
-| `data_mgrs.h/cpp` | `pycpp_quant/.../reference_data.h/cpp`（框架侧现名） | 去掉 arrow/parquet 读取，用内存直接 Load |
-| `bindings.cpp` DataProvider 类 | `bindings_engine.cpp` CDataProvider 绑定段 | 结构一致，框架版多了文件加载 |
-| `FHSGRecord` 构造后传入 | 框架版从 parquet 读取后填充 | Load 数据来源不同，Query 逻辑完全一致 |
-| `SymbolKey`（std::array<char,16>） | `CSymbolType`（同定义） | 同一设计，名字不同 |
+| demo 中                           | 框架中                                           | 差异                             |
+|:---------------------------------|:----------------------------------------------|:-------------------------------|
+| `data_mgrs.h/cpp`                | `pycpp_quant/.../reference_data.h/cpp`（框架侧现名） | 去掉 arrow/parquet 读取，用内存直接 Load |
+| `bindings.cpp` DataProvider 类    | `bindings_engine.cpp` CDataProvider 绑定段       | 结构一致，框架版多了文件加载                 |
+| `FHSGRecord` 构造后传入               | 框架版从 parquet 读取后填充                            | Load 数据来源不同，Query 逻辑完全一致       |
+| `SymbolKey`（std::array<char,16>） | `CSymbolType`（同定义）                            | 同一设计，名字不同                      |
 
 ---
 
 ## 9. 英文及缩写说明
 
-| 缩写/术语 | 含义 |
-|:---|:---|
-| `cur_ns` | current nanoseconds — 当前 bar 的纳秒时间戳，用于截止查询防止未来函数 |
-| `FHSG` | 分红送股（Fen Hong Song Gu） |
-| `QueryLatest` | 查最新一条 — 二分查找取 `<= cur_ns` 的最后一条记录 |
-| `SymbolKey` | 定长 16 字节 char 数组，用作 unordered_map 的 key（避免 std::string 的堆分配） |
-| `upper_bound` | STL 算法 — 找第一个大于目标值的位置，减一即为 `<=` 目标值的最后一个 |
-| `pybind11` | C++ → Python 绑定库，将 C++ 类/函数暴露为 Python 可调用的模块 |
-| `.pyd` | Windows 上 Python C 扩展模块的动态库格式（等同于 Linux 的 `.so`） |
-| `BUILD_PYBIND` | CMake 选项，`ON` 时额外编译 pybind11 Python 模块 |
+| 缩写/术语          | 含义                                                           |
+|:---------------|:-------------------------------------------------------------|
+| `cur_ns`       | current nanoseconds — 当前 bar 的纳秒时间戳，用于截止查询防止未来函数             |
+| `FHSG`         | 分红送股（Fen Hong Song Gu）                                       |
+| `QueryLatest`  | 查最新一条 — 二分查找取 `<= cur_ns` 的最后一条记录                            |
+| `SymbolKey`    | 定长 16 字节 char 数组，用作 unordered_map 的 key（避免 std::string 的堆分配） |
+| `upper_bound`  | STL 算法 — 找第一个大于目标值的位置，减一即为 `<=` 目标值的最后一个                     |
+| `pybind11`     | C++ → Python 绑定库，将 C++ 类/函数暴露为 Python 可调用的模块                 |
+| `.pyd`         | Windows 上 Python C 扩展模块的动态库格式（等同于 Linux 的 `.so`）             |
+| `BUILD_PYBIND` | CMake 选项，`ON` 时额外编译 pybind11 Python 模块                       |

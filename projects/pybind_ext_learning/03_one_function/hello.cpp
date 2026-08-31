@@ -17,10 +17,11 @@
 // CMake 把 include/ 加入头文件搜索路径，加 pybind11/ 前缀是为了防重名
 #include <pybind11/pybind11.h>   // pybind11 核心头文件
 
-namespace py = pybind11;         // 本步没用上，但后续会大量写 py::arg / py::class_ 等，先认识这个缩写
+namespace py = pybind11; // 本步没用上，但后续会大量写 py::arg / py::class_ 等，先认识这个缩写
 
 // 这是一个普通的 C++ 函数，和 Python 没有任何关系
-int add(int a, int b) {
+int add(int a, int b)
+{
     return a + b;
 }
 
@@ -47,7 +48,8 @@ int add(int a, int b) {
 // 做完后 Python 侧等于有了：
 //   hello.add = add           # C++ 函数挂到模块上
 //   hello.__doc__ = "..."     # m.doc() 设置的模块文档
-PYBIND11_MODULE(hello, m) {
+PYBIND11_MODULE(hello, m)
+{
     m.doc() = "第三步：最小 pybind11 模块";
     m.def("add", &add, "两个整数相加");
 }

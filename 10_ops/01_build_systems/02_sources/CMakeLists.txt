@@ -7,8 +7,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # 多源文件：显式列举，不用 GLOB（CMake 不会自动感知新增文件）
 add_executable(multi_sources
-    main.cpp
-    math_utils.cpp
+        main.cpp
+        math_utils.cpp
 )
 
 # 头文件搜索路径

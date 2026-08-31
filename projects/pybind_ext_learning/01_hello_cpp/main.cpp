@@ -22,8 +22,7 @@
 #include "hello.h"
 
 // 一个最简单的 C++ 函数
-int add(int a, int b)
-{
+int add(int a, int b) {
     return a + b;
 }
 
@@ -83,9 +82,9 @@ int add(int a, int b)
 // 取地址 & 产生指针；引用 & 内部就是个指针，只是编译器隐藏了 * 和 & 细节
 // 为什么函数参数用 & 不用 *：调用直接传变量，函数内直接用，省事
 // 为什么 this 是指针：C++ 语法规定 this 就是指针，编译器内部机制，改不了
-double avg(const std::vector<double>& v)
-{
-    if (v.empty()) return 0.0;
+double avg(const std::vector<double>& v) {
+    if (v.empty())
+        return 0.0;
 
     double sum = 0.0;
 
@@ -105,23 +104,20 @@ double avg(const std::vector<double>& v)
 
 // 指针参数：函数内通过 *p 修改调用方的变量
 //   调用时必须传地址：update_close(&close, 1600.0)，& 是取地址符
-void update_close(double* p, double v)
-{
+void update_close(double* p, double v) {
     *p = v;
 }
 
 // 引用参数：r 是调用方变量的别名，直接修改
 //   调用直接传变量：update_close_ref(close, 1600.0)，不用 & 也不用 *
-void update_close_ref(double& r, double v)
-{
+void update_close_ref(double& r, double v) {
     r = v;
 }
 
 // 值传递参数：r 是副本，函数内修改不影响调用方
 //   想拿回修改结果必须靠返回值：double after = update_close_copy(close, 2000.0)
 //   对比：引用/指针能改到调用方，值传递改不到
-double update_close_copy(double r, double v)
-{
+double update_close_copy(double r, double v) {
     r = v;
     return r;
 }
@@ -147,8 +143,7 @@ double update_close_copy(double r, double v)
 //   示例："BTC.USDT".find('.') → 返回 3（点的位置）
 //         "BTC.USDT".substr(0, 3) → "BTC"
 //         "BTC.USDT".substr(4)    → "USDT"
-std::pair<std::string, std::string> split_symbol(const std::string& symbol)
-{
+std::pair<std::string, std::string> split_symbol(const std::string& symbol) {
     /* auto：让编译器自动推断类型，不用手写
        size_t dot = symbol.find('.')  ← 简单类型显式写，不用 auto */
     size_t dot = symbol.find('.');
@@ -164,8 +159,7 @@ std::pair<std::string, std::string> split_symbol(const std::string& symbol)
 //   << 可以连续拼接多个内容
 //   "\n"                   → 换行符
 //   std::endl              → 换行 + 强制刷新，比 "\n" 慢，一般不需要
-int main()
-{
+int main() {
     std::cout << "========== 第一步：纯 C++ ==========\n\n";
 
     // ① 整数加法
@@ -202,7 +196,7 @@ int main()
     std::cout << "   引用参数: update_close_ref(close, 1900) 后 close = " << close << "\n";
     double after = update_close_copy(close, 2000.0);
     std::cout << "   值传递参数: update_close_copy(close, 2000) 返回 " << after
-              << "，close 仍 = " << close << "\n";
+        << "，close 仍 = " << close << "\n";
 
     std::cout << "\n========== 编译环境正常 ==========\n";
     return 0;

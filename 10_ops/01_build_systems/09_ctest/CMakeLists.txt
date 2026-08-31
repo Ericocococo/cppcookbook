@@ -21,8 +21,8 @@ add_test(NAME edge_cases COMMAND test_edge)
 
 # ② 为测试设置超时、环境变量、标签
 set_tests_properties(edge_cases PROPERTIES
-    TIMEOUT 5
-    LABELS "edge"
+        TIMEOUT 5
+        LABELS "edge"
 )
 
 # ③ 运行：cmake --build build && ctest --build-dir build --output-on-failure

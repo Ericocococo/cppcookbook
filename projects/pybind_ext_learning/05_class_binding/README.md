@@ -4,13 +4,13 @@
 
 ## 1. 文件
 
-| 文件 | 说明 | 依赖 pybind11？ |
-|:---|:---|:---:|
-| `stock.h` | Stock 类声明（纯 C++ 头文件） | ✗ |
-| `stock.cpp` | Stock 类实现（纯 C++） | ✗ |
-| `bindings.cpp` | pybind11 绑定（唯一引用 pybind11 的地方） | ✓ |
-| `CMakeLists.txt` | `pybind11_add_module(stock_demo stock.cpp bindings.cpp)` | — |
-| `test_stock.py` | 验证脚本 | — |
+| 文件               | 说明                                                       | 依赖 pybind11？ |
+|:-----------------|:---------------------------------------------------------|:------------:|
+| `stock.h`        | Stock 类声明（纯 C++ 头文件）                                     |      ✗       |
+| `stock.cpp`      | Stock 类实现（纯 C++）                                         |      ✗       |
+| `bindings.cpp`   | pybind11 绑定（唯一引用 pybind11 的地方）                           |      ✓       |
+| `CMakeLists.txt` | `pybind11_add_module(stock_demo stock.cpp bindings.cpp)` |      —       |
+| `test_stock.py`  | 验证脚本                                                     |      —       |
 
 > **分离的好处**：`stock.h/cpp` 是纯 C++，可以被其他 C++ 项目复用，不强制依赖 pybind11。绑定只是"给 Python 开一扇窗"。
 
@@ -18,7 +18,8 @@
 
 ## 2. 命令行 · MinGW（Git Bash）
 
-> pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux 构建见 § 4。
+> pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux
+> 构建见 § 4。
 
 ---
 
@@ -142,13 +143,13 @@ print(f"涨停={up:.1f}, 跌停={down:.1f}")   # → 涨停=1760.0, 跌停=1440.
 
 ## 7. 本步新学了什么
 
-| 前四步 | 本步新增 |
-|:---|:---|
-| 只绑定全局函数 | `py::class_<Stock>(m, "Stock")` 绑定整个类 |
+| 前四步      | 本步新增                                          |
+|:---------|:----------------------------------------------|
+| 只绑定全局函数  | `py::class_<Stock>(m, "Stock")` 绑定整个类         |
 | 单文件 .cpp | `.h`（声明）+ `.cpp`（实现）+ `bindings.cpp`（绑定）三文件分离 |
-| 无 | `py::init<string, double>()` 绑定构造函数 |
-| 无 | `.def_property_readonly("close", ...)` 绑定只读属性 |
-| 无 | `.def("__repr__", ...)` 绑定 Python 特殊方法 |
+| 无        | `py::init<string, double>()` 绑定构造函数           |
+| 无        | `.def_property_readonly("close", ...)` 绑定只读属性 |
+| 无        | `.def("__repr__", ...)` 绑定 Python 特殊方法        |
 
 ---
 
@@ -173,10 +174,10 @@ stock.h          stock.cpp          bindings.cpp
 
 ## 9. 方法 vs 属性（最常见的坑）
 
-| 绑定方式 | Python 访问 | 加括号？ |
-|:---|:---|:---|
-| `.def("code", &Stock::code)` | `s.code()` | ✓ 必须加 |
-| `.def_property_readonly("close", ...)` | `s.close` | ✗ 不能加（加了报 TypeError） |
-| `.def_readwrite("price", &Stock::m_price)` | `s.price` / `s.price = 100` | ✗ 不加（可读可写） |
+| 绑定方式                                       | Python 访问                   | 加括号？                 |
+|:-------------------------------------------|:----------------------------|:---------------------|
+| `.def("code", &Stock::code)`               | `s.code()`                  | ✓ 必须加                |
+| `.def_property_readonly("close", ...)`     | `s.close`                   | ✗ 不能加（加了报 TypeError） |
+| `.def_readwrite("price", &Stock::m_price)` | `s.price` / `s.price = 100` | ✗ 不加（可读可写）           |
 
 > 规律：`def` 注册的是方法（callable），`def_property*` / `def_readwrite` 注册的是属性（descriptor）。

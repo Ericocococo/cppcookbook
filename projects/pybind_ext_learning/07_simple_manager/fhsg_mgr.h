@@ -10,8 +10,7 @@
 #include <unordered_map>
 #include <vector>
 
-struct FHSGRecord
-{
+struct FHSGRecord {
     // 没有手写构造函数，编译器自动生成无参构造：
     //   FHSGRecord() {}
     std::string symbol;
@@ -20,8 +19,7 @@ struct FHSGRecord
     double cash_divi; // 派息
 };
 
-class CFHSGMgr
-{
+class CFHSGMgr {
 public:
     // 没有手写构造函数，编译器自动生成无参构造：
     //   CFHSGMgr() {}
@@ -40,8 +38,7 @@ public:
     std::vector<std::string> GetSymbols() const;
 
     // 已加载的标的数量
-    size_t Size() const
-    {
+    size_t Size() const {
         return m_data.size();
     }
 

@@ -12,23 +12,23 @@
 cmake -B <构建目录> [选项...]
 ```
 
-| 参数 | 说明 |
-|------|------|
-| `-B build` | 指定构建目录（build 文件夹），不存在时自动创建 |
-| `-S .` | 指定源目录（含 CMakeLists.txt），默认为当前目录，通常可省略 |
-| `-G Ninja` | 指定构建系统生成器；常用值：`Ninja`（快）、`"MinGW Makefiles"`、`"Visual Studio 18 2026"` |
-| `-A x64` | 目标平台，**VS Generator 专用**；不指定默认 Win32（32 位）；可选值：`x64`（64 位）、`Win32`（32 位）、`ARM`、`ARM64`、`ARM64EC` |
-| `-DCMAKE_BUILD_TYPE=Debug` | 构建类型（单配置 Generator 用）：`Debug` / `Release` / `RelWithDebInfo` / `MinSizeRel`；VS Generator 不用此参数，改用 `--config` |
-| `-DCMAKE_CXX_COMPILER="路径"` | 指定 C++ 编译器可执行文件路径；编译器不在 PATH 时必填 |
-| `-DCMAKE_MAKE_PROGRAM="路径"` | 指定构建工具（ninja.exe / mingw32-make.exe）路径；构建工具不在 PATH 时必填 |
-| `-DCMAKE_TOOLCHAIN_FILE=路径` | 工具链文件（vcpkg 集成时用）|
-| `-DCMAKE_INSTALL_PREFIX=路径` | `cmake --install` 的安装根目录，默认 `/usr/local`（Linux）或 `C:/Program Files`（Windows）|
-| `-DCMAKE_CXX_STANDARD=17` | 强制 C++ 标准（17 / 20 / 23），等价于 CMakeLists.txt 里的 `set(CMAKE_CXX_STANDARD 17)` |
-| `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` | 导出 `compile_commands.json`，供 clangd / IDE 静态分析用；**Ninja 支持，VS Generator 不支持** |
-| `-DCMAKE_VERBOSE_MAKEFILE=ON` | 构建时打印完整编译命令，排查编译参数问题用 |
-| `-DFOO=ON` | 向 CMakeLists.txt 传递缓存变量，等价于 `set(FOO ON CACHE BOOL "")` |
-| `-Wno-dev` | 抑制 CMakeLists.txt 的开发者警告 |
-| `--fresh` | 强制删除旧缓存重新配置（CMake 3.24+）|
+| 参数                                   | 说明                                                                                                           |
+|--------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| `-B build`                           | 指定构建目录（build 文件夹），不存在时自动创建                                                                                   |
+| `-S .`                               | 指定源目录（含 CMakeLists.txt），默认为当前目录，通常可省略                                                                        |
+| `-G Ninja`                           | 指定构建系统生成器；常用值：`Ninja`（快）、`"MinGW Makefiles"`、`"Visual Studio 18 2026"`                                       |
+| `-A x64`                             | 目标平台，**VS Generator 专用**；不指定默认 Win32（32 位）；可选值：`x64`（64 位）、`Win32`（32 位）、`ARM`、`ARM64`、`ARM64EC`             |
+| `-DCMAKE_BUILD_TYPE=Debug`           | 构建类型（单配置 Generator 用）：`Debug` / `Release` / `RelWithDebInfo` / `MinSizeRel`；VS Generator 不用此参数，改用 `--config` |
+| `-DCMAKE_CXX_COMPILER="路径"`          | 指定 C++ 编译器可执行文件路径；编译器不在 PATH 时必填                                                                             |
+| `-DCMAKE_MAKE_PROGRAM="路径"`          | 指定构建工具（ninja.exe / mingw32-make.exe）路径；构建工具不在 PATH 时必填                                                       |
+| `-DCMAKE_TOOLCHAIN_FILE=路径`          | 工具链文件（vcpkg 集成时用）                                                                                            |
+| `-DCMAKE_INSTALL_PREFIX=路径`          | `cmake --install` 的安装根目录，默认 `/usr/local`（Linux）或 `C:/Program Files`（Windows）                                 |
+| `-DCMAKE_CXX_STANDARD=17`            | 强制 C++ 标准（17 / 20 / 23），等价于 CMakeLists.txt 里的 `set(CMAKE_CXX_STANDARD 17)`                                   |
+| `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` | 导出 `compile_commands.json`，供 clangd / IDE 静态分析用；**Ninja 支持，VS Generator 不支持**                                |
+| `-DCMAKE_VERBOSE_MAKEFILE=ON`        | 构建时打印完整编译命令，排查编译参数问题用                                                                                        |
+| `-DFOO=ON`                           | 向 CMakeLists.txt 传递缓存变量，等价于 `set(FOO ON CACHE BOOL "")`                                                      |
+| `-Wno-dev`                           | 抑制 CMakeLists.txt 的开发者警告                                                                                     |
+| `--fresh`                            | 强制删除旧缓存重新配置（CMake 3.24+）                                                                                     |
 
 ```bash
 # 完整示例
@@ -45,13 +45,13 @@ cmake -B build -G Ninja \
 cmake --build <构建目录> [选项...]
 ```
 
-| 参数 | 说明 |
-|------|------|
-| `--build build` | 指定构建目录（与配置时的 `-B` 一致）|
-| `--target <名称>` | 只构建指定目标；`--target clean` 清理构建产物 |
-| `--config Release` | 多配置生成器（Visual Studio）下指定构建类型 |
-| `-j 8` / `--parallel 8` | 并行编译线程数；省略时使用生成器默认值 |
-| `--verbose` / `-v` | 打印实际执行的编译命令，排查编译选项问题时用 |
+| 参数                      | 说明                              |
+|-------------------------|---------------------------------|
+| `--build build`         | 指定构建目录（与配置时的 `-B` 一致）           |
+| `--target <名称>`         | 只构建指定目标；`--target clean` 清理构建产物 |
+| `--config Release`      | 多配置生成器（Visual Studio）下指定构建类型    |
+| `-j 8` / `--parallel 8` | 并行编译线程数；省略时使用生成器默认值             |
+| `--verbose` / `-v`      | 打印实际执行的编译命令，排查编译选项问题时用          |
 
 ```bash
 cmake --build build -j 8 --verbose    # 8 线程构建并打印完整命令
@@ -64,12 +64,12 @@ cmake --build build --target clean    # 只清理
 cmake --install <构建目录> [选项...]
 ```
 
-| 参数 | 说明 |
-|------|------|
-| `--install build` | 指定构建目录 |
-| `--prefix 路径` | 覆盖安装根目录（优先级高于配置时的 `CMAKE_INSTALL_PREFIX`）|
-| `--component <名称>` | 只安装指定组件（需 CMakeLists.txt 配合 `COMPONENT` 参数）|
-| `--config Release` | 多配置生成器下指定安装哪种构建类型 |
+| 参数                 | 说明                                          |
+|--------------------|---------------------------------------------|
+| `--install build`  | 指定构建目录                                      |
+| `--prefix 路径`      | 覆盖安装根目录（优先级高于配置时的 `CMAKE_INSTALL_PREFIX`）   |
+| `--component <名称>` | 只安装指定组件（需 CMakeLists.txt 配合 `COMPONENT` 参数） |
+| `--config Release` | 多配置生成器下指定安装哪种构建类型                           |
 
 ```bash
 cmake --install build --prefix ./dist   # 安装到 ./dist
@@ -81,14 +81,14 @@ cmake --install build --prefix ./dist   # 安装到 ./dist
 ctest --test-dir <构建目录> [选项...]
 ```
 
-| 参数 | 说明 |
-|------|------|
-| `--test-dir build` | 指定构建目录（含 CTestTestfile.cmake）|
-| `--output-on-failure` | 只在测试失败时打印输出，通过的不显示 |
-| `-L <标签>` | 只运行带指定标签的测试（标签在 `set_tests_properties` 里设置）|
-| `-R <正则>` | 按测试名称正则过滤 |
-| `-j 4` | 并行运行测试 |
-| `--rerun-failed` | 只重跑上次失败的测试 |
+| 参数                    | 说明                                          |
+|-----------------------|---------------------------------------------|
+| `--test-dir build`    | 指定构建目录（含 CTestTestfile.cmake）               |
+| `--output-on-failure` | 只在测试失败时打印输出，通过的不显示                          |
+| `-L <标签>`             | 只运行带指定标签的测试（标签在 `set_tests_properties` 里设置） |
+| `-R <正则>`             | 按测试名称正则过滤                                   |
+| `-j 4`                | 并行运行测试                                      |
+| `--rerun-failed`      | 只重跑上次失败的测试                                  |
 
 ```bash
 ctest --test-dir build --output-on-failure -j 4   # 4 并行，失败时才输出
@@ -112,14 +112,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(hello_cmake main.cpp)
 ```
 
-| 行 | 说明 |
-|----|------|
-| `cmake_minimum_required(VERSION 3.28)` | 声明最低 CMake 版本；低于此版本报错停止 |
-| `project(hello_cmake LANGUAGES CXX)` | 定义工程名；`LANGUAGES CXX` 只启用 C++ 工具链，省略时默认启用 `C CXX` 两套，纯 C++ 项目写明可避免多余的 C 编译器探测 |
-| `set(CMAKE_CXX_STANDARD 20)` | 指定 C++ 标准，等价编译器的 `-std=c++20` |
-| `set(CMAKE_CXX_STANDARD_REQUIRED ON)` | 若编译器不支持该标准则报错，而不是静默降级 |
-| `set(CMAKE_CXX_EXTENSIONS OFF)` | 禁用编译器扩展（`-std=c++20` 而非 `-std=gnu++20`） |
-| `add_executable(hello_cmake main.cpp)` | 创建可执行目标，名为 `hello_cmake`，源文件 `main.cpp` |
+| 行                                      | 说明                                                                            |
+|----------------------------------------|-------------------------------------------------------------------------------|
+| `cmake_minimum_required(VERSION 3.28)` | 声明最低 CMake 版本；低于此版本报错停止                                                       |
+| `project(hello_cmake LANGUAGES CXX)`   | 定义工程名；`LANGUAGES CXX` 只启用 C++ 工具链，省略时默认启用 `C CXX` 两套，纯 C++ 项目写明可避免多余的 C 编译器探测 |
+| `set(CMAKE_CXX_STANDARD 20)`           | 指定 C++ 标准，等价编译器的 `-std=c++20`                                                 |
+| `set(CMAKE_CXX_STANDARD_REQUIRED ON)`  | 若编译器不支持该标准则报错，而不是静默降级                                                         |
+| `set(CMAKE_CXX_EXTENSIONS OFF)`        | 禁用编译器扩展（`-std=c++20` 而非 `-std=gnu++20`）                                       |
+| `add_executable(hello_cmake main.cpp)` | 创建可执行目标，名为 `hello_cmake`，源文件 `main.cpp`                                       |
 
 **`LANGUAGES` 与 `-DCMAKE_CXX_COMPILER` 是两件独立的事**：
 
@@ -139,14 +139,14 @@ cmake -B build \
 
 可选的 `LANGUAGES` 值：
 
-| 值 | 说明 |
-|----|------|
-| `C` | C 编译器 |
-| `CXX` | C++ 编译器 |
-| `CUDA` | CUDA 编译器（nvcc） |
-| `Fortran` | Fortran 编译器 |
-| `ASM` | 汇编器 |
-| `NONE` | 不启用任何语言（纯脚本工程） |
+| 值         | 说明             |
+|-----------|----------------|
+| `C`       | C 编译器          |
+| `CXX`     | C++ 编译器        |
+| `CUDA`    | CUDA 编译器（nvcc） |
+| `Fortran` | Fortran 编译器    |
+| `ASM`     | 汇编器            |
+| `NONE`    | 不启用任何语言（纯脚本工程） |
 
 ---
 
@@ -161,12 +161,12 @@ add_executable(multi_sources
 target_include_directories(multi_sources PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 ```
 
-| 行 | 说明 |
-|----|------|
-| 多行 `add_executable` | 源文件列表换行写，不用通配符——CMake 无法感知新增文件 |
-| `target_include_directories` | 为目标添加头文件搜索路径 |
-| `PRIVATE` | 传播范围：仅本目标使用，不传给链接它的其他目标 |
-| `${CMAKE_CURRENT_SOURCE_DIR}` | 当前 CMakeLists.txt 所在目录，内置变量 |
+| 行                             | 说明                             |
+|-------------------------------|--------------------------------|
+| 多行 `add_executable`           | 源文件列表换行写，不用通配符——CMake 无法感知新增文件 |
+| `target_include_directories`  | 为目标添加头文件搜索路径                   |
+| `PRIVATE`                     | 传播范围：仅本目标使用，不传给链接它的其他目标        |
+| `${CMAKE_CURRENT_SOURCE_DIR}` | 当前 CMakeLists.txt 所在目录，内置变量    |
 
 ---
 
@@ -185,37 +185,39 @@ target_link_libraries(use_static PRIVATE math_static)
 
 **`add_library(math_static STATIC math_utils.cpp)`**
 
-| 参数 | 说明 |
-|----|------|
-| `math_static` | 库目标名，在整个 CMake 项目中唯一，后续 `target_link_libraries` 通过此名引用 |
-| `STATIC` | 构建静态库：Linux/macOS 生成 `.a`，Windows 生成 `.lib`；链接时整体嵌入可执行文件，运行时无额外依赖 |
-| `math_utils.cpp` | 源文件列表，可写多个，空格分隔 |
+| 参数               | 说明                                                                |
+|------------------|-------------------------------------------------------------------|
+| `math_static`    | 库目标名，在整个 CMake 项目中唯一，后续 `target_link_libraries` 通过此名引用            |
+| `STATIC`         | 构建静态库：Linux/macOS 生成 `.a`，Windows 生成 `.lib`；链接时整体嵌入可执行文件，运行时无额外依赖 |
+| `math_utils.cpp` | 源文件列表，可写多个，空格分隔                                                   |
 
 **`target_include_directories(math_static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})`**
 
-| 参数 | 说明 |
-|----|------|
-| `math_static` | 要设置头文件搜索路径的目标 |
-| `PUBLIC` | 传播范围：**本目标编译时**和**所有链接它的目标编译时**都生效；见下方传播范围说明 |
+| 参数                            | 说明                                                                                  |
+|-------------------------------|-------------------------------------------------------------------------------------|
+| `math_static`                 | 要设置头文件搜索路径的目标                                                                       |
+| `PUBLIC`                      | 传播范围：**本目标编译时**和**所有链接它的目标编译时**都生效；见下方传播范围说明                                        |
 | `${CMAKE_CURRENT_SOURCE_DIR}` | 内置变量，当前 `CMakeLists.txt` 所在目录；这里用于让消费者不需要知道头文件的绝对路径，直接 `#include "math_utils.h"` 即可 |
 
 **`add_library(math_shared SHARED math_utils.cpp)`**
 
-| 参数 | 说明 |
-|----|------|
-| `math_shared` | 动态库目标名 |
-| `SHARED` | 构建动态库：Linux/macOS 生成 `.so`，Windows 生成 `.dll` + `.lib`（导入库）；运行时按需加载，可热替换 |
-| `math_utils.cpp` | 源文件，与静态库共用相同源文件，CMake 分别编译两份（编译标志可能不同） |
+| 参数               | 说明                                                                      |
+|------------------|-------------------------------------------------------------------------|
+| `math_shared`    | 动态库目标名                                                                  |
+| `SHARED`         | 构建动态库：Linux/macOS 生成 `.so`，Windows 生成 `.dll` + `.lib`（导入库）；运行时按需加载，可热替换 |
+| `math_utils.cpp` | 源文件，与静态库共用相同源文件，CMake 分别编译两份（编译标志可能不同）                                  |
 
 **`set_target_properties(math_shared PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)`**
 
-| 参数 | 说明 |
-|----|------|
-| `math_shared` | 要设置属性的目标 |
-| `PROPERTIES` | 关键字，后跟 `属性名 值` 对，可连续写多组 |
+| 参数                              | 说明                                                                                                                     |
+|---------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| `math_shared`                   | 要设置属性的目标                                                                                                               |
+| `PROPERTIES`                    | 关键字，后跟 `属性名 值` 对，可连续写多组                                                                                                |
 | `WINDOWS_EXPORT_ALL_SYMBOLS ON` | **仅 Windows 有效**：让 CMake 自动生成 `.def` 文件并导出所有公开符号，免去在每个函数前写 `__declspec(dllexport)`；Linux/macOS 的 `.so` 默认导出所有符号，不需要此属性 |
 
-> **为什么 Windows 需要显式导出？** Windows 的 DLL 默认隐藏所有符号，只有加了 `__declspec(dllexport)` 的符号才对外可见；Linux/macOS 相反，默认全部可见（可用 `-fvisibility=hidden` 收紧）。`WINDOWS_EXPORT_ALL_SYMBOLS` 是"懒人模式"，适合快速移植；生产代码更推荐用 `__declspec(dllexport/dllimport)` 精确控制接口。
+> **为什么 Windows 需要显式导出？** Windows 的 DLL 默认隐藏所有符号，只有加了 `__declspec(dllexport)` 的符号才对外可见；Linux/macOS
+> 相反，默认全部可见（可用 `-fvisibility=hidden` 收紧）。`WINDOWS_EXPORT_ALL_SYMBOLS` 是"懒人模式"，适合快速移植；生产代码更推荐用
+`__declspec(dllexport/dllimport)` 精确控制接口。
 
 **`add_executable(use_static main_static.cpp)`**
 
@@ -223,19 +225,19 @@ target_link_libraries(use_static PRIVATE math_static)
 
 **`target_link_libraries(use_static PRIVATE math_static)`**
 
-| 参数 | 说明 |
-|----|------|
-| `use_static` | 要链接的目标（消费者） |
-| `PRIVATE` | 传播范围：链接关系**不传播**给链接 `use_static` 的其他目标；见下方传播范围说明 |
-| `math_static` | 被链接的目标（库）；CMake 自动处理链接顺序和传递依赖 |
+| 参数            | 说明                                               |
+|---------------|--------------------------------------------------|
+| `use_static`  | 要链接的目标（消费者）                                      |
+| `PRIVATE`     | 传播范围：链接关系**不传播**给链接 `use_static` 的其他目标；见下方传播范围说明 |
+| `math_static` | 被链接的目标（库）；CMake 自动处理链接顺序和传递依赖                    |
 
 **传播范围（PRIVATE / PUBLIC / INTERFACE）速查**
 
-| 关键字 | 本目标编译时生效 | 消费者编译时生效 | 典型用途 |
-|--------|:--------------:|:--------------:|---------|
-| `PRIVATE` | ✓ | ✗ | 实现细节，不暴露给外部（如内部依赖的库） |
-| `PUBLIC` | ✓ | ✓ | 接口与实现都需要（如库的公开头文件路径） |
-| `INTERFACE` | ✗ | ✓ | 纯头文件库，只传属性不参与编译 |
+| 关键字         | 本目标编译时生效 | 消费者编译时生效 | 典型用途                 |
+|-------------|:--------:|:--------:|----------------------|
+| `PRIVATE`   |    ✓     |    ✗     | 实现细节，不暴露给外部（如内部依赖的库） |
+| `PUBLIC`    |    ✓     |    ✓     | 接口与实现都需要（如库的公开头文件路径） |
+| `INTERFACE` |    ✗     |    ✓     | 纯头文件库，只传属性不参与编译      |
 
 ---
 
@@ -262,13 +264,14 @@ target_link_libraries(app PRIVATE core utils_iface)
 
 **传播范围三关键字**：
 
-| 关键字 | 本目标使用 | 消费者继承 | 适用场景 |
-|--------|-----------|-----------|---------|
-| `PRIVATE` | ✓ | ✗ | 实现细节，不暴露给外部 |
-| `PUBLIC` | ✓ | ✓ | 接口与实现都需要（如 `include/` 路径） |
-| `INTERFACE` | ✗ | ✓ | 纯头文件库，只传属性不参与编译 |
+| 关键字         | 本目标使用 | 消费者继承 | 适用场景                      |
+|-------------|-------|-------|---------------------------|
+| `PRIVATE`   | ✓     | ✗     | 实现细节，不暴露给外部               |
+| `PUBLIC`    | ✓     | ✓     | 接口与实现都需要（如 `include/` 路径） |
+| `INTERFACE` | ✗     | ✓     | 纯头文件库，只传属性不参与编译           |
 
 实际执行（`app` 链接 `core` 时）：
+
 ```bash
 # core 编译时
 g++ -Wall -Wextra -Iinclude/ -c core.cpp -o core.o
@@ -307,14 +310,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 生成器表达式在 **构建时** 展开（configure 阶段不展开），格式 `$<条件:值>`：
 
-| 表达式 | 含义 |
-|--------|------|
-| `$<CXX_COMPILER_ID:MSVC>` | 编译器是 MSVC 时为真 |
-| `$<NOT:$<...>>` | 取反 |
-| `$<AND:$<...>,$<...>>` | 与 |
-| `$<CONFIG:Debug>` | 当前构建类型是 Debug 时为真 |
-| `$<BUILD_INTERFACE:path>` | 构建时使用此路径（安装后不用） |
-| `$<INSTALL_INTERFACE:path>` | 安装后使用此路径（构建时不用） |
+| 表达式                         | 含义                |
+|-----------------------------|-------------------|
+| `$<CXX_COMPILER_ID:MSVC>`   | 编译器是 MSVC 时为真     |
+| `$<NOT:$<...>>`             | 取反                |
+| `$<AND:$<...>,$<...>>`      | 与                 |
+| `$<CONFIG:Debug>`           | 当前构建类型是 Debug 时为真 |
+| `$<BUILD_INTERFACE:path>`   | 构建时使用此路径（安装后不用）   |
+| `$<INSTALL_INTERFACE:path>` | 安装后使用此路径（构建时不用）   |
 
 ---
 
@@ -336,12 +339,12 @@ else()
 endif()
 ```
 
-| 参数 | 说明 |
-|------|------|
-| `REQUIRED` | 找不到则报错停止 |
-| `CONFIG` | 强制 Config 模式，查找包自带的 `XxxConfig.cmake` |
-| 省略 `CONFIG` | 先 Module 模式（CMake 内置 `FindXxx.cmake`），再 Config 模式 |
-| `Threads::Threads` | 导入目标（imported target），自动携带正确的编译/链接标志 |
+| 参数                 | 说明                                                |
+|--------------------|---------------------------------------------------|
+| `REQUIRED`         | 找不到则报错停止                                          |
+| `CONFIG`           | 强制 Config 模式，查找包自带的 `XxxConfig.cmake`             |
+| 省略 `CONFIG`        | 先 Module 模式（CMake 内置 `FindXxx.cmake`），再 Config 模式 |
+| `Threads::Threads` | 导入目标（imported target），自动携带正确的编译/链接标志              |
 
 ---
 
@@ -393,10 +396,10 @@ install(EXPORT mylibTargets
 )
 ```
 
-| 变量 | 默认值 |
-|------|--------|
-| `CMAKE_INSTALL_BINDIR` | `bin` |
-| `CMAKE_INSTALL_LIBDIR` | `lib` |
+| 变量                         | 默认值       |
+|----------------------------|-----------|
+| `CMAKE_INSTALL_BINDIR`     | `bin`     |
+| `CMAKE_INSTALL_LIBDIR`     | `lib`     |
 | `CMAKE_INSTALL_INCLUDEDIR` | `include` |
 
 ---
@@ -417,6 +420,7 @@ set_tests_properties(edge_cases PROPERTIES
 ```
 
 运行：
+
 ```bash
 cmake --build build
 ctest --build-dir build --output-on-failure
@@ -455,16 +459,16 @@ file(GENERATE
 )
 ```
 
-| 模式 | 语法 | 说明 |
-|------|------|------|
-| 条件（布尔求值） | `$<condition>` | condition 为真时展开为 `1`，否则为 `0` |
-| 条件取值 | `$<condition:value>` | condition 为真时展开为 value，否则为空 |
-| IF-ELSE | `$<IF:cond,true_val,false_val>` | 三元运算符 |
-| 编译器判断 | `$<CXX_COMPILER_ID:MSVC>` | 编译器匹配时为 `1` |
-| 构建类型 | `$<CONFIG:Release>` | 当前配置匹配时为 `1` |
-| 目标属性 | `$<TARGET_PROPERTY:tgt,PROP>` | 读取目标属性值 |
-| 目标文件路径 | `$<TARGET_FILE:tgt>` | 目标输出文件完整路径 |
-| 构建/安装接口 | `$<BUILD_INTERFACE:v>` / `$<INSTALL_INTERFACE:v>` | 区分构建期和安装后的路径 |
+| 模式       | 语法                                                | 说明                           |
+|----------|---------------------------------------------------|------------------------------|
+| 条件（布尔求值） | `$<condition>`                                    | condition 为真时展开为 `1`，否则为 `0` |
+| 条件取值     | `$<condition:value>`                              | condition 为真时展开为 value，否则为空  |
+| IF-ELSE  | `$<IF:cond,true_val,false_val>`                   | 三元运算符                        |
+| 编译器判断    | `$<CXX_COMPILER_ID:MSVC>`                         | 编译器匹配时为 `1`                  |
+| 构建类型     | `$<CONFIG:Release>`                               | 当前配置匹配时为 `1`                 |
+| 目标属性     | `$<TARGET_PROPERTY:tgt,PROP>`                     | 读取目标属性值                      |
+| 目标文件路径   | `$<TARGET_FILE:tgt>`                              | 目标输出文件完整路径                   |
+| 构建/安装接口  | `$<BUILD_INTERFACE:v>` / `$<INSTALL_INTERFACE:v>` | 区分构建期和安装后的路径                 |
 
 ---
 
@@ -511,22 +515,23 @@ file(GENERATE
 ```
 
 使用：
+
 ```bash
 cmake --list-presets                              # 列出所有预设
 cmake --preset debug && cmake --build --preset debug    # 配置 + 构建
 cmake --preset asan  && cmake --build --preset asan     # ASan 预设
 ```
 
-| 字段 | 说明 |
-|------|------|
-| `version` | Presets 格式版本，6 = CMake 3.25+；3 = CMake 3.21+（最低可用版本） |
-| `hidden: true` | 该预设仅作为基类，不出现在 `--list-presets` 列表 |
-| `inherits` | 继承另一个预设的所有字段，可多重继承（数组形式） |
-| `binaryDir` | 构建目录；`${sourceDir}` 是 CMakePresets.json 所在目录，`${presetName}` 是预设名 |
-| `cacheVariables` | 等价于命令行 `-DVAR=value`，覆盖 CMakeLists.txt 里的默认值 |
-| `generator` | 构建系统生成器，等价于 `-G` |
-| `toolchainFile` | 工具链文件路径，等价于 `-DCMAKE_TOOLCHAIN_FILE` |
-| `environment` | 设置环境变量（仅对该预设有效） |
+| 字段               | 说明                                                                |
+|------------------|-------------------------------------------------------------------|
+| `version`        | Presets 格式版本，6 = CMake 3.25+；3 = CMake 3.21+（最低可用版本）              |
+| `hidden: true`   | 该预设仅作为基类，不出现在 `--list-presets` 列表                                 |
+| `inherits`       | 继承另一个预设的所有字段，可多重继承（数组形式）                                          |
+| `binaryDir`      | 构建目录；`${sourceDir}` 是 CMakePresets.json 所在目录，`${presetName}` 是预设名 |
+| `cacheVariables` | 等价于命令行 `-DVAR=value`，覆盖 CMakeLists.txt 里的默认值                      |
+| `generator`      | 构建系统生成器，等价于 `-G`                                                  |
+| `toolchainFile`  | 工具链文件路径，等价于 `-DCMAKE_TOOLCHAIN_FILE`                              |
+| `environment`    | 设置环境变量（仅对该预设有效）                                                   |
 
 ---
 
@@ -587,12 +592,12 @@ set_tests_properties(utils_test PROPERTIES LABELS "unit" TIMEOUT 10)
 
 **架构要点**：
 
-| 要点 | 说明 |
-|------|------|
-| `project_options` 接口库 | 以 `INTERFACE` 集中管理编译选项，所有目标 `target_link_libraries(... project_options)` 继承，避免全局污染 |
-| `PUBLIC` 传播依赖链 | `core_lib PUBLIC utils_lib`：链接 `core_lib` 的消费者自动获得 `utils_lib` 的头文件和链接，无需重复声明 |
-| `PRIVATE project_options` | 编译选项不对外暴露（外部不需要用同样的警告标志编译） |
-| ASan 用 `target_link_options` | ASan 既需要编译标志（`-fsanitize=address`）也需要链接标志，两个都要设 |
+| 要点                           | 说明                                                                                 |
+|------------------------------|------------------------------------------------------------------------------------|
+| `project_options` 接口库        | 以 `INTERFACE` 集中管理编译选项，所有目标 `target_link_libraries(... project_options)` 继承，避免全局污染 |
+| `PUBLIC` 传播依赖链               | `core_lib PUBLIC utils_lib`：链接 `core_lib` 的消费者自动获得 `utils_lib` 的头文件和链接，无需重复声明      |
+| `PRIVATE project_options`    | 编译选项不对外暴露（外部不需要用同样的警告标志编译）                                                         |
+| ASan 用 `target_link_options` | ASan 既需要编译标志（`-fsanitize=address`）也需要链接标志，两个都要设                                    |
 
 ---
 
@@ -605,9 +610,9 @@ cmake_minimum_required(VERSION 3.28)
 cmake_minimum_required(VERSION 3.20...3.28)   # 范围写法：兼容 3.20+，以 3.28 策略运行
 ```
 
-| 参数 | 说明 |
-|------|------|
-| `VERSION 3.28` | 要求最低 CMake 版本；低于此版本报错停止 |
+| 参数                    | 说明                                    |
+|-----------------------|---------------------------------------|
+| `VERSION 3.28`        | 要求最低 CMake 版本；低于此版本报错停止               |
 | `VERSION 3.20...3.28` | 策略范围：最低 3.20，最高用 3.28 的 policy；推荐现代写法 |
 
 ```cmake
@@ -619,13 +624,13 @@ project(MyApp
 )
 ```
 
-| 参数 | 说明 |
-|------|------|
-| `MyApp` | 工程名，设置 `PROJECT_NAME` 变量 |
-| `VERSION 1.2.3` | 设置 `PROJECT_VERSION` / `PROJECT_VERSION_MAJOR/MINOR/PATCH` |
-| `DESCRIPTION` | 设置 `PROJECT_DESCRIPTION`，供 CPack 等工具读取 |
-| `HOMEPAGE_URL` | 设置 `PROJECT_HOMEPAGE_URL` |
-| `LANGUAGES CXX C` | 启用的语言；仅 `CXX` 时跳过 C 编译器探测，加快配置速度 |
+| 参数                | 说明                                                         |
+|-------------------|------------------------------------------------------------|
+| `MyApp`           | 工程名，设置 `PROJECT_NAME` 变量                                   |
+| `VERSION 1.2.3`   | 设置 `PROJECT_VERSION` / `PROJECT_VERSION_MAJOR/MINOR/PATCH` |
+| `DESCRIPTION`     | 设置 `PROJECT_DESCRIPTION`，供 CPack 等工具读取                     |
+| `HOMEPAGE_URL`    | 设置 `PROJECT_HOMEPAGE_URL`                                  |
+| `LANGUAGES CXX C` | 启用的语言；仅 `CXX` 时跳过 C 编译器探测，加快配置速度                           |
 
 ---
 
@@ -655,24 +660,26 @@ cmake_print_variables(CMAKE_CXX_COMPILER CMAKE_BUILD_TYPE PROJECT_VERSION)
 
 **常用内置变量**：
 
-| 变量 | 含义 |
-|------|------|
-| `CMAKE_SOURCE_DIR` | 顶层 CMakeLists.txt 所在目录（始终固定） |
-| `CMAKE_CURRENT_SOURCE_DIR` | 当前正在处理的 CMakeLists.txt 所在目录 |
-| `CMAKE_CURRENT_LIST_DIR` | 当前正在处理的**文件**所在目录；在 `include()` 引入的 `.cmake` 文件里与 `CMAKE_CURRENT_SOURCE_DIR` 不同 |
-| `CMAKE_BINARY_DIR` | 顶层构建目录 |
-| `CMAKE_CURRENT_BINARY_DIR` | 当前目标的构建目录 |
-| `PROJECT_NAME` | `project()` 设置的工程名 |
-| `PROJECT_VERSION` | `project(... VERSION x.y.z)` 设置的版本 |
-| `CMAKE_BUILD_TYPE` | `Debug` / `Release` / `RelWithDebInfo` / `MinSizeRel` |
-| `CMAKE_CXX_COMPILER` | 实际使用的 C++ 编译器完整路径（由 CMake 自动检测或 `-DCMAKE_CXX_COMPILER` 指定） |
-| `CMAKE_CXX_COMPILER_ID` | `MSVC` / `GNU` / `Clang` / `AppleClang` |
-| `CMAKE_INSTALL_PREFIX` | `cmake --install` 的安装根目录；默认 `/usr/local`（Linux）或 `C:/Program Files/<project>`（Windows） |
-| `CMAKE_RUNTIME_OUTPUT_DIRECTORY` | 统一所有目标的可执行文件 / DLL 输出目录（覆盖各目标的默认位置） |
-| `CMAKE_LIBRARY_OUTPUT_DIRECTORY` | 统一共享库（`.so` / `.dylib`）输出目录 |
-| `CMAKE_ARCHIVE_OUTPUT_DIRECTORY` | 统一静态库（`.a` / `.lib`）输出目录 |
+| 变量                               | 含义                                                                                     |
+|----------------------------------|----------------------------------------------------------------------------------------|
+| `CMAKE_SOURCE_DIR`               | 顶层 CMakeLists.txt 所在目录（始终固定）                                                           |
+| `CMAKE_CURRENT_SOURCE_DIR`       | 当前正在处理的 CMakeLists.txt 所在目录                                                            |
+| `CMAKE_CURRENT_LIST_DIR`         | 当前正在处理的**文件**所在目录；在 `include()` 引入的 `.cmake` 文件里与 `CMAKE_CURRENT_SOURCE_DIR` 不同        |
+| `CMAKE_BINARY_DIR`               | 顶层构建目录                                                                                 |
+| `CMAKE_CURRENT_BINARY_DIR`       | 当前目标的构建目录                                                                              |
+| `PROJECT_NAME`                   | `project()` 设置的工程名                                                                     |
+| `PROJECT_VERSION`                | `project(... VERSION x.y.z)` 设置的版本                                                     |
+| `CMAKE_BUILD_TYPE`               | `Debug` / `Release` / `RelWithDebInfo` / `MinSizeRel`                                  |
+| `CMAKE_CXX_COMPILER`             | 实际使用的 C++ 编译器完整路径（由 CMake 自动检测或 `-DCMAKE_CXX_COMPILER` 指定）                             |
+| `CMAKE_CXX_COMPILER_ID`          | `MSVC` / `GNU` / `Clang` / `AppleClang`                                                |
+| `CMAKE_INSTALL_PREFIX`           | `cmake --install` 的安装根目录；默认 `/usr/local`（Linux）或 `C:/Program Files/<project>`（Windows） |
+| `CMAKE_RUNTIME_OUTPUT_DIRECTORY` | 统一所有目标的可执行文件 / DLL 输出目录（覆盖各目标的默认位置）                                                    |
+| `CMAKE_LIBRARY_OUTPUT_DIRECTORY` | 统一共享库（`.so` / `.dylib`）输出目录                                                            |
+| `CMAKE_ARCHIVE_OUTPUT_DIRECTORY` | 统一静态库（`.a` / `.lib`）输出目录                                                               |
 
-> **`CMAKE_CURRENT_LIST_DIR` vs `CMAKE_CURRENT_SOURCE_DIR`**：在 CMakeLists.txt 里两者相同；但在 `include(my_utils.cmake)` 引入的文件里，`CMAKE_CURRENT_SOURCE_DIR` 仍指向调用方的目录，`CMAKE_CURRENT_LIST_DIR` 指向 `my_utils.cmake` 所在目录。引用 `.cmake` 文件自身路径时应使用 `CMAKE_CURRENT_LIST_DIR`。
+> **`CMAKE_CURRENT_LIST_DIR` vs `CMAKE_CURRENT_SOURCE_DIR`**：在 CMakeLists.txt 里两者相同；但在 `include(my_utils.cmake)`
+> 引入的文件里，`CMAKE_CURRENT_SOURCE_DIR` 仍指向调用方的目录，`CMAKE_CURRENT_LIST_DIR` 指向 `my_utils.cmake` 所在目录。引用
+`.cmake` 文件自身路径时应使用 `CMAKE_CURRENT_LIST_DIR`。
 
 ### 2.3 option()
 
@@ -687,10 +694,10 @@ if(ENABLE_TESTS)
 endif()
 ```
 
-| 语法 | 说明 |
-|------|------|
-| `option(<变量> "<说明>" <默认值>)` | 声明一个布尔缓存变量；默认值 `ON` / `OFF` |
-| 命令行覆盖 | `cmake -B build -DENABLE_TESTS=OFF` 覆盖默认值 |
+| 语法                              | 说明                                                       |
+|---------------------------------|----------------------------------------------------------|
+| `option(<变量> "<说明>" <默认值>)`     | 声明一个布尔缓存变量；默认值 `ON` / `OFF`                              |
+| 命令行覆盖                           | `cmake -B build -DENABLE_TESTS=OFF` 覆盖默认值                |
 | 与 `set(... CACHE BOOL ...)` 的区别 | `option` 是简化写法，等价于 `set(VAR OFF CACHE BOOL "说明")`，但只支持布尔 |
 
 > **注意**：`option` 的值一旦写入 `CMakeCache.txt` 就不会被下次 cmake 命令的默认值覆盖——必须显式 `-DVAR=新值` 或删除缓存。
@@ -762,13 +769,13 @@ endfunction()
 my_target_setup(app WARNINGS STANDARD 20 SOURCES main.cpp INCLUDES include/)
 ```
 
-| 参数 | 说明 |
-|------|------|
-| 变量前缀 | 所有解析结果以此为前缀，如 `ARG_WARNINGS`、`ARG_STANDARD` |
-| 布尔选项 | 出现则为 `TRUE`，不出现则为 `FALSE` |
-| 单值选项 | 后跟一个值 |
-| 多值选项 | 后跟多个值，结果为列表 |
-| `ARG_UNPARSED_ARGUMENTS` | 未被任何选项匹配的剩余参数 |
+| 参数                       | 说明                                          |
+|--------------------------|---------------------------------------------|
+| 变量前缀                     | 所有解析结果以此为前缀，如 `ARG_WARNINGS`、`ARG_STANDARD` |
+| 布尔选项                     | 出现则为 `TRUE`，不出现则为 `FALSE`                   |
+| 单值选项                     | 后跟一个值                                       |
+| 多值选项                     | 后跟多个值，结果为列表                                 |
+| `ARG_UNPARSED_ARGUMENTS` | 未被任何选项匹配的剩余参数                               |
 
 ### 2.6 目标命令
 
@@ -804,11 +811,11 @@ install(TARGETS mylib FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 **`target_compile_features` vs `set(CMAKE_CXX_STANDARD 20)`：**
 
-| 方式 | 作用范围 | 推荐场景 |
-|------|---------|---------|
-| `target_compile_features(tgt PRIVATE cxx_std_20)` | 仅该目标 | 库开发，避免污染全局设置 |
-| `set(CMAKE_CXX_STANDARD 20)` | 整个项目 | 顶层项目统一设置 |
-| `set_target_properties(tgt PROPERTIES CXX_STANDARD 20)` | 仅该目标，语义等价 | 同上，写法不同 |
+| 方式                                                      | 作用范围      | 推荐场景         |
+|---------------------------------------------------------|-----------|--------------|
+| `target_compile_features(tgt PRIVATE cxx_std_20)`       | 仅该目标      | 库开发，避免污染全局设置 |
+| `set(CMAKE_CXX_STANDARD 20)`                            | 整个项目      | 顶层项目统一设置     |
+| `set_target_properties(tgt PROPERTIES CXX_STANDARD 20)` | 仅该目标，语义等价 | 同上，写法不同      |
 
 ### 2.7 add_subdirectory()
 
@@ -820,12 +827,13 @@ add_subdirectory(app)
 add_subdirectory(tests EXCLUDE_FROM_ALL)   # 不纳入默认构建，需显式 cmake --build --target tests
 ```
 
-| 参数 | 说明 |
-|------|------|
-| `<子目录>` | 相对于当前 CMakeLists.txt 的路径，子目录须有自己的 CMakeLists.txt |
-| `EXCLUDE_FROM_ALL` | 该子目录的目标不加入默认构建目标（ALL），只在显式指定时才构建 |
+| 参数                 | 说明                                               |
+|--------------------|--------------------------------------------------|
+| `<子目录>`            | 相对于当前 CMakeLists.txt 的路径，子目录须有自己的 CMakeLists.txt |
+| `EXCLUDE_FROM_ALL` | 该子目录的目标不加入默认构建目标（ALL），只在显式指定时才构建                 |
 
-**子目录之间的依赖顺序**：`add_subdirectory` 按顺序执行，但目标的实际链接依赖由 `target_link_libraries` 决定，CMake 自动排序，无需手动保证顺序。
+**子目录之间的依赖顺序**：`add_subdirectory` 按顺序执行，但目标的实际链接依赖由 `target_link_libraries` 决定，CMake
+自动排序，无需手动保证顺序。
 
 ---
 
@@ -847,12 +855,12 @@ include_guard()              # 放在 .cmake 文件顶部；全局作用域
 include_guard(DIRECTORY)     # 仅在当前目录作用域生效
 ```
 
-| 模块 | 作用 |
-|------|------|
-| `GNUInstallDirs` | 定义 `CMAKE_INSTALL_BINDIR` / `LIBDIR` / `INCLUDEDIR` 等标准目录 |
-| `FetchContent` | CMake 3.11+，配置阶段下载外部依赖（见 2.14 节） |
-| `CPack` | 生成安装包（.zip / .deb / .msi 等），`include(CPack)` 后即可用 `cpack` 命令 |
-| `CheckCXXCompilerFlag` | `check_cxx_compiler_flag("-std=c++20" HAS_CXX20)` 检测编译器 flag 支持 |
+| 模块                     | 作用                                                                  |
+|------------------------|---------------------------------------------------------------------|
+| `GNUInstallDirs`       | 定义 `CMAKE_INSTALL_BINDIR` / `LIBDIR` / `INCLUDEDIR` 等标准目录           |
+| `FetchContent`         | CMake 3.11+，配置阶段下载外部依赖（见 2.14 节）                                    |
+| `CPack`                | 生成安装包（.zip / .deb / .msi 等），`include(CPack)` 后即可用 `cpack` 命令        |
+| `CheckCXXCompilerFlag` | `check_cxx_compiler_flag("-std=c++20" HAS_CXX20)` 检测编译器 flag 支持     |
 | `GenerateExportHeader` | 为动态库自动生成 `dllexport/dllimport` 宏头文件，替代 `WINDOWS_EXPORT_ALL_SYMBOLS` |
 
 ---
@@ -874,7 +882,8 @@ file(GENERATE
 )
 ```
 
-> `file(GENERATE)` 在 `cmake -B`（配置阶段）之后、`cmake --build`（构建阶段）之前执行，是调试生成器表达式的标准手段——把 `$<CONFIG>`、`$<TARGET_PROPERTY:...>` 等写入文件查看实际值。
+> `file(GENERATE)` 在 `cmake -B`（配置阶段）之后、`cmake --build`（构建阶段）之前执行，是调试生成器表达式的标准手段——把
+`$<CONFIG>`、`$<TARGET_PROPERTY:...>` 等写入文件查看实际值。
 
 ### 2.10 list() 操作
 
@@ -939,18 +948,19 @@ if(NOT PY_RESULT EQUAL 0)
 endif()
 ```
 
-| 参数 | 说明 |
-|------|------|
-| `COMMAND` | 要执行的命令及参数，不经过 shell 解析（无管道/重定向） |
-| `OUTPUT_VARIABLE` | 捕获标准输出到变量 |
-| `ERROR_VARIABLE` | 捕获标准错误到变量 |
-| `RESULT_VARIABLE` | 捕获退出码（0 = 成功） |
-| `OUTPUT_STRIP_TRAILING_WHITESPACE` | 去除输出末尾换行，常用 |
-| `ERROR_QUIET` | 忽略错误输出，不显示到终端 |
-| `WORKING_DIRECTORY` | 指定命令的工作目录 |
-| `TIMEOUT` | 超时秒数，超时后命令被终止 |
+| 参数                                 | 说明                              |
+|------------------------------------|---------------------------------|
+| `COMMAND`                          | 要执行的命令及参数，不经过 shell 解析（无管道/重定向） |
+| `OUTPUT_VARIABLE`                  | 捕获标准输出到变量                       |
+| `ERROR_VARIABLE`                   | 捕获标准错误到变量                       |
+| `RESULT_VARIABLE`                  | 捕获退出码（0 = 成功）                   |
+| `OUTPUT_STRIP_TRAILING_WHITESPACE` | 去除输出末尾换行，常用                     |
+| `ERROR_QUIET`                      | 忽略错误输出，不显示到终端                   |
+| `WORKING_DIRECTORY`                | 指定命令的工作目录                       |
+| `TIMEOUT`                          | 超时秒数，超时后命令被终止                   |
 
-> **与 `add_custom_command` 的区别**：`execute_process` 在**配置阶段**运行（`cmake -B`），结果是 CMake 变量；`add_custom_command` 在**构建阶段**运行（`cmake --build`），结果是文件或构建动作。
+> **与 `add_custom_command` 的区别**：`execute_process` 在**配置阶段**运行（`cmake -B`），结果是 CMake 变量；
+`add_custom_command` 在**构建阶段**运行（`cmake --build`），结果是文件或构建动作。
 
 ---
 
@@ -983,13 +993,13 @@ add_custom_target(format
 # cmake --build build --target format
 ```
 
-| 参数 | 说明 |
-|------|------|
-| `TARGET xxx PRE_BUILD/PRE_LINK/POST_BUILD` | 绑定到目标构建的某个阶段；`POST_BUILD` 最常用 |
-| `OUTPUT 文件` | 声明命令生成的文件；有依赖此文件的目标时自动触发 |
-| `DEPENDS 文件/目标` | 输入依赖；依赖变化时重新执行命令 |
-| `COMMENT` | 构建时显示的进度文字 |
-| `${CMAKE_COMMAND} -E` | CMake 跨平台文件操作（`copy`、`make_directory`、`remove` 等），避免 shell 差异 |
+| 参数                                         | 说明                                                            |
+|--------------------------------------------|---------------------------------------------------------------|
+| `TARGET xxx PRE_BUILD/PRE_LINK/POST_BUILD` | 绑定到目标构建的某个阶段；`POST_BUILD` 最常用                                 |
+| `OUTPUT 文件`                                | 声明命令生成的文件；有依赖此文件的目标时自动触发                                      |
+| `DEPENDS 文件/目标`                            | 输入依赖；依赖变化时重新执行命令                                              |
+| `COMMENT`                                  | 构建时显示的进度文字                                                    |
+| `${CMAKE_COMMAND} -E`                      | CMake 跨平台文件操作（`copy`、`make_directory`、`remove` 等），避免 shell 差异 |
 
 ---
 
@@ -1016,14 +1026,15 @@ target_link_libraries(my_test PRIVATE GTest::gtest_main)
 target_link_libraries(app PRIVATE nlohmann_json::nlohmann_json)
 ```
 
-| 命令 | 说明 |
-|------|------|
-| `FetchContent_Declare` | 声明依赖来源（GIT / URL / SVN），不立即下载 |
+| 命令                           | 说明                                                         |
+|------------------------------|------------------------------------------------------------|
+| `FetchContent_Declare`       | 声明依赖来源（GIT / URL / SVN），不立即下载                              |
 | `FetchContent_MakeAvailable` | 下载并添加到构建（等价于 `FetchContent_Populate` + `add_subdirectory`） |
-| `GIT_TAG` | 推荐使用 tag 或 commit hash，避免每次构建拉取最新 |
-| `URL_HASH` | 校验下载包完整性，防止篡改 |
+| `GIT_TAG`                    | 推荐使用 tag 或 commit hash，避免每次构建拉取最新                          |
+| `URL_HASH`                   | 校验下载包完整性，防止篡改                                              |
 
-> **FetchContent vs vcpkg**：FetchContent 在 cmake 配置阶段下载源码并编译，无需额外工具；vcpkg 预编译缓存，速度更快。大型依赖（如 Qt、Boost）优先用 vcpkg。
+> **FetchContent vs vcpkg**：FetchContent 在 cmake 配置阶段下载源码并编译，无需额外工具；vcpkg 预编译缓存，速度更快。大型依赖（如
+> Qt、Boost）优先用 vcpkg。
 
 ---
 
@@ -1043,11 +1054,11 @@ target_precompile_headers(my_lib
 target_precompile_headers(my_app REUSE_FROM my_lib)
 ```
 
-| 参数 | 说明 |
-|------|------|
+| 参数                         | 说明                            |
+|----------------------------|-------------------------------|
 | `PRIVATE/PUBLIC/INTERFACE` | 传播范围，通常用 `PRIVATE`（PCH 是实现细节） |
-| `<header>` | 系统头文件用尖括号；自定义头文件用引号 |
-| `REUSE_FROM <目标>` | 复用已有 PCH，节省重复编译；两个目标的编译标志须兼容 |
+| `<header>`                 | 系统头文件用尖括号；自定义头文件用引号           |
+| `REUSE_FROM <目标>`          | 复用已有 PCH，节省重复编译；两个目标的编译标志须兼容  |
 
 > **适用场景**：频繁 include 的重量级头文件（STL、Boost、Qt 头文件等）收益明显；小项目或头文件变动频繁时收益有限。
 
@@ -1055,16 +1066,16 @@ target_precompile_headers(my_app REUSE_FROM my_lib)
 
 ### 2.16 生成器表达式速查
 
-| 表达式 | 含义 |
-|--------|------|
-| `$<CXX_COMPILER_ID:MSVC>` | 编译器是 MSVC |
-| `$<CONFIG:Release>` | 构建类型是 Release |
-| `$<NOT:$<...>>` | 取反 |
-| `$<AND:$<...>,$<...>>` | 与 |
-| `$<OR:$<...>,$<...>>` | 或 |
-| `$<BUILD_INTERFACE:path>` | 仅构建时生效 |
-| `$<INSTALL_INTERFACE:path>` | 仅安装后生效 |
-| `$<TARGET_FILE:name>` | 目标输出文件的完整路径 |
+| 表达式                         | 含义            |
+|-----------------------------|---------------|
+| `$<CXX_COMPILER_ID:MSVC>`   | 编译器是 MSVC     |
+| `$<CONFIG:Release>`         | 构建类型是 Release |
+| `$<NOT:$<...>>`             | 取反            |
+| `$<AND:$<...>,$<...>>`      | 与             |
+| `$<OR:$<...>,$<...>>`       | 或             |
+| `$<BUILD_INTERFACE:path>`   | 仅构建时生效        |
+| `$<INSTALL_INTERFACE:path>` | 仅安装后生效        |
+| `$<TARGET_FILE:name>`       | 目标输出文件的完整路径   |
 
 ### 2.17 find_library() / find_program() / find_path() / find_file()
 
@@ -1099,20 +1110,22 @@ find_file(ZLIB_H zlib.h
 )
 ```
 
-| 命令 | 用途 | 结果变量 |
-|------|------|---------|
-| `find_library` | 查找库文件 | 库完整路径 |
-| `find_program` | 查找可执行文件 | 可执行文件完整路径 |
-| `find_path` | 查找头文件所在目录 | 目录路径 |
-| `find_file` | 查找任意文件 | 文件完整路径 |
+| 命令             | 用途        | 结果变量      |
+|----------------|-----------|-----------|
+| `find_library` | 查找库文件     | 库完整路径     |
+| `find_program` | 查找可执行文件   | 可执行文件完整路径 |
+| `find_path`    | 查找头文件所在目录 | 目录路径      |
+| `find_file`    | 查找任意文件    | 文件完整路径    |
 
 **通用搜索顺序**（从高到低）：
+
 1. `CMAKE_PREFIX_PATH` 指定的目录
 2. `HINTS` 指定的目录（优先于系统路径）
 3. 系统默认路径（`/usr/lib`、`%ProgramFiles%` 等）
 4. `PATHS` 指定的目录（低于系统路径）
 
-> `find_package` 是这四个命令的高层封装，会自动查找库路径、头文件目录、导入目标等；`find_library` 等是更底层的单一职责工具，适合手动组装自定义查找逻辑。
+> `find_package` 是这四个命令的高层封装，会自动查找库路径、头文件目录、导入目标等；`find_library`
+> 等是更底层的单一职责工具，适合手动组装自定义查找逻辑。
 
 ---
 
@@ -1146,13 +1159,13 @@ install(TARGETS mylib COMPONENT devel)
 # cmake --install build --component runtime   # 只安装 runtime 组件
 ```
 
-| 关键字 | 说明 |
-|--------|------|
-| `RUNTIME` | Windows 的 `.exe` / `.dll`，Linux 的可执行文件 |
-| `LIBRARY` | Linux/macOS 的共享库 `.so` / `.dylib`；Windows DLL 归 `RUNTIME` |
-| `ARCHIVE` | 静态库 `.a` / `.lib`；Windows DLL 的导入库 `.lib` 也归这里 |
-| `COMPONENT` | 分组安装，`cmake --install --component` 时过滤 |
-| `NAMESPACE` | 导出目标的命名空间前缀，消费者用 `mylib::mylib` 引用 |
+| 关键字         | 说明                                                        |
+|-------------|-----------------------------------------------------------|
+| `RUNTIME`   | Windows 的 `.exe` / `.dll`，Linux 的可执行文件                    |
+| `LIBRARY`   | Linux/macOS 的共享库 `.so` / `.dylib`；Windows DLL 归 `RUNTIME` |
+| `ARCHIVE`   | 静态库 `.a` / `.lib`；Windows DLL 的导入库 `.lib` 也归这里            |
+| `COMPONENT` | 分组安装，`cmake --install --component` 时过滤                    |
+| `NAMESPACE` | 导出目标的命名空间前缀，消费者用 `mylib::mylib` 引用                        |
 
 ---
 
@@ -1183,15 +1196,15 @@ set_tests_properties(basic_test PROPERTIES
 set_property(TEST basic_test basic_verbose PROPERTY LABELS "unit")
 ```
 
-| 属性 | 说明 |
-|------|------|
-| `TIMEOUT` | 超时秒数；CI 环境必设，防止死循环测试卡住流水线 |
-| `LABELS` | 分号分隔的标签列表；`ctest -L unit` 只跑带 unit 标签的测试 |
-| `PASS_REGULAR_EXPRESSION` | 输出需匹配此正则才算通过；适合脚本测试 |
-| `FAIL_REGULAR_EXPRESSION` | 输出匹配此正则即失败（优先于 PASS） |
-| `ENVIRONMENT` | 测试运行的额外环境变量 |
-| `DEPENDS` | 本测试依赖的其他测试名（先跑依赖项） |
-| `RUN_SERIAL` | `ON` 时不并行执行（`ctest -j` 对此测试无效） |
+| 属性                        | 说明                                       |
+|---------------------------|------------------------------------------|
+| `TIMEOUT`                 | 超时秒数；CI 环境必设，防止死循环测试卡住流水线                |
+| `LABELS`                  | 分号分隔的标签列表；`ctest -L unit` 只跑带 unit 标签的测试 |
+| `PASS_REGULAR_EXPRESSION` | 输出需匹配此正则才算通过；适合脚本测试                      |
+| `FAIL_REGULAR_EXPRESSION` | 输出匹配此正则即失败（优先于 PASS）                     |
+| `ENVIRONMENT`             | 测试运行的额外环境变量                              |
+| `DEPENDS`                 | 本测试依赖的其他测试名（先跑依赖项）                       |
+| `RUN_SERIAL`              | `ON` 时不并行执行（`ctest -j` 对此测试无效）           |
 
 ---
 
@@ -1208,14 +1221,15 @@ add_link_options(-Wl,--as-needed)
 
 **与 `target_compile_options` 的关键区别：**
 
-| | `add_compile_options` | `target_compile_options` |
-|---|---|---|
-| 作用范围 | 当前目录 + 所有子目录的**全部目标** | 仅指定的单个目标 |
-| 传播控制 | 无（全局生效） | `PRIVATE` / `PUBLIC` / `INTERFACE` |
-| 推荐程度 | ⚠ 谨慎使用，容易污染第三方库 | ✓ 推荐，精确控制 |
-| 典型用途 | 顶层设置所有目标共享的基础选项 | 库/可执行文件的独立选项 |
+|      | `add_compile_options` | `target_compile_options`           |
+|------|-----------------------|------------------------------------|
+| 作用范围 | 当前目录 + 所有子目录的**全部目标** | 仅指定的单个目标                           |
+| 传播控制 | 无（全局生效）               | `PRIVATE` / `PUBLIC` / `INTERFACE` |
+| 推荐程度 | ⚠ 谨慎使用，容易污染第三方库       | ✓ 推荐，精确控制                          |
+| 典型用途 | 顶层设置所有目标共享的基础选项       | 库/可执行文件的独立选项                       |
 
-> **最佳实践**：优先用 `target_compile_options`；如需全局设置，考虑用接口库（`project_options` 模式，见 1.11 节）代替 `add_compile_options`，避免意外影响 `add_subdirectory` 引入的第三方库。
+> **最佳实践**：优先用 `target_compile_options`；如需全局设置，考虑用接口库（`project_options` 模式，见 1.11 节）代替
+`add_compile_options`，避免意外影响 `add_subdirectory` 引入的第三方库。
 
 **跨编译器写法：`if(MSVC)` vs 生成器表达式**
 
@@ -1245,12 +1259,12 @@ target_compile_options(app PRIVATE
 )
 ```
 
-| 对比项 | `if(MSVC)` | 生成器表达式 |
-|--------|-----------|-------------|
-| 判断时机 | 配置阶段（`cmake -B`）| 构建阶段（`ninja`/`make`）|
-| 能否区分 Debug/Release | ❌ | ✅ |
-| 可读性 | ✅ 直观 | ⚠ 嵌套深，初学难读 |
-| 适合场景 | 简单工程、入门 | 多配置工程、需精细控制 |
+| 对比项                | `if(MSVC)`       | 生成器表达式               |
+|--------------------|------------------|----------------------|
+| 判断时机               | 配置阶段（`cmake -B`） | 构建阶段（`ninja`/`make`） |
+| 能否区分 Debug/Release | ❌                | ✅                    |
+| 可读性                | ✅ 直观             | ⚠ 嵌套深，初学难读           |
+| 适合场景               | 简单工程、入门          | 多配置工程、需精细控制          |
 
 ---
 
@@ -1260,10 +1274,10 @@ target_compile_options(app PRIVATE
 
 **两种主要写法对比：**
 
-| 写法 | 判断时机 | 能否区分 Debug/Release | 推荐场景 |
-|------|---------|---------------------|---------|
-| `if(MSVC)` 等条件块 | 配置阶段（`cmake -B`）| ❌ 仅单配置 Generator 有效 | 简单工程，只按编译器/OS 区分 |
-| 生成器表达式 `$<...>` | 构建阶段（`ninja`/`make`）| ✅ 多/单配置均有效 | 需同时区分编译器 + 构建类型 |
+| 写法              | 判断时机                 | 能否区分 Debug/Release  | 推荐场景             |
+|-----------------|----------------------|---------------------|------------------|
+| `if(MSVC)` 等条件块 | 配置阶段（`cmake -B`）     | ❌ 仅单配置 Generator 有效 | 简单工程，只按编译器/OS 区分 |
+| 生成器表达式 `$<...>` | 构建阶段（`ninja`/`make`） | ✅ 多/单配置均有效          | 需同时区分编译器 + 构建类型  |
 
 ---
 
@@ -1293,10 +1307,10 @@ endif()
 
 #### 层次二：三路编译器区分
 
-| 条件 | 匹配对象 | `CMAKE_CXX_COMPILER_ID` 值 |
-|------|----------|--------------------------|
-| `MSVC` | Visual Studio 的 cl.exe | `"MSVC"` |
-| `CMAKE_CXX_COMPILER_ID STREQUAL "GNU"` | GCC / MinGW-w64 | `"GNU"` |
+| 条件                                      | 匹配对象                   | `CMAKE_CXX_COMPILER_ID` 值  |
+|-----------------------------------------|------------------------|----------------------------|
+| `MSVC`                                  | Visual Studio 的 cl.exe | `"MSVC"`                   |
+| `CMAKE_CXX_COMPILER_ID STREQUAL "GNU"`  | GCC / MinGW-w64        | `"GNU"`                    |
 | `CMAKE_CXX_COMPILER_ID MATCHES "Clang"` | Clang 和 AppleClang 均匹配 | `"Clang"` / `"AppleClang"` |
 
 ```cmake
@@ -1315,12 +1329,12 @@ endif()
 
 #### 层次三：操作系统区分
 
-| 条件 | 匹配对象 | 注意 |
-|------|----------|------|
-| `WIN32` | Windows（MSVC 或 MinGW 均匹配）| 含 64 位 Windows |
-| `APPLE` | macOS / iOS | `UNIX` 同时也为真 |
-| `UNIX AND NOT APPLE` | 纯 Linux | 排除 macOS |
-| `UNIX` | Linux + macOS | 两者都匹配 |
+| 条件                   | 匹配对象                      | 注意             |
+|----------------------|---------------------------|----------------|
+| `WIN32`              | Windows（MSVC 或 MinGW 均匹配） | 含 64 位 Windows |
+| `APPLE`              | macOS / iOS               | `UNIX` 同时也为真   |
+| `UNIX AND NOT APPLE` | 纯 Linux                   | 排除 macOS       |
+| `UNIX`               | Linux + macOS             | 两者都匹配          |
 
 ```cmake
 if(WIN32)
@@ -1433,11 +1447,11 @@ target_compile_options(app PRIVATE
 )
 ```
 
-| 变量 | 示例值 | 说明 |
-|------|--------|------|
-| `CMAKE_CXX_COMPILER_VERSION` | `"13.2.0"` | 完整版本字符串，用 `VERSION_GREATER_EQUAL` 比较 |
-| `MSVC_VERSION` | `1930` | MSVC 内部版本号（VS 2022 = 193x，VS 2019 = 192x）|
-| `MSVC_TOOLSET_VERSION` | `143` | 工具集版本（v143 = VS 2022，v142 = VS 2019）|
+| 变量                           | 示例值        | 说明                                        |
+|------------------------------|------------|-------------------------------------------|
+| `CMAKE_CXX_COMPILER_VERSION` | `"13.2.0"` | 完整版本字符串，用 `VERSION_GREATER_EQUAL` 比较      |
+| `MSVC_VERSION`               | `1930`     | MSVC 内部版本号（VS 2022 = 193x，VS 2019 = 192x） |
+| `MSVC_TOOLSET_VERSION`       | `143`      | 工具集版本（v143 = VS 2022，v142 = VS 2019）      |
 
 ---
 
@@ -1445,32 +1459,31 @@ target_compile_options(app PRIVATE
 
 **常用条件变量：**
 
-| 变量 / 条件 | 含义 | 典型值 |
-|-------------|------|--------|
-| `MSVC` | 编译器是 cl.exe | `TRUE` / `FALSE` |
-| `WIN32` | 目标平台是 Windows（含 64 位）| `TRUE` / `FALSE` |
-| `APPLE` | 目标平台是 macOS 或 iOS | `TRUE` / `FALSE` |
-| `UNIX` | 目标平台是 Linux 或 macOS | `TRUE` / `FALSE` |
-| `CMAKE_CXX_COMPILER_ID` | 编译器 ID 字符串 | `MSVC` / `GNU` / `Clang` / `AppleClang` |
-| `CMAKE_CXX_COMPILER_VERSION` | 编译器完整版本号 | `13.2.0` / `17.0.1` |
-| `CMAKE_BUILD_TYPE` | 构建类型（单配置 Generator）| `Debug` / `Release` / `RelWithDebInfo` / `MinSizeRel` |
-| `MSVC_VERSION` | MSVC 内部版本号 | `1930`（VS 2022）|
+| 变量 / 条件                      | 含义                    | 典型值                                                   |
+|------------------------------|-----------------------|-------------------------------------------------------|
+| `MSVC`                       | 编译器是 cl.exe           | `TRUE` / `FALSE`                                      |
+| `WIN32`                      | 目标平台是 Windows（含 64 位） | `TRUE` / `FALSE`                                      |
+| `APPLE`                      | 目标平台是 macOS 或 iOS     | `TRUE` / `FALSE`                                      |
+| `UNIX`                       | 目标平台是 Linux 或 macOS   | `TRUE` / `FALSE`                                      |
+| `CMAKE_CXX_COMPILER_ID`      | 编译器 ID 字符串            | `MSVC` / `GNU` / `Clang` / `AppleClang`               |
+| `CMAKE_CXX_COMPILER_VERSION` | 编译器完整版本号              | `13.2.0` / `17.0.1`                                   |
+| `CMAKE_BUILD_TYPE`           | 构建类型（单配置 Generator）   | `Debug` / `Release` / `RelWithDebInfo` / `MinSizeRel` |
+| `MSVC_VERSION`               | MSVC 内部版本号            | `1930`（VS 2022）                                       |
 
 **生成器表达式速查（用于 `target_compile_options` 等）：**
 
-| 表达式 | 含义 |
-|--------|------|
-| `$<CXX_COMPILER_ID:MSVC>` | 编译器是 MSVC |
-| `$<CXX_COMPILER_ID:GNU>` | 编译器是 GCC |
-| `$<CONFIG:Debug>` | 当前构建类型是 Debug |
-| `$<NOT:$<CXX_COMPILER_ID:MSVC>>` | 编译器不是 MSVC |
-| `$<AND:$<A>,$<B>>` | A 且 B 同时为真 |
-| `$<IF:cond,yes,no>` | 三元：cond 为真取 yes，否则取 no |
-| `$<BOOL:${VAR}>` | 将 CMake 变量转成布尔值 |
-| `$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>` | 编译器版本 ≥ 12 |
+| 表达式                                                   | 含义                     |
+|-------------------------------------------------------|------------------------|
+| `$<CXX_COMPILER_ID:MSVC>`                             | 编译器是 MSVC              |
+| `$<CXX_COMPILER_ID:GNU>`                              | 编译器是 GCC               |
+| `$<CONFIG:Debug>`                                     | 当前构建类型是 Debug          |
+| `$<NOT:$<CXX_COMPILER_ID:MSVC>>`                      | 编译器不是 MSVC             |
+| `$<AND:$<A>,$<B>>`                                    | A 且 B 同时为真             |
+| `$<IF:cond,yes,no>`                                   | 三元：cond 为真取 yes，否则取 no |
+| `$<BOOL:${VAR}>`                                      | 将 CMake 变量转成布尔值        |
+| `$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>` | 编译器版本 ≥ 12             |
 
 ---
-
 
 ### 2.22 math(EXPR ...)
 
@@ -1494,12 +1507,12 @@ math(EXPR half "${N} / 2")          # → 4
 math(EXPR result "255" OUTPUT_FORMAT HEXADECIMAL)  # → 0xff
 ```
 
-| 运算符 | 说明 |
-|--------|------|
-| `+ - * /` | 四则运算（整除） |
-| `%` | 取模 |
-| `& \| ^ ~` | 位与、位或、位异或、位非 |
-| `<< >>` | 左移、右移 |
+| 运算符                                  | 说明                  |
+|--------------------------------------|---------------------|
+| `+ - * /`                            | 四则运算（整除）            |
+| `%`                                  | 取模                  |
+| `& \| ^ ~`                           | 位与、位或、位异或、位非        |
+| `<< >>`                              | 左移、右移               |
 | `OUTPUT_FORMAT DECIMAL\|HEXADECIMAL` | 指定输出格式（CMake 3.13+） |
 
 ---
@@ -1527,18 +1540,18 @@ find_package(MyLib
 )
 ```
 
-| 参数 | 说明 |
-|------|------|
-| `REQUIRED` | 找不到报错停止 |
-| `QUIET` | 找不到不打印提示；与 `REQUIRED` 同用时仍报错 |
-| `VERSION x.y` | 最低版本要求 |
-| `EXACT` | 精确版本匹配 |
-| `COMPONENTS comp1 comp2` | 指定需要的组件；组件找不到视为整个包未找到 |
-| `OPTIONAL_COMPONENTS` | 可选组件，找不到不报错 |
-| `CONFIG` / `NO_MODULE` | 强制 Config 模式，跳过 Module 模式 |
-| `HINTS` | 优先搜索路径（高于系统默认路径） |
-| `PATHS` | 额外搜索路径（低于系统默认路径） |
-| `NO_DEFAULT_PATH` | 禁用所有默认搜索路径，只用 `HINTS` / `PATHS` |
+| 参数                       | 说明                              |
+|--------------------------|---------------------------------|
+| `REQUIRED`               | 找不到报错停止                         |
+| `QUIET`                  | 找不到不打印提示；与 `REQUIRED` 同用时仍报错    |
+| `VERSION x.y`            | 最低版本要求                          |
+| `EXACT`                  | 精确版本匹配                          |
+| `COMPONENTS comp1 comp2` | 指定需要的组件；组件找不到视为整个包未找到           |
+| `OPTIONAL_COMPONENTS`    | 可选组件，找不到不报错                     |
+| `CONFIG` / `NO_MODULE`   | 强制 Config 模式，跳过 Module 模式       |
+| `HINTS`                  | 优先搜索路径（高于系统默认路径）                |
+| `PATHS`                  | 额外搜索路径（低于系统默认路径）                |
+| `NO_DEFAULT_PATH`        | 禁用所有默认搜索路径，只用 `HINTS` / `PATHS` |
 
 ---
 
@@ -1557,11 +1570,11 @@ add_dependencies(my_app codegen)   # 确保 codegen 先于 my_app 构建
 
 **与 `target_link_libraries` 的区别：**
 
-| | `target_link_libraries` | `add_dependencies` |
-|---|---|---|
-| 作用 | 链接 + 构建顺序 + 属性传播 | 仅保证构建顺序 |
+|      | `target_link_libraries`      | `add_dependencies`          |
+|------|------------------------------|-----------------------------|
+| 作用   | 链接 + 构建顺序 + 属性传播             | 仅保证构建顺序                     |
 | 适用对象 | 库目标（STATIC/SHARED/INTERFACE） | 任意目标，包括 `add_custom_target` |
-| 推荐程度 | ✓ 首选 | 只在无法用链接表达依赖时使用 |
+| 推荐程度 | ✓ 首选                         | 只在无法用链接表达依赖时使用              |
 
 > **何时必须用 `add_dependencies`**：依赖一个 `add_custom_target`（它不是库，无法链接）；或依赖一个不需要链接但必须先构建的目标。
 
@@ -1595,7 +1608,8 @@ cmake_path(HAS_EXTENSION p has_ext)      # → TRUE / FALSE
 cmake_path(RELATIVE_PATH p BASE_DIRECTORY "/path" OUTPUT_VARIABLE rel)
 ```
 
-> **为什么优先用 `cmake_path` 而不是 `string(REGEX ...)`**：`cmake_path` 正确处理 Windows 盘符、UNC 路径、混合斜杠等边缘情况；`string(REGEX)` 手写路径解析容易出 bug。
+> **为什么优先用 `cmake_path` 而不是 `string(REGEX ...)`**：`cmake_path` 正确处理 Windows 盘符、UNC 路径、混合斜杠等边缘情况；
+`string(REGEX)` 手写路径解析容易出 bug。
 
 ---
 
@@ -1622,13 +1636,13 @@ set_property(TEST test1 test2 test3 PROPERTY LABELS "unit")
 set_property(TEST test1 test2 test3 APPEND PROPERTY LABELS "fast")  # APPEND 追加不覆盖
 ```
 
-| 作用域 | 语法 | 常用属性 |
-|--------|------|---------|
-| `TARGET` | `get/set_property(TARGET <tgt> PROPERTY <name>)` | `COMPILE_OPTIONS` / `INCLUDE_DIRECTORIES` / `CXX_STANDARD` |
-| `DIRECTORY` | `get/set_property(DIRECTORY <dir> PROPERTY <name>)` | `INCLUDE_DIRECTORIES` / `COMPILE_DEFINITIONS` |
-| `GLOBAL` | `get/set_property(GLOBAL PROPERTY <name>)` | `BUILDSYSTEM_TARGETS` / 自定义全局状态 |
-| `TEST` | `get/set_property(TEST <name> PROPERTY <name>)` | `TIMEOUT` / `LABELS` / `ENVIRONMENT` |
-| `SOURCE` | `get/set_property(SOURCE <file> PROPERTY <name>)` | `COMPILE_FLAGS` / `GENERATED` |
+| 作用域         | 语法                                                  | 常用属性                                                       |
+|-------------|-----------------------------------------------------|------------------------------------------------------------|
+| `TARGET`    | `get/set_property(TARGET <tgt> PROPERTY <name>)`    | `COMPILE_OPTIONS` / `INCLUDE_DIRECTORIES` / `CXX_STANDARD` |
+| `DIRECTORY` | `get/set_property(DIRECTORY <dir> PROPERTY <name>)` | `INCLUDE_DIRECTORIES` / `COMPILE_DEFINITIONS`              |
+| `GLOBAL`    | `get/set_property(GLOBAL PROPERTY <name>)`          | `BUILDSYSTEM_TARGETS` / 自定义全局状态                            |
+| `TEST`      | `get/set_property(TEST <name> PROPERTY <name>)`     | `TIMEOUT` / `LABELS` / `ENVIRONMENT`                       |
+| `SOURCE`    | `get/set_property(SOURCE <file> PROPERTY <name>)`   | `COMPILE_FLAGS` / `GENERATED`                              |
 
 ---
 
@@ -1663,7 +1677,8 @@ try_run(
 message(STATUS "字节序: ${endian}")
 ```
 
-> **注意**：`try_run` 在交叉编译时无法运行目标平台代码，需配合 `CMAKE_TRY_RUN_<VAR>_DEFAULT` 或 `CMAKE_CROSSCOMPILING_EMULATOR` 处理。
+> **注意**：`try_run` 在交叉编译时无法运行目标平台代码，需配合 `CMAKE_TRY_RUN_<VAR>_DEFAULT` 或
+`CMAKE_CROSSCOMPILING_EMULATOR` 处理。
 
 ---
 
@@ -1684,15 +1699,15 @@ cmake_host_system_information(RESULT jobs QUERY NUMBER_OF_LOGICAL_CORES)
 set(CMAKE_BUILD_PARALLEL_LEVEL ${jobs} CACHE STRING "并行构建线程数")
 ```
 
-| QUERY 值 | 说明 |
-|----------|------|
-| `NUMBER_OF_PHYSICAL_CORES` | 物理 CPU 核数 |
-| `NUMBER_OF_LOGICAL_CORES` | 逻辑核数（含超线程） |
-| `TOTAL_PHYSICAL_MEMORY` | 总物理内存（MB） |
+| QUERY 值                     | 说明         |
+|-----------------------------|------------|
+| `NUMBER_OF_PHYSICAL_CORES`  | 物理 CPU 核数  |
+| `NUMBER_OF_LOGICAL_CORES`   | 逻辑核数（含超线程） |
+| `TOTAL_PHYSICAL_MEMORY`     | 总物理内存（MB）  |
 | `AVAILABLE_PHYSICAL_MEMORY` | 可用物理内存（MB） |
-| `OS_NAME` | 操作系统名称 |
-| `OS_PLATFORM` | 处理器架构 |
-| `HOSTNAME` | 主机名 |
+| `OS_NAME`                   | 操作系统名称     |
+| `OS_PLATFORM`               | 处理器架构      |
+| `HOSTNAME`                  | 主机名        |
 
 ---
 
@@ -1715,15 +1730,16 @@ cmake_policy(POP)
 
 **常见策略速查：**
 
-| 策略 | 含义 | NEW 行为 |
-|------|------|---------|
-| `CMP0077` | `option()` 是否尊重已有缓存变量 | 尊重（`set` 在 `option` 之前有效） |
-| `CMP0048` | `project()` 是否必须声明 VERSION | 可不声明（`PROJECT_VERSION` 为空字符串） |
-| `CMP0076` | `target_sources` 相对路径处理 | 转为绝对路径 |
-| `CMP0135` | FetchContent URL 下载时间戳 | 使用提取时间（每次重新构建依赖） |
+| 策略        | 含义                                 | NEW 行为                                   |
+|-----------|------------------------------------|------------------------------------------|
+| `CMP0077` | `option()` 是否尊重已有缓存变量              | 尊重（`set` 在 `option` 之前有效）                |
+| `CMP0048` | `project()` 是否必须声明 VERSION         | 可不声明（`PROJECT_VERSION` 为空字符串）            |
+| `CMP0076` | `target_sources` 相对路径处理            | 转为绝对路径                                   |
+| `CMP0135` | FetchContent URL 下载时间戳             | 使用提取时间（每次重新构建依赖）                         |
 | `CMP0167` | `find_package(Boost)` 首选 Config 模式 | 跳过 FindBoost.cmake，直接找 BoostConfig.cmake |
 
-> 遇到 CMake 警告 `Policy CMP00xx is not set` 时，在 `cmake_minimum_required` 后加 `cmake_policy(VERSION x.y)` 即可消除全部警告（推荐）；也可单独 `SET` 某条策略。
+> 遇到 CMake 警告 `Policy CMP00xx is not set` 时，在 `cmake_minimum_required` 后加 `cmake_policy(VERSION x.y)`
+> 即可消除全部警告（推荐）；也可单独 `SET` 某条策略。
 
 ---
 
@@ -1799,31 +1815,32 @@ ctest --preset default                             # 测试
 
 **顶层字段：**
 
-| 字段 | 说明 |
-|------|------|
-| `version` | 格式版本；3 = CMake 3.21+（最低），6 = CMake 3.25+（推荐） |
-| `cmakeMinimumRequired` | 要求使用的最低 CMake 版本 |
-| `configurePresets` | 配置预设列表（对应 `cmake -B ... -G ... -D...`） |
-| `buildPresets` | 构建预设列表（对应 `cmake --build`） |
-| `testPresets` | 测试预设列表（对应 `ctest`） |
-| `include` | 引入其他 JSON 文件（模块化拆分预设） |
+| 字段                     | 说明                                           |
+|------------------------|----------------------------------------------|
+| `version`              | 格式版本；3 = CMake 3.21+（最低），6 = CMake 3.25+（推荐） |
+| `cmakeMinimumRequired` | 要求使用的最低 CMake 版本                             |
+| `configurePresets`     | 配置预设列表（对应 `cmake -B ... -G ... -D...`）       |
+| `buildPresets`         | 构建预设列表（对应 `cmake --build`）                   |
+| `testPresets`          | 测试预设列表（对应 `ctest`）                           |
+| `include`              | 引入其他 JSON 文件（模块化拆分预设）                        |
 
 **configurePreset 常用字段：**
 
-| 字段 | 说明 |
-|------|------|
-| `name` | 预设唯一标识，命令行用此名称引用 |
-| `displayName` | 显示名称（IDE 展示用） |
-| `hidden` | `true` = 仅作为基类，不出现在 `--list-presets` |
-| `inherits` | 继承另一个预设；字符串或数组（多重继承） |
-| `generator` | 等价于 `-G` |
-| `binaryDir` | 构建目录；支持变量 `${sourceDir}` / `${presetName}` / `${hostSystemName}` |
-| `cacheVariables` | 等价于 `-DVAR=value`，值可以是字符串或 `{"type":"BOOL","value":"ON"}` |
-| `toolchainFile` | 等价于 `-DCMAKE_TOOLCHAIN_FILE` |
-| `environment` | 设置进程环境变量（仅对该预设有效） |
-| `condition` | 条件表达式，不满足时该预设不可用（CMake 3.22+） |
+| 字段               | 说明                                                               |
+|------------------|------------------------------------------------------------------|
+| `name`           | 预设唯一标识，命令行用此名称引用                                                 |
+| `displayName`    | 显示名称（IDE 展示用）                                                    |
+| `hidden`         | `true` = 仅作为基类，不出现在 `--list-presets`                             |
+| `inherits`       | 继承另一个预设；字符串或数组（多重继承）                                             |
+| `generator`      | 等价于 `-G`                                                         |
+| `binaryDir`      | 构建目录；支持变量 `${sourceDir}` / `${presetName}` / `${hostSystemName}` |
+| `cacheVariables` | 等价于 `-DVAR=value`，值可以是字符串或 `{"type":"BOOL","value":"ON"}`        |
+| `toolchainFile`  | 等价于 `-DCMAKE_TOOLCHAIN_FILE`                                     |
+| `environment`    | 设置进程环境变量（仅对该预设有效）                                                |
+| `condition`      | 条件表达式，不满足时该预设不可用（CMake 3.22+）                                    |
 
-> **CMakeUserPresets.json**：本地个人预设放在 `CMakeUserPresets.json`（与 `CMakePresets.json` 同目录），应加入 `.gitignore`，避免本地路径提交到仓库。
+> **CMakeUserPresets.json**：本地个人预设放在 `CMakeUserPresets.json`（与 `CMakePresets.json` 同目录），应加入 `.gitignore`
+> ，避免本地路径提交到仓库。
 
 ---
 
@@ -1831,68 +1848,68 @@ ctest --preset default                             # 测试
 
 ### 3.1 所有 Generator 通用
 
-| 文件 / 目录 | 说明 |
-|---|---|
-| `CMakeFiles/` | CMake 内部工作目录，存放配置日志、中间状态、目标中间文件（`.o` / `.obj`） |
-| `CMakeFiles/CMakeConfigureLog.yaml` | 配置阶段详细日志，记录编译器探测结果、feature 检测等，排查配置失败时看这里 |
-| `CMakeFiles/<version>/` | CMake 版本号目录（如 `4.2.2/`），存放编译器探测脚本和结果 |
-| `CMakeFiles/CMakeScratch/` | 配置阶段临时文件，探测完即废弃 |
-| `CMakeFiles/pkgRedirects/` | 包重定向配置（find_package 相关） |
-| `CMakeFiles/<target>.dir/` | 各构建目标的中间文件目录（`.o`、依赖文件等），目标名即 `add_executable` / `add_library` 的名称 |
-| `CMakeCache.txt` | 所有 cmake 变量的缓存，修改后须重跑 cmake 才生效；删除此文件等同于清空配置缓存 |
-| `cmake_install.cmake` | `cmake --install` 的安装规则脚本，由 CMakeLists.txt 里的 `install()` 生成 |
-| `InstallScripts.json` | 安装脚本索引 |
-| `TargetDirectories.txt` | 记录所有构建目标的输出目录路径 |
+| 文件 / 目录                             | 说明                                                                 |
+|-------------------------------------|--------------------------------------------------------------------|
+| `CMakeFiles/`                       | CMake 内部工作目录，存放配置日志、中间状态、目标中间文件（`.o` / `.obj`）                     |
+| `CMakeFiles/CMakeConfigureLog.yaml` | 配置阶段详细日志，记录编译器探测结果、feature 检测等，排查配置失败时看这里                          |
+| `CMakeFiles/<version>/`             | CMake 版本号目录（如 `4.2.2/`），存放编译器探测脚本和结果                               |
+| `CMakeFiles/CMakeScratch/`          | 配置阶段临时文件，探测完即废弃                                                    |
+| `CMakeFiles/pkgRedirects/`          | 包重定向配置（find_package 相关）                                            |
+| `CMakeFiles/<target>.dir/`          | 各构建目标的中间文件目录（`.o`、依赖文件等），目标名即 `add_executable` / `add_library` 的名称 |
+| `CMakeCache.txt`                    | 所有 cmake 变量的缓存，修改后须重跑 cmake 才生效；删除此文件等同于清空配置缓存                     |
+| `cmake_install.cmake`               | `cmake --install` 的安装规则脚本，由 CMakeLists.txt 里的 `install()` 生成       |
+| `InstallScripts.json`               | 安装脚本索引                                                             |
+| `TargetDirectories.txt`             | 记录所有构建目标的输出目录路径                                                    |
 
 ### 3.2 Ninja 方案特有
 
-| 文件 | 说明 |
-|---|---|
-| `build.ninja` | **主构建文件**，ninja 读取它执行所有构建规则 |
-| `CMakeFiles/rules.ninja` | 通用编译规则（响应规则、默认标志等），被 `build.ninja` 包含 |
-| `.ninja_deps` | ninja 依赖数据库，记录每个源文件依赖的头文件，增量构建时判断哪些文件需要重编 |
-| `.ninja_log` | 构建日志，记录每条命令的开始/结束时间，`ninja -t restat` 用它 |
+| 文件                       | 说明                                        |
+|--------------------------|-------------------------------------------|
+| `build.ninja`            | **主构建文件**，ninja 读取它执行所有构建规则               |
+| `CMakeFiles/rules.ninja` | 通用编译规则（响应规则、默认标志等），被 `build.ninja` 包含     |
+| `.ninja_deps`            | ninja 依赖数据库，记录每个源文件依赖的头文件，增量构建时判断哪些文件需要重编 |
+| `.ninja_log`             | 构建日志，记录每条命令的开始/结束时间，`ninja -t restat` 用它  |
 
 ### 3.3 MinGW Makefiles 方案特有
 
-| 文件 | 说明 |
-|---|---|
-| `Makefile` | **主构建文件**，mingw32-make 读取它执行构建 |
-| `CMakeFiles/Makefile.cmake` | CMake 生成的 Makefile 片段，被主 Makefile 包含 |
-| `CMakeFiles/Makefile2` | 内部 Makefile，处理目标依赖顺序 |
-| `CMakeFiles/progress.marks` | 记录构建进度（用于显示 `[xx%]`） |
-| `CMakeFiles/CMakeDirectoryInformation.cmake` | 当前目录的路径信息 |
+| 文件                                           | 说明                                   |
+|----------------------------------------------|--------------------------------------|
+| `Makefile`                                   | **主构建文件**，mingw32-make 读取它执行构建       |
+| `CMakeFiles/Makefile.cmake`                  | CMake 生成的 Makefile 片段，被主 Makefile 包含 |
+| `CMakeFiles/Makefile2`                       | 内部 Makefile，处理目标依赖顺序                 |
+| `CMakeFiles/progress.marks`                  | 记录构建进度（用于显示 `[xx%]`）                 |
+| `CMakeFiles/CMakeDirectoryInformation.cmake` | 当前目录的路径信息                            |
 
 ### 3.4 Ninja Multi-Config 方案特有
 
-| 文件 / 目录 | 说明 |
-|---|---|
-| `Debug/` / `Release/` / `RelWithDebInfo/` | 各配置的独立输出目录，exe 在对应子目录下 |
+| 文件 / 目录                                                                    | 说明                                       |
+|----------------------------------------------------------------------------|------------------------------------------|
+| `Debug/` / `Release/` / `RelWithDebInfo/`                                  | 各配置的独立输出目录，exe 在对应子目录下                   |
 | `build-Debug.ninja` / `build-Release.ninja` / `build-RelWithDebInfo.ninja` | 各配置的入口 ninja 文件，`--config Debug` 时读取对应文件 |
-| `CMakeFiles/common.ninja` | 所有配置共用的编译规则（目标定义、路径等） |
-| `CMakeFiles/impl-Debug.ninja` 等 | 各配置的具体实现（编译标志差异、输出路径等） |
+| `CMakeFiles/common.ninja`                                                  | 所有配置共用的编译规则（目标定义、路径等）                    |
+| `CMakeFiles/impl-Debug.ninja` 等                                            | 各配置的具体实现（编译标志差异、输出路径等）                   |
 
 ### 3.5 MSVC 特有（相比 MinGW）
 
-| 文件 / 目录 | 说明 |
-|---|---|
-| `<target>.pdb` | **调试符号文件**（Program Debug Database），VS 调试器 / WinDbg 读取它，大小通常远超 exe |
-| `<target>.ilk` | **增量链接文件**（Incremental Link），存储上次链接的中间数据，加速下次链接；Debug 构建才生成 |
-| `CMakeFiles/ShowIncludes/` | 解析 MSVC `/showIncludes` 输出，实现头文件依赖跟踪（GCC 用 `-MF` 生成 `.d` 文件，MSVC 改用此目录） |
-| `CMakeFiles/<version>-msvc1/` | MSVC 版本标识目录（如 `4.3.1-msvc1/`） |
+| 文件 / 目录                       | 说明                                                                      |
+|-------------------------------|-------------------------------------------------------------------------|
+| `<target>.pdb`                | **调试符号文件**（Program Debug Database），VS 调试器 / WinDbg 读取它，大小通常远超 exe       |
+| `<target>.ilk`                | **增量链接文件**（Incremental Link），存储上次链接的中间数据，加速下次链接；Debug 构建才生成             |
+| `CMakeFiles/ShowIncludes/`    | 解析 MSVC `/showIncludes` 输出，实现头文件依赖跟踪（GCC 用 `-MF` 生成 `.d` 文件，MSVC 改用此目录） |
+| `CMakeFiles/<version>-msvc1/` | MSVC 版本标识目录（如 `4.3.1-msvc1/`）                                           |
 
 ### 3.6 VS Generator 特有
 
-| 文件 / 目录 | 说明 |
-|---|---|
-| `<project>.slnx` | **VS 解决方案文件**（新格式，VS 2022 17.x+），双击用 VS 打开，包含所有项目 |
-| `<target>.vcxproj` | 主项目文件，MSBuild 读取它编译对应目标 |
-| `ALL_BUILD.vcxproj` | 构建所有目标，VS 里 Build Solution 触发的就是它 |
-| `ZERO_CHECK.vcxproj` | 监控 CMakeLists.txt 变化，变化时自动重新运行 cmake 刷新 `.vcxproj` |
-| `*.vcxproj.filters` | 项目筛选器，控制文件在 VS Solution Explorer 里的分组显示 |
-| `*.vcxproj.user` | 用户本地配置（调试启动参数、工作目录等），不应提交 git |
-| `.vs/` | VS IDE 本地配置目录，不应提交 git |
-| `Debug/` / `Release/` | 各配置的输出目录，exe 在对应子目录下 |
-| `x64/` | x64 平台的中间文件目录 |
-| `CMakeFiles/generate.stamp` | ZERO_CHECK 用来判断是否需要重新生成 `.vcxproj` 的时间戳 |
-| `CMakeFiles/generate.stamp.depend` | 触发重新生成的文件列表（CMakeLists.txt 及所有 `.cmake` 文件） |
+| 文件 / 目录                            | 说明                                                 |
+|------------------------------------|----------------------------------------------------|
+| `<project>.slnx`                   | **VS 解决方案文件**（新格式，VS 2022 17.x+），双击用 VS 打开，包含所有项目  |
+| `<target>.vcxproj`                 | 主项目文件，MSBuild 读取它编译对应目标                            |
+| `ALL_BUILD.vcxproj`                | 构建所有目标，VS 里 Build Solution 触发的就是它                  |
+| `ZERO_CHECK.vcxproj`               | 监控 CMakeLists.txt 变化，变化时自动重新运行 cmake 刷新 `.vcxproj` |
+| `*.vcxproj.filters`                | 项目筛选器，控制文件在 VS Solution Explorer 里的分组显示            |
+| `*.vcxproj.user`                   | 用户本地配置（调试启动参数、工作目录等），不应提交 git                      |
+| `.vs/`                             | VS IDE 本地配置目录，不应提交 git                             |
+| `Debug/` / `Release/`              | 各配置的输出目录，exe 在对应子目录下                               |
+| `x64/`                             | x64 平台的中间文件目录                                      |
+| `CMakeFiles/generate.stamp`        | ZERO_CHECK 用来判断是否需要重新生成 `.vcxproj` 的时间戳            |
+| `CMakeFiles/generate.stamp.depend` | 触发重新生成的文件列表（CMakeLists.txt 及所有 `.cmake` 文件）        |

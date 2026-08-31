@@ -16,7 +16,8 @@ namespace py = pybind11;
 
 // PYBIND11_MODULE 是宏，展开后是一个函数定义，所以 } 后面不加分号
 // m 是 Python 模块对象，所有绑定都通过 m 注册
-PYBIND11_MODULE(stock_demo, m) {
+PYBIND11_MODULE(stock_demo, m)
+{
     m.doc() = "第五步：类绑定（声明/实现/绑定三文件分离）";
 
     // py::class_<Stock>(m, "Stock") → 注册 C++ 的 Stock 类到 Python 模块

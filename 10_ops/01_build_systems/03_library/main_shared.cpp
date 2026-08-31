@@ -3,7 +3,8 @@
 #include <iostream>
 #include "math_utils.h"
 
-int main() {
+int main()
+{
     std::cout << "② 动态库链接\n";
     std::cout << "  add(7, 2)      = " << add(7, 2) << "\n";
     std::cout << "  multiply(7, 2) = " << multiply(7, 2) << "\n";

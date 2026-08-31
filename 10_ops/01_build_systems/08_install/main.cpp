@@ -5,7 +5,8 @@
 #include <iostream>
 #include "mylib.h"
 
-int main() {
+int main()
+{
     std::cout << "compute(7) = " << compute(7) << "\n";
     return 0;
 }

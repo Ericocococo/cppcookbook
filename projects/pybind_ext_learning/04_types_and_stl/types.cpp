@@ -30,7 +30,8 @@ double avg(const std::vector<double>& v)
     if (v.empty()) return 0.0;
 
     double sum = 0.0;
-    for (double x : v) {
+    for (double x : v)
+    {
         sum += x;
     }
     return sum / v.size();
@@ -73,7 +74,8 @@ std::map<std::string, int> count_letters(const std::string& s)
                                        std::string(3, 'x') → "xxx"
                                    map 的 key 是 string 不是 char，所以 char 得转成 string
        out[key]++                → key 不存在时自动创建并初始化为 0，然后 +1 */
-    for (char c : s) {
+    for (char c : s)
+    {
         out[std::string(1, c)]++;
     }
     return out;
@@ -83,13 +85,15 @@ std::map<std::string, int> count_letters(const std::string& s)
 std::vector<std::string> split_symbol(const std::string& symbol)
 {
     size_t dot = symbol.find('.');
-    if (dot == std::string::npos) {
+    if (dot == std::string::npos)
+    {
         return {symbol};
     }
     return {symbol.substr(0, dot), symbol.substr(dot + 1)};
 }
 
-PYBIND11_MODULE(types_demo, m) {
+PYBIND11_MODULE(types_demo, m)
+{
     m.doc() = "第四步：多种参数类型 + STL 容器自动转换";
 
     /* py::arg("v")：给参数命名，Python 侧可以按关键字传参

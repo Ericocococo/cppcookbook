@@ -3,7 +3,8 @@
 #include <iostream>
 #include "math_utils.h"
 
-int main() {
+int main()
+{
     std::cout << "① 静态库链接\n";
     std::cout << "  add(5, 3)      = " << add(5, 3) << "\n";
     std::cout << "  multiply(5, 3) = " << multiply(5, 3) << "\n";
