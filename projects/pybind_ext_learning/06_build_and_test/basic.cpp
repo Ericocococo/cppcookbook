@@ -14,14 +14,18 @@ namespace py = pybind11;
 
 // ---- 1. 普通函数 ----
 
-int add(int a, int b) { return a + b; }
+int add(int a, int b)
+{
+    return a + b;
+}
 
 double avg(const std::vector<double>& v)
 {
     if (v.empty()) return 0.0;
 
     double sum = 0.0;
-    for (double x : v) {
+    for (double x : v)
+    {
         sum += x;
     }
     return sum / v.size();
@@ -30,7 +34,8 @@ double avg(const std::vector<double>& v)
 std::map<std::string, int> count_letters(const std::string& s)
 {
     std::map<std::string, int> out;
-    for (char c : s) {
+    for (char c : s)
+    {
         out[std::string(1, c)]++;
     }
     return out;
@@ -38,21 +43,36 @@ std::map<std::string, int> count_letters(const std::string& s)
 
 // ---- 2. 类绑定 ----
 
-class Stock {
+class Stock
+{
     std::string m_code;
-    double      m_close;
+    double m_close;
 
 public:
-    Stock(std::string code, double close) : m_code(std::move(code)), m_close(close) {}
+    Stock(std::string code, double close)
+        : m_code(std::move(code)), m_close(close)
+    {
+    }
 
-    std::string code() const { return m_code; }
-    double      close() const { return m_close; }
-    void        set_close(double v) { m_close = v; }
+    std::string code() const
+    {
+        return m_code;
+    }
+
+    double close() const
+    {
+        return m_close;
+    }
+
+    void set_close(double v)
+    {
+        m_close = v;
+    }
 
     // 模拟涨跌停价
     std::pair<double, double> limit_prices() const
     {
-        return {m_close * 1.1, m_close * 0.9};  // 涨停 / 跌停（简化 ±10%）
+        return {m_close * 1.1, m_close * 0.9}; // 涨停 / 跌停（简化 ±10%）
     }
 };
 

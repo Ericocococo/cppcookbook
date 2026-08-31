@@ -15,10 +15,11 @@
 namespace py = pybind11;
 
 // 聚合类: 模拟框架中的 CDataProvider，持有各 Mgr 并暴露统一接口
-class DataProvider {
-    CFHSGMgr         m_fhsg;
-    CUpDownLimitMgr  m_up_down_limit;
-    CPlateMgr        m_plate;
+class DataProvider
+{
+    CFHSGMgr m_fhsg;
+    CUpDownLimitMgr m_up_down_limit;
+    CPlateMgr m_plate;
 
 public:
     // ---- Load ----
@@ -51,7 +52,8 @@ public:
     {
         auto records = m_fhsg.Query(symbol, start_ns, end_ns, cur_ns);
         py::list ex_dates, bonuses, trans_adds, cash_divis;
-        for (const auto& r : records) {
+        for (const auto& r : records)
+        {
             ex_dates.append(r.ex_divi_date_ns);
             bonuses.append(r.bonus);
             trans_adds.append(r.trans_add);

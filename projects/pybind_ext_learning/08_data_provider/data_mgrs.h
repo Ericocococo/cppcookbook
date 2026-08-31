@@ -33,11 +33,13 @@ inline SymbolKey ToSymbolKey(const std::string& s)
    末尾：const              — 不修改这个对象的成员
    末尾：noexcept           — 承诺不抛异常，纯数学运算没有失败的可能
    unordered_map<Key, Value, Hash> 的第三个模板参数就是哈希函数类型 */
-struct SymbolKeyHash {
+struct SymbolKeyHash
+{
     size_t operator()(const SymbolKey& k) const noexcept
     {
         size_t h = 14695981039346656037ULL;
-        for (char c : k) {
+        for (char c : k)
+        {
             if (c == 0) break;
             h ^= static_cast<size_t>(static_cast<unsigned char>(c));
             h *= 1099511628211ULL;
@@ -48,48 +50,55 @@ struct SymbolKeyHash {
 
 // ---- 分红送股 ----
 
-struct FHSGRecord {
-    int64_t ex_divi_date_ns;  // 除权除息日（纳秒时间戳）
-    double  bonus;            // 送股
-    double  trans_add;        // 转增
-    double  cash_divi;        // 派息
+struct FHSGRecord
+{
+    int64_t ex_divi_date_ns; // 除权除息日（纳秒时间戳）
+    double bonus; // 送股
+    double trans_add; // 转增
+    double cash_divi; // 派息
 };
 
-class CFHSGMgr {
+class CFHSGMgr
+{
 public:
     // 批量加载（symbol → 多条记录，自动按日期升序排序）
     void Load(const std::string& symbol, std::vector<FHSGRecord> records);
 
     // 查询 [start_ns, min(end_ns, cur_ns)] 区间内的分红记录
     std::vector<FHSGRecord> Query(const std::string& symbol,
-                                   int64_t start_ns, int64_t end_ns,
-                                   int64_t cur_ns) const;
+                                  int64_t start_ns, int64_t end_ns,
+                                  int64_t cur_ns) const;
+
 private:
     std::unordered_map<SymbolKey, std::vector<FHSGRecord>, SymbolKeyHash> m_data;
 };
 
 // ---- 涨跌停价 ----
 
-struct UpDownLimitRecord {
+struct UpDownLimitRecord
+{
     int64_t datetime_ns;
-    double  up_price;    // 涨停价
-    double  down_price;  // 跌停价
+    double up_price; // 涨停价
+    double down_price; // 跌停价
 };
 
-class CUpDownLimitMgr {
+class CUpDownLimitMgr
+{
 public:
     // 批量加载（symbol → 多条记录，自动按时间升序排序）
     void Load(const std::string& symbol, std::vector<UpDownLimitRecord> records);
 
     // 二分查找：取 datetime_ns <= cur_ns 的最后一条
     UpDownLimitRecord QueryLatest(const std::string& symbol, int64_t cur_ns) const;
+
 private:
     std::unordered_map<SymbolKey, std::vector<UpDownLimitRecord>, SymbolKeyHash> m_data;
 };
 
 // ---- 板块 ----
 
-class CPlateMgr {
+class CPlateMgr
+{
 public:
     // 加载行业板块成份股
     void LoadPlateComponent(const std::string& plate_name, std::vector<std::string> symbols);
@@ -102,9 +111,10 @@ public:
 
     // 查询板块成份股（先查行业，未命中再查概念）
     std::vector<std::string> GetStockListInSector(const std::string& sector) const;
+
 private:
-    std::unordered_map<std::string, std::vector<std::string>> m_plate;    // 行业板块
-    std::unordered_map<std::string, std::vector<std::string>> m_concept;  // 概念板块
+    std::unordered_map<std::string, std::vector<std::string>> m_plate; // 行业板块
+    std::unordered_map<std::string, std::vector<std::string>> m_concept; // 概念板块
 };
 
 // ---- 证券类型（静态分类，纯函数）----

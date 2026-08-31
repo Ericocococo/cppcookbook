@@ -25,7 +25,7 @@ import subprocess
 import sys
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
-build_dir = os.path.join(cur_dir, "build_py")
+build_dir = os.path.join(cur_dir, "build_py_vs")
 
 
 def parse_args():
@@ -34,7 +34,9 @@ def parse_args():
                         help="拷贝 .pyd 到指定目录（不存在则自动创建）")
     parser.add_argument("--python", default=sys.executable,
                         help="指定 Python 解释器路径（默认当前 python）")
-    return parser.parse_args()
+    return parser.parse_args([
+        "--dest", "lib",
+    ])
 
 
 def get_pybind11_dir(python_exe: str) -> str:
@@ -49,6 +51,12 @@ def get_pybind11_dir(python_exe: str) -> str:
         sys.exit(1)
 
 
+_VS_MAJOR_TO_YEAR = {
+    "14": "2015", "15": "2017", "16": "2019",
+    "17": "2022", "18": "2026",
+}
+
+
 def _vs_generator():
     """用 vswhere 检测已安装的 VS 版本，返回 CMake 生成器参数列表。"""
     vswhere = os.path.join(
@@ -60,14 +68,16 @@ def _vs_generator():
         out = subprocess.check_output([vswhere, "-latest", "-format", "json"], text=True)
         vs = json.loads(out)[0]
         major = vs["installationVersion"].split(".")[0]
-        year = vs["catalog"]["productLineVersion"]
+        year = vs.get("catalog", {}).get("productLineVersion", "")
+        if not year.startswith("20"):
+            year = _VS_MAJOR_TO_YEAR.get(major, year)
         return ["-G", f"Visual Studio {major} {year}", "-A", "x64"]
     except Exception:
         return []
 
 
 def find_pyd() -> str:
-    """在 build_py 目录下递归查找编译出的 .pyd，返回完整路径。
+    """在 build_py_vs 目录下递归查找编译出的 .pyd，返回完整路径。
 
     注意: 必须锚定文件名结尾($)，否则会误匹配 MSBuild 生成的
     "xxx.pyd.recipe" 中间文件。
@@ -106,21 +116,21 @@ def build():
     # 配置（失败时重新生成）
     cmake_cache = os.path.join(build_dir, "CMakeCache.txt")
     if not os.path.exists(cmake_cache):
-        print("正在配置 CMake...")
-        cmd = [
-            "cmake",
-        ] + _vs_generator() + [
+        print("[1/2] 配置 CMake...")
+        cmd = ["cmake"] + _vs_generator() + [
+            "-B", build_dir, "-S", cur_dir,
             f"-Dpybind11_DIR={pybind11_dir}",
             f"-DPython_EXECUTABLE={python_exe}",
             "-DBUILD_PYBIND=ON",
-            cur_dir,
         ]
-        subprocess.run(cmd, cwd=build_dir, check=True)
+        print("CMD:", subprocess.list2cmdline(cmd))
+        subprocess.run(cmd, check=True)
 
     # 编译
-    print("正在编译...")
-    subprocess.run(["cmake", "--build", ".", "--config", "Release"],
-                   cwd=build_dir, check=True)
+    print("[2/2] 编译...")
+    cmd = ["cmake", "--build", build_dir, "--config", "Release"]
+    print("CMD:", subprocess.list2cmdline(cmd))
+    subprocess.run(cmd, check=True)
 
     found = find_pyd()
     if not found:

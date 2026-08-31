@@ -11,10 +11,12 @@ for sub in ["lib", "build_py_vs/Release", "build_py/Release", "build_py"]:
 
 import data_provider_ext as dp
 
+
 def date_to_ns(yyyymmdd):
     y, m, d = yyyymmdd // 10000, (yyyymmdd // 100) % 100, yyyymmdd % 100
     days = (y - 1970) * 365 + (y - 1969) // 4 + (m - 1) * 30 + d
     return days * 86400 * 1_000_000_000
+
 
 mgr = dp.DataProvider()
 

@@ -5,11 +5,11 @@ project(parquet_reader LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(MSVC)
+if (MSVC)
     add_compile_options(/W4 /utf-8)
-else()
+else ()
     add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
+endif ()
 
 find_package(Python 3.11 EXACT REQUIRED COMPONENTS Interpreter Development Development.Module)
 # find_package：让 CMake 去电脑上找 pybind11，找到了才能继续；REQUIRED：没找到就报错退出
@@ -19,8 +19,8 @@ find_package(Parquet CONFIG REQUIRED)
 
 # 动态/静态库自动选择（vcpkg 默认动态: ARROW_BUILD_STATIC=OFF → arrow_shared）
 set(TP_LINK
-    "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
-    "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>"
+        "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
+        "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>"
 )
 
 pybind11_add_module(parquet_reader parquet_reader.cpp)
