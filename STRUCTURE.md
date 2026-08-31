@@ -68,46 +68,53 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 └── .gitignore                              # 忽略 build/ *.o *.pdb 大二进制
 │
 ├── 01_language/                            # ─── C++ 语言本身（按难度递进）───
-│   ├── 01_basics/                          # 基础
-│   │   ├── types_values.cpp                    # 内置类型/值类别(lvalue/rvalue/xvalue)
-│   │   ├── references_pointers.cpp             # 引用/指针/nullptr
-│   │   ├── control_flow.cpp                    # if/for/while/switch/goto
-│   │   ├── functions.cpp                       # 函数/重载/默认参数/内联/constexpr
-│   │   ├── arrays_strings.cpp                  # 原生数组/C字符串/string
-│   │   └── namespaces.cpp                      # 命名空间/using/ADL
-│   ├── 02_oop/                             # 面向对象
-│   │   ├── classes_objects.cpp                 # 类/成员/访问控制/友元
-│   │   ├── constructors_raii.cpp               # 构造/析构/拷贝/移动/RAII
-│   │   ├── inheritance.cpp                     # 继承/虚函数/override/final
-│   │   ├── polymorphism.cpp                    # 多态/纯虚/抽象类/虚析构
-│   │   ├── operator_overload.cpp               # 运算符重载
-│   │   └── special_members.cpp                 # Rule of 0/3/5
-│   ├── 03_templates/                       # 模板
-│   │   ├── function_templates.cpp              # 函数模板/实例化/推导
-│   │   ├── class_templates.cpp                 # 类模板/成员模板
-│   │   ├── specialization.cpp                  # 全特化/偏特化
-│   │   ├── variadic_templates.cpp              # 变参模板/fold 表达式
-│   │   └── sfinae_tag_dispatch.cpp             # SFINAE/标签分发（C++20 前）
-│   ├── 04_modern/                          # 现代 C++（C++11-23 核心特性）
-│   │   ├── move_semantics.cpp                  # 移动语义/std::move/完美转发
-│   │   ├── lambda.cpp                          # lambda/捕获/泛型lambda
-│   │   ├── structured_bindings.cpp             # 结构化绑定（C++17）
-│   │   ├── if_switch_init.cpp                  # if/switch 初始化语句（C++17）
-│   │   ├── concepts.cpp                        # Concepts（C++20）
-│   │   ├── modules_demo.cpp                    # Modules（C++20）
-│   │   └── ranges_brief.cpp                    # Ranges 入门（C++20，详见 03_stl）
-│   ├── 05_memory/                          # 内存管理
-│   │   ├── smart_pointers.cpp                  # unique_ptr/shared_ptr/weak_ptr
-│   │   ├── memory_layout.cpp                   # 对齐/padding/sizeof
-│   │   ├── allocators.cpp                      # 自定义分配器/pmr
-│   │   ├── memory_model.cpp                    # C++ 内存模型/happens-before
-│   │   └── placement_new.cpp                   # placement new/对象生命期
-│   └── 06_expert/                          # 专家（元编程/底层/陷阱）
-│       ├── type_traits.cpp                     # type_traits/条件类型
-│       ├── constexpr_consteval.cpp             # constexpr/consteval/constinit
-│       ├── reflection_demo.cpp                 # ★ 静态反射（C++26 草案/workaround）
-│       ├── ub_and_traps.cpp                    # UB/悬挂引用/严格别名/常见陷阱
-│       └── abi_linkage.cpp                     # ABI/name mangling/extern "C"
+│   ├── 01_basics/                          # 基础 ✅ 入门主线（每个知识点一个带序号子目录）
+│   │   ├── 00_hello_world/                     # 程序结构/main/cout/变量/注释/作用域
+│   │   ├── 01_types/                           # 内置类型/字面量后缀/初始化/const/constexpr/定宽整数
+│   │   ├── 02_type_queries/                    # sizeof/alignof/auto/decltype
+│   │   ├── 03_operators/                       # 算术/比较/逻辑短路/位运算/三目/优先级/逗号
+│   │   ├── 04_control_flow/                    # if/switch/循环/范围for/结构化绑定/if constexpr
+│   │   ├── 05_functions/                       # 传参/默认参数/重载/inline/constexpr/函数指针/lambda
+│   │   ├── 06_pointers_refs/                   # 引用/右值引用/指针/nullptr/const指针/智能指针
+│   │   ├── 07_arrays_strings/                  # 原始数组/std::array/vector/string/string_view
+│   │   ├── 08_oop/                             # struct/class/继承/多态/Rule 0-3-5/移动（入门）
+│   │   ├── 09_misc/                            # enum/enum class/namespace/四种 cast
+│   │   ├── 10_templates/                       # 函数模板/类模板/特化/Concepts/if constexpr（入门）
+│   │   ├── 11_exceptions/                      # try/catch/throw/标准异常/noexcept/RAII
+│   │   └── 12_typeid_pack/                     # typeid/sizeof.../变参模板/type_traits（入门）
+│   ├── 02_oop/                             # 面向对象 ⏳ 深化专章（待填充）
+│   │   ├── 01_classes_objects/                 # 类/成员/访问控制/友元
+│   │   ├── 02_constructors_raii/               # 构造/析构/拷贝/移动/RAII
+│   │   ├── 03_inheritance/                     # 继承/虚函数/override/final
+│   │   ├── 04_polymorphism/                    # 多态/纯虚/抽象类/虚析构
+│   │   ├── 05_operator_overload/               # 运算符重载
+│   │   └── 06_special_members/                 # Rule of 0/3/5
+│   ├── 03_templates/                       # 模板 ⏳ 深化专章（待填充）
+│   │   ├── 01_function_templates/              # 函数模板/实例化/推导
+│   │   ├── 02_class_templates/                 # 类模板/成员模板
+│   │   ├── 03_specialization/                  # 全特化/偏特化
+│   │   ├── 04_variadic_templates/              # 变参模板/fold 表达式
+│   │   └── 05_sfinae_tag_dispatch/             # SFINAE/标签分发（C++20 前）
+│   ├── 04_modern/                          # 现代 C++（C++11-23 核心特性）🚧 建设中
+│   │   ├── 01_lambda/                          # ✅ lambda/捕获/泛型/mutable/IIFE
+│   │   ├── 02_move_semantics/                  # 移动语义/std::move/完美转发
+│   │   ├── 03_structured_bindings/             # 结构化绑定（C++17）
+│   │   ├── 04_if_switch_init/                  # if/switch 初始化语句（C++17）
+│   │   ├── 05_concepts/                        # Concepts（C++20）
+│   │   ├── 06_modules/                         # Modules（C++20）
+│   │   └── 07_ranges_brief/                    # Ranges 入门（C++20，详见 03_stl）
+│   ├── 05_memory/                          # 内存管理 ⏳ 深化专章（待填充）
+│   │   ├── 01_smart_pointers/                  # unique_ptr/shared_ptr/weak_ptr
+│   │   ├── 02_memory_layout/                   # 对齐/padding/sizeof
+│   │   ├── 03_allocators/                      # 自定义分配器/pmr
+│   │   ├── 04_memory_model/                    # C++ 内存模型/happens-before
+│   │   └── 05_placement_new/                   # placement new/对象生命期
+│   └── 06_expert/                          # 专家（元编程/底层/陷阱）⏳ 深化专章（待填充）
+│       ├── 01_type_traits/                     # type_traits/条件类型
+│       ├── 02_constexpr_consteval/             # constexpr/consteval/constinit
+│       ├── 03_reflection_demo/                 # ★ 静态反射（C++26 草案/workaround）
+│       ├── 04_ub_and_traps/                    # UB/悬挂引用/严格别名/常见陷阱
+│       └── 05_abi_linkage/                     # ABI/name mangling/extern "C"
 │
 ├── 02_algorithms/                          # ─── ★新增: 算法与设计模式 ───
 │   ├── 01_data_structures/                 # 链表/树/图/堆/并查集/跳表/布隆过滤器
@@ -204,15 +211,16 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 │   │                                       #   不带数字前缀；每个项目自含 CMakeLists.txt
 │   │                                       #   例: snake_game/ json_parser/ http_server/
 │   │
-│   └── pybind_ext_learning/                # C++ 扩展学习路径（pybind11 八步走）
+│   └── pybind_ext_learning/                # C++ 扩展学习路径（pybind11 九步走）
 │       ├── 01_hello_cpp/                   #   第1步: 纯 C++，确认编译环境
-│       ├── 02_one_function/                #   第2步: 第一个 pybind11 模块（一个函数）
-│       ├── 03_types_and_stl/               #   第3步: 多种类型 + STL 容器自动转换
-│       ├── 04_class_binding/               #   第4步: 类绑定 + .h/.cpp/bindings 三文件分离
-│       ├── 05_build_and_test/              #   第5步: build.py 自动化 + test 脚本
-│       ├── 06_simple_manager/              #   第6步: 单个数据管理器（Load + Query）
-│       ├── 07_data_provider/               #   第7步: 多 Mgr + 二分查找 + 聚合 DataProvider
-│       └── 08_parquet_and_dll/             #   第8步: arrow/parquet 读文件 + 拷贝依赖 dll
+│       ├── 02_cpp_class/                   #   第2步: C++ 类基础（三种定义写法）
+│       ├── 03_one_function/                #   第3步: 第一个 pybind11 模块（一个函数）
+│       ├── 04_types_and_stl/               #   第4步: 多种类型 + STL 容器自动转换
+│       ├── 05_class_binding/               #   第5步: 类绑定 + .h/.cpp/bindings 三文件分离
+│       ├── 06_build_and_test/              #   第6步: build.py 自动化 + test 脚本
+│       ├── 07_simple_manager/              #   第7步: 单个数据管理器（Load + Query）
+│       ├── 08_data_provider/               #   第8步: 多 Mgr + 聚合 DataProvider
+│       └── 09_parquet_and_dll/             #   第9步: arrow/parquet 读文件 + 拷贝依赖 dll
 │
 └── 10_ops/                                 # ─── ▲ 工程化（横切；只放"纯工程活动"）───
     ├── 01_build_systems/                       # 构建系统演进：手动编译→Makefile→CMake→vcpkg→企业级
@@ -267,7 +275,7 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 
 1. **可运行 `.cpp` + `main()` 展示结果**；非代码演示（架构笔记/部署/复杂框架）用 `.md` 记录（如 ROS2、Vulkan 初始化）。
 2. **文件顶部注释写明 C++ 标准版本 + 依赖**——三方库 API 变动大（如 Asio standalone vs Boost.Asio）。
-3. **依赖统一写进 `vcpkg.json`**——换机 `vcpkg install` 全装。
+3. **第三方依赖用 vcpkg 安装**——各项目按需 `find_package` + vcpkg toolchain 链接（如第九步的 arrow/parquet），不用根级 `vcpkg.json` manifest。
 4. **所有层级目录统一带两位数字前缀 `01_ 02_ ...`**——顺序即导航；插入新目录就重排序号，幅度大就整体重组。
 5. **`04_libraries` 与 `10_ops` 分工**——"某个库怎么用"（含 cli/log/test 工具库）归 `04_libraries`；"纯工程活动/流程"（CMake
    构建/CI/静态分析/交叉编译）归 `10_ops`，两边不重复。
