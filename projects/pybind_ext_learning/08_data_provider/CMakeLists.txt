@@ -32,6 +32,7 @@ if (BUILD_PYBIND)
             data_mgrs.cpp
     )
 
+    # set_target_properties(目标名 PROPERTIES（属性） 属性名 值)：给目标设置属性
     # CMake 目标名和输出文件名是两回事：
     #   目标名 data_provider_ext_py → 默认输出 data_provider_ext_py.cp311-win_amd64.pyd
     #   Python import data_provider_ext 找不到 data_provider_ext_py

@@ -97,6 +97,26 @@ def copy_output(dest_dir: str) -> bool:
     print(f".pyd 已拷贝: {pyd_path}")
 
     # 2. 拷贝依赖 dll（MSBuild 会把 vcpkg 依赖 dll 部署到 pyd 同目录，全量拷过去）
+    # 不拷贝这些 dll，import 时会报 DLL load failed
+    # 06/07/08 不需要拷贝 dll，因为它们只依赖 pybind11（纯头文件库，不产生额外 dll）
+    #
+    # parquet.dll / arrow.dll 自己也依赖压缩库（zstd/snappy/lz4 等），
+    # 运行时 Windows 加载 parquet.dll 时会自动找这些依赖 dll，找不到就报 DLL load failed
+    # vcpkg 动态版把这些依赖编译成独立 dll，所以必须一起拷贝
+    # 如果 vcpkg 装的是静态版，压缩库会编译进 parquet.lib 里，不需要拷贝额外 dll
+    #
+    # 编译后产生的 11 个 dll：
+    #   arrow.dll              — Arrow 核心库，内存中的列式数据格式
+    #   parquet.dll            — Parquet 文件读写，依赖 Arrow
+    #   zstd.dll               — Zstandard 压缩算法（Parquet 默认压缩格式）
+    #   snappy.dll             — Snappy 压缩算法（Google 出的，速度优先）
+    #   lz4.dll                — LZ4 压缩算法（极快压缩/解压）
+    #   bz2.dll                — BZip2 压缩算法
+    #   z.dll                  — zlib 压缩算法（最经典的通用压缩）
+    #   brotlicommon.dll       — Brotli 压缩 — 公共部分
+    #   brotlidec.dll          — Brotli 压缩 — 解压
+    #   brotlienc.dll          — Brotli 压缩 — 压缩
+    #   libcrypto-3-x64.dll    — OpenSSL 加密库（数据校验/完整性验证）
     pyd_dir = os.path.dirname(pyd_path)
     copied = 0
     for fn in os.listdir(pyd_dir):
