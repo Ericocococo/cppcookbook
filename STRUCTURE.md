@@ -63,8 +63,8 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 ├── CONVENTIONS.md                          # 项目规范：命名/注释/提交约定
 ├── CMakeLists.txt                          # 仓库根标记，仅供 CLion 识别根目录
 ├── Makefile                                # 命令快捷表：make fmt / make lint
-├── .clang-format                           # 格式规则（Google+C++20+4空格）
-├── .clang-tidy                             # 静态分析规则集
+├── .clang-format                           # 代码格式规则（缩进/空格/花括号位置），CLion Ctrl+Alt+L 自动格式化
+├── .clang-tidy                             # 静态分析规则（编译前检查 bug/性能/可读性/现代写法）
 └── .gitignore                              # 忽略 build/ *.o *.pdb 大二进制
 │
 ├── 01_language/                            # ─── C++ 语言本身（按难度递进）───
@@ -236,8 +236,8 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 | `CONVENTIONS.md` | 项目规范   | 命名、注释、提交、代码风格约定                                      |
 | `CMakeLists.txt` | 仓库根标记  | 仅供 CLion 识别仓库根目录；各子目录是独立 CMake 工程，互不依赖               |
 | `Makefile`       | 命令快捷表  | `make fmt` / `make lint`；只是命令运行器，不负责 C++ 构建          |
-| `.clang-format`  | 统一格式规则 | 基于 Google 风格 + C++20 + 4 空格缩进，`make fmt` 全格式化        |
-| `.clang-tidy`    | 静态分析规则 | modernize / bugprone / readability / performance 检查集 |
+| `.clang-format`  | 代码格式规则 | 管代码排版（缩进/空格/花括号位置），CLion `Ctrl+Alt+L` 或 `make fmt` 自动格式化 |
+| `.clang-tidy`    | 静态分析规则 | 管代码质量（bug/性能/可读性/现代写法），CLion 实时标黄提示，检查集：modernize / bugprone / readability / performance |
 | `.gitignore`     | git 忽略 | `build/` / `.cache/` / `*.o` / `*.pdb` / 大二进制        |
 
 > **各子目录是独立工程**：每个知识点子目录含自己的 `CMakeLists.txt`，在 CLion 里单独打开/构建，互不依赖。根目录的
