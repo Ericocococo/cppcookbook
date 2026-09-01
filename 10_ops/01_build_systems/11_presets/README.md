@@ -205,6 +205,16 @@ build\asan\presets_demo.exe
 
 ---
 
+## 命令行 · Linux / WSL
+
+```bash
+cmake -G Ninja -B build-linux -S .
+cmake --build build-linux
+./build-linux/presets_demo
+```
+
+---
+
 ## 3. 对比
 
 |                                    | debug 预设      | release 预设      | asan 预设      |

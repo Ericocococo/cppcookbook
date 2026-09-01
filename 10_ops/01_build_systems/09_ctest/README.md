@@ -264,6 +264,16 @@ ctest --test-dir build-msvc-ninja --output-on-failure
 
 ---
 
+## 命令行 · Linux / WSL
+
+```bash
+cmake -G Ninja -B build-linux -S .
+cmake --build build-linux
+ctest --test-dir build-linux --output-on-failure
+```
+
+---
+
 ## 3. 对比
 
 |          | MinGW 方案 A<br>Ninja                  | MinGW 方案 B<br>MinGW Makefiles       | MinGW 方案 C<br>Ninja Multi-Config                 |

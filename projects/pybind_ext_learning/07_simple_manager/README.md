@@ -10,6 +10,7 @@
 | `fhsg_mgr.cpp` | Load（存入 map）+ Query（按 symbol 查） |
 | `bindings.cpp` | pybind11 绑定                     |
 | `build.py`     | 编译脚本                            |
+| `CMakeLists.txt` | 构建配置                            |
 | `test_fhsg.py` | 验证脚本                            |
 
 ---
@@ -37,8 +38,8 @@ D:\ProgramData\anaconda3\envs\quant311\python test_fhsg.py
 
 ```bash
 cd 07_simple_manager
-D:\ProgramData\anaconda3\envs\quant311\python build.py --dest lib
-D:\ProgramData\anaconda3\envs\quant311\python test_fhsg.py
+python build.py --dest lib
+python test_fhsg.py
 ```
 
 > pybind11 模块（.so）同样必须使用与 Python 相同的编译器。Linux 上的 Python 由 GCC 编译，因此 .so 用 GCC 构建即可。

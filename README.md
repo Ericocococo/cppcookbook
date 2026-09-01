@@ -16,7 +16,7 @@
 | [08_hpc](08_hpc/README.md)               | 高性能计算：SIMD / OpenMP / TBB / CUDA / 数值优化                                                               |
 | [09_domain](09_domain/README.md)         | 领域应用：游戏 / 图形 / AI 推理 / 音视频 / 量化 / 机器人                                                                 |
 | [10_ops](10_ops/README.md)               | 工程化：构建系统演进 / 调试 / 分析 / 包管理 / CI                                                                       |
-| [projects](projects/)                    | 阶段性实战项目：综合运用多个知识点的独立小项目（如 [pybind_ext_learning](projects/pybind_ext_learning/README.md) C++ 扩展三步学习路径） |
+| [projects](projects/)                    | 阶段性实战项目：综合运用多个知识点的独立小项目（如 [pybind_ext_learning](projects/pybind_ext_learning/README.md) C++ 扩展九步学习路径） |
 
 详细目录规划见 [STRUCTURE.md](STRUCTURE.md)，编码习惯见 [CONVENTIONS.md](CONVENTIONS.md)。
 
@@ -57,7 +57,7 @@ GCC + GDB 组合，跨平台友好，适合学习语言特性和标准库。
 ### 工具链 B — MSVC（VS 自带）
 
 cl.exe + LLDB 组合，生成原生 Windows COFF 格式目标文件，适合调试 Windows API、测试 ABI 兼容性。
-工具集版本号 `14.51`，对应 VS 2022 17.x。
+工具集版本号 `14.51`，对应 VS 2026 18.x。
 
 | 工具            | 完整路径                                                                                                                     | 版本                           |
 |---------------|--------------------------------------------------------------------------------------------------------------------------|------------------------------|

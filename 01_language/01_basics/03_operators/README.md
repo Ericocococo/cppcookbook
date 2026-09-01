@@ -1,4 +1,4 @@
-# 02_operators — 运算符
+# 03_operators — 运算符
 
 演示算术、比较、逻辑、位运算、赋值、自增自减、三目运算符及 `sizeof`。
 
@@ -13,82 +13,111 @@
 
 ## 2. 命令行 · MinGW（Git Bash）
 
-```bash
-CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
-GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
-NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
-```
-
-### 方案 A：Ninja（推荐）
+### 方案 A — Ninja
 
 ```bash
-# 配置
-"$CMAKE" -B build-mingw-ninja -G Ninja \
-  -DCMAKE_CXX_COMPILER="$GXX" \
-  -DCMAKE_MAKE_PROGRAM="$NINJA"
-
-# 构建
-"$CMAKE" --build build-mingw-ninja
-
-# 运行
+cmake -G Ninja -B build-mingw-ninja -S .
+cmake --build build-mingw-ninja
 ./build-mingw-ninja/operators.exe
 ```
 
-> cmd 三步版：
+<details><summary>cmd 三步版（绝对路径，可直接粘贴）</summary>
 
-```bat
-:: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-ninja -G Ninja -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
-
-:: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-ninja
-
-:: 运行
-build-mingw-ninja\operators.exe
+```cmd
+cmake -G Ninja -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-mingw-ninja -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators
+cmake --build D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-mingw-ninja
+D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-mingw-ninja\operators.exe
 ```
+
+</details>
+
+### 方案 B — MinGW Makefiles
+
+```bash
+cmake -G "MinGW Makefiles" -B build-mingw-make -S .
+cmake --build build-mingw-make
+./build-mingw-make/operators.exe
+```
+
+<details><summary>cmd 三步版（绝对路径，可直接粘贴）</summary>
+
+```cmd
+cmake -G "MinGW Makefiles" -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-mingw-make -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators
+cmake --build D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-mingw-make
+D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-mingw-make\operators.exe
+```
+
+</details>
+
+### 方案 C — Ninja Multi-Config
+
+```bash
+cmake -G "Ninja Multi-Config" -B build-mingw-mc -S .
+cmake --build build-mingw-mc --config Release
+./build-mingw-mc/Release/operators.exe
+```
+
+<details><summary>cmd 三步版（绝对路径，可直接粘贴）</summary>
+
+```cmd
+cmake -G "Ninja Multi-Config" -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-mingw-mc -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators
+cmake --build D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-mingw-mc --config Release
+D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-mingw-mc\Release\operators.exe
+```
+
+</details>
 
 ---
 
 ## 3. 命令行 · MSVC（cmd）
 
-### 方案 A：vcvarsall + Ninja（推荐）
+### 方案 A — vcvarsall + Ninja
 
-```bat
-set CMAKE=D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
-set VCVARSALL=D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat
-
-call "%VCVARSALL%" x64
-
-"%CMAKE%" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
-
-"%CMAKE%" --build build-msvc-ninja
-
+```cmd
+call "C:\Program Files\Microsoft Visual Studio\2026\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+cmake -G Ninja -B build-msvc-ninja -S .
+cmake --build build-msvc-ninja
 build-msvc-ninja\operators.exe
 ```
 
-> 四步版：
+<details><summary>cmd 四步版（绝对路径，可直接粘贴）</summary>
 
-```bat
-:: 激活
-call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
-
-:: 配置
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
-
-:: 构建
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-ninja
-
-:: 运行
-build-msvc-ninja\operators.exe
+```cmd
+call "C:\Program Files\Microsoft Visual Studio\2026\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+cmake -G Ninja -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-msvc-ninja -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators
+cmake --build D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-msvc-ninja
+D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-msvc-ninja\operators.exe
 ```
+
+</details>
+
+### 方案 B — VS Generator
+
+```cmd
+cmake -G "Visual Studio 18 2026" -A x64 -B build-msvc-vs -S .
+cmake --build build-msvc-vs --config Release
+build-msvc-vs\Release\operators.exe
+```
+
+<details><summary>cmd 四步版（绝对路径，可直接粘贴）</summary>
+
+```cmd
+cmake -G "Visual Studio 18 2026" -A x64 -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-msvc-vs -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators
+cmake --build D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-msvc-vs --config Release
+D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\03_operators\build-msvc-vs\Release\operators.exe
+```
+
+</details>
 
 ---
 
-## 4. CLion IDE
+## 4. 命令行 · Linux / WSL
 
-1. `File → Open` 选择 `02_operators/` 目录
-2. CLion 自动识别 `CMakeLists.txt`，右下角点击**加载**
-3. **构建** `Ctrl+F9`**运行** `Shift+F10`
+```bash
+cmake -G Ninja -B build-linux -S .
+cmake --build build-linux
+./build-linux/operators
+```
 
 ---
 

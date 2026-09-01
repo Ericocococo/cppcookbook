@@ -4,13 +4,24 @@
 
 // #include：引入工具箱（头文件）
 // 不写就用不了里面的东西，编译器报"未定义"错误
+// #include <iostream> 之后才能用 std::cout，#include <string> 之后才能用 std::string
+// std 是标准库的命名空间（namespace），所有标准库的东西都装在 std 里面
+//
+// 标准库（Standard Library）：C++ 自带的工具箱，不用额外安装，#include 就能用
+//   <iostream>    → cout/cin/cerr（打印和读输入）
+//   <string>      → std::string（字符串）
+//   <vector>      → std::vector（动态数组，用得最多）
+//   <map>         → std::map（键值对，类似 Python dict）
+//   <algorithm>   → sort/find/count_if（算法）
+//   <cmath>       → sqrt/sin/pow（数学函数）
+//   <memory>      → unique_ptr/shared_ptr（智能指针）
+//   <functional>  → std::function（存函数/lambda）
+//   <fstream>     → ifstream/ofstream（读写文件）
+//   <chrono>      → 时间点/时长（计时）
 #include <iostream>   // 提供 cout（打印）、cin（读输入）、cerr（错误输出）
 #include <string>     // 提供 std::string 字符串类型
 
-// ① 程序入口：main 函数
-// int main()：程序从这里开始执行，有且只有一个
-// int：表示 main 向操作系统返回一个整数
-// return 0：表示"程序正常结束"；非零表示出错
+// ① 程序结构
 void demo01_structure()
 {
     std::cout << "\n① 程序结构\n";
@@ -151,6 +162,10 @@ void demo06_cin()
     std::cout << "  你输入了: \"" << line << "\"\n";
 }
 
+// 程序入口：main 函数
+// int main()：程序从这里开始执行，有且只有一个
+// int：表示 main 向操作系统返回一个整数
+// return 0：表示"程序正常结束"；非零表示出错
 int main()
 {
     std::cout << "=== 00_hello_world: 程序结构 ===";

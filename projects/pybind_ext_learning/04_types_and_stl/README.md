@@ -100,7 +100,7 @@ cmake -Dpybind11_DIR=$(python -c "import pybind11;print(pybind11.get_cmake_dir()
 cmake --build .
 
 cd ..
-D:\ProgramData\anaconda3\envs\quant311\python test_types.py
+python test_types.py
 ```
 
 > pybind11 模块（.so）同样必须使用与 Python 相同的编译器。Linux 上的 Python 由 GCC 编译，因此 .so 用 GCC 构建即可。

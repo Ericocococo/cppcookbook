@@ -37,7 +37,7 @@ D:\ProgramData\anaconda3\envs\quant311\python test_basic.py         # 验证
 ```bash
 cd 06_build_and_test
 python build.py --dest lib
-D:\ProgramData\anaconda3\envs\quant311\python test_basic.py
+python test_basic.py
 ```
 
 > pybind11 模块（.so）同样必须使用与 Python 相同的编译器。Linux 上的 Python 由 GCC 编译，`build.py` 自动使用 GCC，无需额外配置。

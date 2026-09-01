@@ -249,6 +249,16 @@ build-msvc-ninja\find_package_demo.exe
 
 ---
 
+## 命令行 · Linux / WSL
+
+```bash
+cmake -G Ninja -B build-linux -S .
+cmake --build build-linux
+./build-linux/find_package_demo
+```
+
+---
+
 ## 3. 对比
 
 |          | MinGW 方案 A<br>Ninja | MinGW 方案 B<br>MinGW Makefiles | MinGW 方案 C<br>Ninja Multi-Config |

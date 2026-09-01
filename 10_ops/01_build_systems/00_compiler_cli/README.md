@@ -91,6 +91,15 @@ app.exe
 
 ---
 
+## 命令行 · Linux / WSL
+
+```bash
+g++ -std=c++20 -Wall -Wextra -Wpedantic main.cpp -o main
+./main
+```
+
+---
+
 ## CLion IDE
 
 本示例无 `CMakeLists.txt`，在 `View → Tool Windows → Terminal`（`Alt+F12`）里执行上方命令。

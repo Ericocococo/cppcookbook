@@ -39,8 +39,8 @@ D:\ProgramData\anaconda3\envs\quant311\python test_parquet.py               # 3.
 ```bash
 cd 09_parquet_and_dll
 python gen_test_data.py
-D:\ProgramData\anaconda3\envs\quant311\python build.py --dest lib
-D:\ProgramData\anaconda3\envs\quant311\python test_parquet.py
+python build.py --dest lib
+python test_parquet.py
 ```
 
 > pybind11 模块（.so）同样必须使用与 Python 相同的编译器。Linux 上的 Python 由 GCC 编译，因此 .so 用 GCC 构建即可。arrow/parquet

@@ -30,6 +30,15 @@ MSVC 用户请直接从 `01_hello` 起使用 CMake。
 
 ---
 
+## 命令行 · Linux / WSL
+
+```bash
+make
+./app
+```
+
+---
+
 ## 3. CLion IDE
 
 CLion 不直接支持 Makefile 项目，推荐在 Terminal 里运行：

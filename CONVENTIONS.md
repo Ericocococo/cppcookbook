@@ -79,12 +79,13 @@ std::cout << x;    // 不需要：cout = 输出流
    以 `01_language/04_modern/01_move_semantics/` 为范例。
 6. **每个含 `.cpp` 的目录（含叶子目录）都必须有 `README.md`**，中间层目录不加 —
    上级目录的 `README.md` 列出子目录一行摘要；叶子目录的 `README.md` 包含以下五个带序号的 `##` 章节：
-    - **`## 1. 文件`**：列出 `main.cpp` / `CMakeLists.txt` 及各文件用途
-    - **`## 2. 命令行 · MinGW（Git Bash）`**：变量块 + 方案A bash变量版 + cmd内联三步版
-    - **`## 3. 命令行 · MSVC（cmd）`**：方案A 变量版 + 四步版内联
-    - **`## 4. CLion IDE`**：File→Open→加载→Ctrl+F9/Shift+F10
-    - **`## 5. 英文及缩写说明`**：本文件代码中出现的所有英文关键字、API 名、缩写，逐条列表解释
-    - 构建命令格式以 [`10_ops/01_build_systems/01_hello/README.md`](10_ops/01_build_systems/01_hello/README.md) 为标准模板
+    - **`## 1. 文件`**（或 `## 1. 知识点`）：列出文件用途或知识点总览
+    - **`## 2. 命令行 · MinGW（Git Bash）`**：方案 A（Ninja）+ 方案 B（MinGW Makefiles）+ 方案 C（Ninja Multi-Config），每个附 cmd 三步版
+    - **`## 3. 命令行 · MSVC（cmd）`**：方案 A（vcvarsall + Ninja）+ 方案 B（VS Generator），每个附四步版
+    - **`## 4. 命令行 · Linux / WSL`**：Ninja 构建
+    - **`## 5. CLion IDE`**：File→Open→加载→Ctrl+F9/Shift+F10
+    - **`## 6. 英文及缩写说明`**（可选）：本文件代码中出现的英文关键字、API 名、缩写，逐条列表解释
+    - pybind11 项目 MinGW 不适用时，该章节保留标题并注明原因
 7. **英文缩写、缩写、非一般词必须解释** — 包括英文缩写（`RAII`/`CRTP`/`TMP`/`SFINAE`/`UB`/`ABI`），
    中文缩写、框架内术语（`ECS`/`DDS`）等，让读者不查文档也能读懂。
    解释位置：短的一句话放行内注释，较长放 `README.md` 里。
