@@ -7,6 +7,7 @@
 // ============================================================================
 // ① 多继承（multiple inheritance）
 //
+//   知识点 1.1：多继承
 //   一个类可以同时继承多个父类，获得所有父类的成员。
 //   风险：如果多个父类有同名函数，调用时编译器无法决定用哪个，
 //        必须用 类名::函数名 手动消歧义。
@@ -76,6 +77,7 @@ void demo01_multiple_inheritance()
 // ============================================================================
 // ② 菱形继承问题（diamond problem）
 //
+//   知识点 2.1：菱形继承问题
 //   A 是顶层基类，B 和 C 各自继承 A，D 同时继承 B 和 C。
 //   结果：D 对象内部有两份 A 的数据副本（一份来自 B，一份来自 C）。
 //   访问 A 的成员时，编译器不知道该用哪一份 → 报歧义错误。
@@ -143,6 +145,7 @@ void demo02_diamond_problem()
 // ============================================================================
 // ③ virtual 继承
 //
+//   知识点 3.1：virtual 继承
 //   class B : virtual public A → 告诉编译器：无论 A 被继承多少次，
 //   在最终的派生类中只保留一份 A 的数据。
 //
@@ -175,8 +178,10 @@ public:
 class Bird : virtual public Animal
 {
 public:
+    // 知识点 3.2：虚基类构造参数
     // Bird 传给 Animal 的构造参数只在 Bird 是最终类时生效
     // 如果 Bird 不是最终类，这里对 Animal("鸟类") 的调用被跳过
+
     Bird() : Animal("鸟类")
     {
         std::cout << "  Bird 构造\n";
@@ -196,8 +201,10 @@ public:
 class Pegasus : public Bird, public Horse
 {
 public:
+    // 知识点 3.3：最终派生类的虚基类构造
     // 这里的 Animal("飞马") 是唯一生效的 Animal 构造调用
     // Bird() 和 Horse() 中对 Animal 的调用被编译器跳过
+
     Pegasus() : Animal("飞马"), Bird(), Horse()
     {
         std::cout << "  Pegasus 构造\n";
@@ -230,7 +237,7 @@ void demo03_virtual_inheritance()
 // ============================================================================
 // ④ final 关键字
 //
-//   final 有两种用法：
+//   知识点 4.1：final 的两种用法
 //   1. final 类：禁止任何类继承它  →  class X final { };
 //   2. final 虚函数：禁止子类覆盖  →  void foo() override final;
 //
@@ -303,17 +310,17 @@ void demo04_final()
 // ============================================================================
 // ⑤ 隐藏（hiding）vs 覆盖（overriding）
 //
-//   隐藏（name hiding）：
+//   知识点 5.1：隐藏（name hiding）
 //     子类定义了与父类同名的非虚函数，父类的版本被"藏起来"。
 //     通过子类对象调用时，始终调子类版本，与指针/引用类型无关。
 //     不是多态，是编译期的名字查找规则。
 //
-//   覆盖（overriding）：
+//   知识点 5.2：覆盖（overriding）
 //     子类用 override 覆盖父类的虚函数。
 //     通过父类指针/引用调用时，运行时决定调哪个版本。
 //     这才是真正的多态。
 //
-//   using 声明：
+//   知识点 5.3：using 声明
 //     子类中写 using Base::func; 可以把被隐藏的父类函数"拉回"子类作用域。
 // ============================================================================
 
@@ -343,8 +350,10 @@ public:
 class ColorPrinter : public Printer
 {
 public:
+    // 知识点 5.4：同名函数的全部隐藏
     // 定义了 print(int) → 隐藏了父类所有 print 重载（包括 print(double)）
     // 注意：不是只隐藏 print(int)，而是隐藏所有名为 print 的函数
+
     void print(int x)
     {
         std::cout << "  ColorPrinter::print(int) → " << x << " (彩色)\n";
@@ -404,6 +413,7 @@ void demo05_hiding_vs_overriding()
 // ============================================================================
 // ⑥ 继承中的访问控制
 //
+//   知识点 6.1：三种继承方式的访问控制
 //   三种继承方式控制父类成员在子类中的访问级别：
 //
 //   public 继承：父类 public → public，protected → protected
@@ -449,9 +459,11 @@ public:
     }
 };
 
-// private 继承：Engine 的 public/protected 成员在 Robot 中变成 private
+// 知识点 6.2：private 继承
+// Engine 的 public/protected 成员在 Robot 中变成 private
 // 外部不能通过 Robot 对象调用 start()/stop()
 // 表达"Robot 用 Engine 实现，但 Robot 不是 Engine"
+
 class Robot : private Engine
 {
 public:

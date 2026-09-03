@@ -12,104 +12,130 @@
 
 ---
 
-## 2. 命令行 · MinGW（Git Bash）
+## 2. 构建
+
+### 2.1 命令行 · MinGW（Git Bash）
+
+#### 方案 A — Ninja
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
 ```bash
-CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
-GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
-NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
-MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
-```
+# cd 到项目目录
+cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
 
-### 方案 A：Ninja（推荐）
-
-```bash
 # 配置
-"$CMAKE" -B build-mingw-ninja -G Ninja \
-  -DCMAKE_CXX_COMPILER="$GXX" \
-  -DCMAKE_MAKE_PROGRAM="$NINJA"
+cmake -G Ninja -B build-mingw-ninja -S .
 
 # 构建
-"$CMAKE" --build build-mingw-ninja
+cmake --build build-mingw-ninja
 
 # 运行
 ./build-mingw-ninja/hello_cpp.exe
 ```
 
-> cmd 三步版：
+</details>
 
-```bat
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
+
+```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-ninja -G Ninja -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-ninja -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-ninja
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-ninja
 
 :: 运行
-build-mingw-ninja\hello_cpp.exe
+D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-ninja\hello_cpp.exe
 ```
 
-### 方案 B：MinGW Makefiles（无需 ninja.exe）
+</details>
+
+#### 方案 B — MinGW Makefiles
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
 ```bash
+# cd 到项目目录
+cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
+
 # 配置
-"$CMAKE" -B build-mingw-make -G "MinGW Makefiles" \
-  -DCMAKE_CXX_COMPILER="$GXX" \
-  -DCMAKE_MAKE_PROGRAM="$MAKE"
+cmake -G "MinGW Makefiles" -B build-mingw-make -S .
 
 # 构建
-"$CMAKE" --build build-mingw-make
+cmake --build build-mingw-make
 
 # 运行
 ./build-mingw-make/hello_cpp.exe
 ```
 
-> cmd 三步版：
+</details>
 
-```bat
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
+
+```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-make -G "MinGW Makefiles" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-make -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-make
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-make
 
 :: 运行
-build-mingw-make\hello_cpp.exe
+D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-make\hello_cpp.exe
 ```
 
-### 方案 C：Ninja Multi-Config（多配置）
+</details>
+
+#### 方案 C — Ninja Multi-Config
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
 ```bash
-# 配置
-"$CMAKE" -B build-mingw-mc -G "Ninja Multi-Config" \
-  -DCMAKE_CXX_COMPILER="$GXX" \
-  -DCMAKE_MAKE_PROGRAM="$NINJA"
+# cd 到项目目录
+cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
 
-# 构建（多配置须指定 --config）
-"$CMAKE" --build build-mingw-mc --config Debug
+# 配置
+cmake -G "Ninja Multi-Config" -B build-mingw-mc -S .
+
+# 构建
+cmake --build build-mingw-mc --config Debug
 
 # 运行
 ./build-mingw-mc/Debug/hello_cpp.exe
 ```
 
-> cmd 三步版：
+</details>
 
-```bat
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
+
+```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-mc -G "Ninja Multi-Config" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-mc -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-mc --config Debug
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-mc --config Debug
 
 :: 运行
-build-mingw-mc\Debug\hello_cpp.exe
+D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-mc\Debug\hello_cpp.exe
 ```
 
----
+</details>
 
-## 3. 命令行 · MSVC（cmd）
+### 2.2 命令行 · MSVC（cmd）
 
-### vcvarsall 注入的 4 个环境变量
+**路径常量（绝对路径版使用）：**
+
+| 工具 | 完整路径 |
+|------|------|
+| cmake | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` |
+| ninja | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe` |
+| vcvarsall | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat` |
+| cl.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe` |
+
+> cl.exe 一般不用在命令里指定：`call vcvarsall.bat` 会把它注入 PATH，CMake 自动找到。
+> 列出仅供参考；版本号 14.51.36231 随 VS 更新可能变化。
+
+#### vcvarsall 注入的 4 个环境变量
 
 | 变量      | 给谁用           | 找什么                               | 示例路径（MSVC 14.51 / Win10 SDK 26100）                                                             |
 |:--------|:--------------|:----------------------------------|:-----------------------------------------------------------------------------------------------|
@@ -123,88 +149,108 @@ build-mingw-mc\Debug\hello_cpp.exe
 - link.exe 依赖 LIB 找 `libcmt.lib` 等库文件，LIB 没注入则链接失败
 
 ```bat
-set CMAKE=D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
-set VCVARSALL=D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat
-
 :: 激活 — 把 cl.exe / link.exe 加入当前会话 PATH，并注入 INCLUDE / LIB / LIBPATH
-call "%VCVARSALL%" x64
+call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 ```
 
-### 方案 A：vcvarsall + Ninja（推荐，单配置）
+#### 方案 A — vcvarsall + Ninja
 
-```bat
-:: 配置
-"%CMAKE%" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
-:: 构建（Ninja 是单配置生成器，配置时已锁定模式，--build 不需要 --config）
-"%CMAKE%" --build build-msvc-ninja
+```cmd
+:: cd 到项目目录
+cd /d D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
 
-:: 运行
-build-msvc-ninja\hello_cpp.exe
-```
-
-> 四步版：
-
-```bat
 :: 激活
 call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 :: 配置
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+cmake -G Ninja -B build-msvc-ninja -S .
 
-:: 构建
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-ninja
+:: 构建（Ninja 是单配置生成器，配置时已锁定模式，--build 不需要 --config）
+cmake --build build-msvc-ninja
 
 :: 运行
 build-msvc-ninja\hello_cpp.exe
 ```
 
-### 方案 B：Visual Studio 生成器（多配置）
+</details>
+
+<details><summary>绝对路径四步版（可在任意目录直接粘贴运行）</summary>
+
+```cmd
+:: 激活
+call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+
+:: 配置
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -G Ninja -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-ninja -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+
+:: 构建
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-ninja
+
+:: 运行
+D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-ninja\hello_cpp.exe
+```
+
+</details>
+
+#### 方案 B — VS Generator
 
 CMake 自动通过 `vswhere.exe` 检测 MSVC 工具链，生成 `.sln` 工程。VS Generator 是多配置，构建须指定 `--config`。
 
-```bat
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
+
+```cmd
+:: cd 到项目目录
+cd /d D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
+
 :: 配置（-G "Visual Studio 18 2026" 生成 .sln 工程，-A x64 指定 64 位）
-"%CMAKE%" -B build-msvc-vs -G "Visual Studio 18 2026" -A x64
+cmake -B build-msvc-vs -G "Visual Studio 18 2026" -A x64 -S .
 
 :: 构建（VS 生成器一个工程含 Debug + Release，必须用 --config 指定；不写默认 Debug）
-"%CMAKE%" --build build-msvc-vs --config Release
+cmake --build build-msvc-vs --config Release
 
 :: 运行
 build-msvc-vs\Release\hello_cpp.exe
 ```
 
-> 四步版：
+</details>
 
-```bat
-:: 激活
-call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
 
+```cmd
 :: 配置
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-vs -G "Visual Studio 18 2026" -A x64
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -G "Visual Studio 18 2026" -A x64 -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-vs -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
 
 :: 构建
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-vs --config Release
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-vs --config Release
 
 :: 运行
-build-msvc-vs\Release\hello_cpp.exe
+D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-vs\Release\hello_cpp.exe
 ```
 
----
+</details>
 
-## 4. 命令行 · Linux / WSL
+### 2.3 命令行 · Linux / WSL
 
 ```bash
+# cd 到项目目录
 cd 01_hello_cpp
+
+# 配置
 mkdir build && cd build
 cmake ..
+
+# 构建
 cmake --build .
+
+# 运行
 ./hello_cpp
 ```
 
 ---
 
-## 5. CLion IDE
+## 3. CLion IDE
 
 1. `File → Open` 选择 `01_hello_cpp/` 目录
 2. CLion 自动识别 `CMakeLists.txt`，右下角点击**加载**
@@ -213,7 +259,7 @@ cmake --build .
 
 ---
 
-## 6. 预期输出
+## 4. 预期输出
 
 ```
 ========== 第一步：纯 C++ ==========
@@ -234,7 +280,7 @@ cmake --build .
 
 ---
 
-## 7. 本步要点
+## 5. 本步要点
 
 本步的目的不是学 C++ 语法，而是**确认编译工具链正常**：
 
@@ -248,7 +294,7 @@ cmake --build .
 
 ---
 
-## 8. 英文及缩写说明
+## 6. 英文及缩写说明
 
 | 词汇                  | 说明                               |
 |:--------------------|:---------------------------------|

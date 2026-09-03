@@ -6,11 +6,13 @@
 #include <string>
 #include <functional>   // std::function
 
-// ① 基本函数：定义、调用、返回值
+// 知识点 1.1：基本函数：定义、调用、返回值
+
 int add(int a, int b) { return a + b; }
 void printSep() { std::cout << "  -----\n"; }
 
-// 函数声明（前向声明）：先声明再定义，调用方不需要看到完整定义
+// 知识点 1.2：函数声明（前向声明）：先声明再定义，调用方不需要看到完整定义
+
 int multiply(int a, int b); // 声明
 
 void demo01_basic()
@@ -22,7 +24,8 @@ void demo01_basic()
 
 int multiply(int a, int b) { return a * b; } // 定义（可以在声明之后）
 
-// ② 参数传递：值、引用、const 引用、指针
+// 知识点 2.1：参数传递：值、引用、const 引用、指针
+
 void byValue(int x) { x = 999; } // 副本，不影响外部
 void byRef(int& x) { x *= 2; } // 引用，影响外部
 void byConstRef(const int& x) { (void)x; } // 只读，不复制
@@ -48,12 +51,14 @@ void demo02_params()
     std::cout << "    大对象只读         → const 引用（避免复制）\n";
     std::cout << "    可能为 nullptr     → 指针\n";
 
-    // const 引用可以绑定临时值（值传参不行）
+    // 知识点 2.2：const 引用可以绑定临时值（值传参不行）
+
     const int& ref = 42; // 临时值绑定到 const 引用，延长生命周期
     std::cout << "  const int& ref=42: " << ref << "（临时值可绑 const 引用）\n";
 }
 
-// ③ 默认参数
+// 知识点 3.1：默认参数
+
 void greet(std::string name,
            std::string prefix = "Hello",
            char ending = '!')
@@ -67,11 +72,12 @@ void demo03_default_params()
     greet("Alice");
     greet("Bob", "Hi");
     greet("Charlie", "Hey", '?');
-    // 规则：默认参数只能从右往左设置
+    // 知识点 3.2：规则：默认参数只能从右往左设置
     // void f(int a=1, int b) {}  // 错误：b 在 a 右边但没有默认值
 }
 
-// ④ 函数重载：同名，参数不同（类型或数量）
+// 知识点 4.1：函数重载：同名，参数不同（类型或数量）
+
 int max(int a, int b) { return a > b ? a : b; }
 double max(double a, double b) { return a > b ? a : b; }
 int max(int a, int b, int c) { return max(max(a, b), c); }
@@ -82,13 +88,15 @@ void demo04_overload()
     std::cout << "  max(3,5)      = " << max(3, 5) << "（int版）\n";
     std::cout << "  max(3.1,2.7)  = " << max(3.1, 2.7) << "（double版）\n";
     std::cout << "  max(1,5,3)    = " << max(1, 5, 3) << "（三参版）\n";
-    // 返回类型不同不构成重载！只有参数不同才算重载
+    // 知识点 4.2：返回类型不同不构成重载！只有参数不同才算重载
 }
 
-// ⑤ inline 内联函数
+// 知识点 5.1：inline 内联函数
+
 inline int square(int x) { return x * x; }
 
-// constexpr 函数：编译期可求值（如果参数是编译期常量）
+// 知识点 5.2：constexpr 函数：编译期可求值（如果参数是编译期常量）
+
 constexpr int cube(int x) { return x * x * x; }
 
 void demo05_inline_constexpr()
@@ -106,7 +114,8 @@ void demo05_inline_constexpr()
     std::cout << "  cube(" << n << ")=" << d << "（n 非编译期常量，运行时求值）\n";
 }
 
-// ⑥ 函数指针
+// 知识点 6.1：函数指针
+
 int applyOp(int a, int b, int (*op)(int, int))
 {
     return op(a, b);
@@ -116,35 +125,42 @@ void demo06_function_pointer()
 {
     std::cout << "\n⑥ 函数指针\n";
 
-    // 函数指针类型：int (*fp)(int, int)
+    // 知识点 6.2：函数指针类型：int (*fp)(int, int)
+
     int (*fp)(int, int) = add;
     std::cout << "  fp=add; fp(3,4)=" << fp(3, 4) << "\n";
 
-    // 作为参数（回调）
+    // 知识点 6.3：作为参数（回调）
+
     std::cout << "  applyOp(10,3,add)=" << applyOp(10, 3, add) << "\n";
     std::cout << "  applyOp(10,3,multiply)=" << applyOp(10, 3, multiply) << "\n";
 
-    // using 简化函数指针类型
+    // 知识点 6.4：using 简化函数指针类型
+
     using BinOp = int(*)(int, int);
     BinOp ops[] = {add, multiply};
     std::cout << "  ops[0](2,3)=" << ops[0](2, 3)
         << "  ops[1](2,3)=" << ops[1](2, 3) << "\n";
 
-    // std::function：更灵活，可以存 lambda/函数对象/函数指针
+    // 知识点 6.5：std::function：更灵活，可以存 lambda/函数对象/函数指针
+
     std::function < int(int, int) > f = add;
     std::cout << "  std::function f=add; f(2,3)=" << f(2, 3) << "\n";
 }
 
-// ⑦ Lambda 表达式（C++11）
+// 知识点 7.1：Lambda 表达式（C++11）
+
 void demo07_lambda()
 {
     std::cout << "\n⑦ Lambda\n";
 
-    // [捕获列表](参数) -> 返回类型 { 函数体 }
+    // 知识点 7.2：[捕获列表](参数) -> 返回类型 { 函数体 }
+
     auto mul = [](int a, int b) { return a * b; };
     std::cout << "  mul(3,4)=" << mul(3, 4) << "\n";
 
-    // 捕获外部变量
+    // 知识点 7.3：捕获外部变量
+
     int factor = 3;
     auto scaleVal = [factor](int x) { return x * factor; }; // 值捕获（副本）
     auto scaleRef = [&factor](int x) { return x * factor; }; // 引用捕获
@@ -156,13 +172,15 @@ void demo07_lambda()
     std::cout << "    引用捕获 scaleRef(5)=" << scaleRef(5)
         << "（用10，引用最新值）\n";
 
-    // mutable lambda：值捕获的副本可修改（但不影响外部）
+    // 知识点 7.4：mutable lambda：值捕获的副本可修改（但不影响外部）
+
     int count = 0;
     auto inc = [count]() mutable { return ++count; };
     std::cout << "  mutable lambda: " << inc() << " " << inc() << " " << inc()
         << "  count=" << count << "（外部未变）\n";
 
-    // 泛型 lambda（C++14）：参数用 auto
+    // 知识点 7.5：泛型 lambda（C++14）：参数用 auto
+
     auto print = [](auto a, auto b)
     {
         std::cout << "  (" << a << ", " << b << ")\n";
@@ -172,18 +190,21 @@ void demo07_lambda()
     std::cout << "  泛型lambda:";
     print("hi", 42);
 
-    // 立即调用 lambda（IIFE）
+    // 知识点 7.6：立即调用 lambda（IIFE）
+
     int result = [](int n) { return n * n; }(7);
     std::cout << "  立即调用lambda: 7*7=" << result << "\n";
 }
 
-// ⑧ 尾置返回类型（C++11）
+// 知识点 8.1：尾置返回类型（C++11）
+
 auto divide(double a, double b) -> double
 {
     return a / b;
 }
 
-// 返回引用的危险
+// 知识点 8.2：返回引用的危险
+
 int& badReturn()
 {
     int local = 42;

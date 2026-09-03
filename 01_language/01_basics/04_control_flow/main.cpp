@@ -18,7 +18,9 @@ void demo01_if_else()
     else if (score >= 60) std::cout << "  " << score << " -> 及格\n";
     else std::cout << "  " << score << " -> 不及格\n";
 
-    // 悬空 else 陷阱：else 和最近的 if 配对
+    // 知识点 1.1：悬空 else 陷阱
+    // else 和最近的 if 配对
+
     int a = 1, b = -1;
     if (a > 0)
         if (b > 0)
@@ -27,7 +29,9 @@ void demo01_if_else()
             std::cout << "  b<=0（else 配对内层 if，不是外层）\n";
     // 加括号消除歧义是最佳实践
 
-    // C++17 初始化 if：变量作用域限于 if 块
+    // 知识点 1.2：C++17 初始化 if
+    // 变量作用域限于 if 块
+
     if (int x = score - 60; x >= 0)
         std::cout << "  初始化if：高于及格线 " << x << " 分\n";
     // x 在这里不可见
@@ -55,7 +59,8 @@ void demo02_switch()
     default: std::cout << "  非法\n";
     }
 
-    // fall-through（穿透）+ [[fallthrough]] 属性（C++17）
+    // 知识点 2.1：fall-through 穿透与 [[fallthrough]]（C++17）
+
     int x = 1;
     switch (x)
     {
@@ -67,7 +72,8 @@ void demo02_switch()
         break;
     }
 
-    // C++17 初始化 switch
+    // 知识点 2.2：C++17 初始化 switch
+
     switch (int v = day * 2; v)
     {
     case 6: std::cout << "  初始化switch：v=" << v << "\n";
@@ -81,13 +87,17 @@ void demo03_while()
 {
     std::cout << "\n③ while / do-while\n";
 
-    // while：先判断后执行
+    // 知识点 3.1：while 循环
+    // 先判断后执行
+
     int n = 5;
     std::cout << "  while 倒计时: ";
     while (n > 0) std::cout << n-- << " ";
     std::cout << "发射！\n";
 
-    // do-while：先执行后判断，至少执行一次
+    // 知识点 3.2：do-while 循环
+    // 先执行后判断，至少执行一次
+
     n = 0;
     std::cout << "  do-while(n=0,条件n<0): ";
     do
@@ -98,7 +108,9 @@ void demo03_while()
     while (n < 0);
     std::cout << "\n";
 
-    // while(true) + break：用于不确定次数的循环
+    // 知识点 3.3：while(true) + break
+    // 用于不确定次数的循环
+
     std::cout << "  while(true)+break: ";
     int i = 0;
     while (true)
@@ -126,13 +138,15 @@ void demo04_for()
     for (int i = 0; i <= 10; i += 2) std::cout << i << " ";
     std::cout << "\n";
 
-    // for 可以省略任何部分（分号不能省）
+    // 知识点 4.1：for 可以省略任何部分（分号不能省）
+
     int i = 0;
     std::cout << "  省略初始化(i已有): ";
     for (; i < 3; ++i) std::cout << i << " ";
     std::cout << "\n";
 
-    // 多变量
+    // 知识点 4.2：多变量 for 循环
+
     std::cout << "  多变量: ";
     for (int a = 0, b = 10; a < b; ++a, --b)
         std::cout << "(" << a << "," << b << ") ";
@@ -146,24 +160,31 @@ void demo05_range_for()
 
     int arr[] = {1, 2, 3, 4, 5};
 
-    // 值：副本，修改不影响原数组
+    // 知识点 5.1：值遍历
+    // 副本，修改不影响原数组
+
     std::cout << "  auto  遍历: ";
     for (auto x : arr) std::cout << x << " ";
     std::cout << "\n";
 
-    // 引用：修改原数组
+    // 知识点 5.2：引用遍历
+    // 修改原数组
+
     for (auto& x : arr) x *= 2;
     std::cout << "  auto& 修改(*2): ";
     for (auto x : arr) std::cout << x << " ";
     std::cout << "\n";
 
-    // const 引用：只读不复制（大对象推荐）
+    // 知识点 5.3：const 引用遍历
+    // 只读不复制（大对象推荐）
+
     std::vector<std::string> words = {"hello", "world", "cpp"};
     std::cout << "  const auto& 只读: ";
     for (const auto& w : words) std::cout << w << " ";
     std::cout << "\n";
 
-    // C++17 结构化绑定遍历 pair
+    // 知识点 5.4：C++17 结构化绑定遍历 pair
+
     std::vector<std::pair<std::string, int>> data = {
         {"Alice", 95}, {"Bob", 82}
     };
@@ -197,7 +218,8 @@ void demo06_break_continue()
     }
     std::cout << "\n";
 
-    // break 只退出最近一层循环
+    // 知识点 6.1：break 只退出最近一层循环
+
     std::cout << "  嵌套break只退内层:\n";
     for (int i = 0; i < 3; ++i)
     {
@@ -208,7 +230,9 @@ void demo06_break_continue()
         }
     }
 
-    // goto 退出多层：少数合理场景
+    // 知识点 6.2：goto 退出多层
+    // 少数合理的使用场景
+
     std::cout << "  goto 退出多层:\n";
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j)

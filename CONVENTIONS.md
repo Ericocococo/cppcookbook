@@ -395,6 +395,393 @@ cmake --build .
 
 ---
 
+## 新章节模板（创建新知识点目录的 SOP）
+
+新建一个知识点目录时，按以下三个文件模板创建，然后照 checklist 逐项检查。
+
+### main.cpp 模板
+
+```cpp
+// C++20
+// 演示：<一句话说明本文件演示什么>
+// 构建：cmake -B build-mingw-ninja（详见 README.md）
+
+#include <iostream>
+// #include <其他需要的头文件>
+
+// ============================================================
+// ① <第一组主题名>
+// ============================================================
+
+// 知识点 1.1：<标题>
+// <1-3 行说明：这是什么、为什么要用、不用会怎样>
+
+<代码>
+
+// 知识点 1.2：<标题>
+// <说明>
+
+<代码>
+
+// ============================================================
+// ② <第二组主题名>
+// ============================================================
+
+// 知识点 2.1：<标题>
+// <说明>
+
+<代码>
+
+int main()
+{
+    std::cout << "=== <目录名>: <主题> ===\n";
+    demo01_xxx();
+    demo02_xxx();
+    std::cout << "\n完成。\n";
+    return 0;
+}
+```
+
+**注释规则：**
+- 每个知识点注释第一行格式：`// 知识点 X.Y：标题`（X = demo 序号，Y = 该 demo 内的知识点序号）
+- 每组知识点注释后面空一行再写代码
+- 不同知识点之间用空行隔开
+- 注释要详细：参数含义、为什么这样写、不这样写会怎样
+- 注释只描述当前状态，不引用其他章节
+
+### README.md 模板
+
+```markdown
+# <目录名> — <主题名>
+
+> <一句话介绍>
+
+## 1. 知识点
+
+### 1.1 <第一组主题>
+
+#### 1.1.1 <标题>
+
+<1-3 句中文说明>
+
+\```cpp
+// 独立可运行的代码示例，不看 main.cpp 也能学会
+<代码片段>
+\```
+
+#### 1.1.2 <标题>
+
+<说明>
+
+\```cpp
+<代码片段>
+\```
+
+### 1.2 <第二组主题>
+
+#### 1.2.1 <标题>
+
+...
+
+## 2. 构建
+
+### 2.1 命令行 · MinGW（Git Bash）
+
+**路径常量（绝对路径版使用）：**
+
+| 工具 | 完整路径 |
+|------|------|
+| cmake | `D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe` |
+| g++ | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe` |
+| ninja | `D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe` |
+| mingw32-make | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe` |
+
+#### 方案 A — Ninja
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
+
+\```bash
+# cd 到项目目录
+cd <完整目录路径>
+
+# 配置
+cmake -G Ninja -B build-mingw-ninja -S .
+
+# 构建
+cmake --build build-mingw-ninja
+
+# 运行
+./build-mingw-ninja/<EXE>.exe
+\```
+
+</details>
+
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
+
+\```cmd
+:: 配置
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B <完整目录路径>\build-mingw-ninja -S <完整目录路径> -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+
+:: 构建
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build <完整目录路径>\build-mingw-ninja
+
+:: 运行
+<完整目录路径>\build-mingw-ninja\<EXE>.exe
+\```
+
+</details>
+
+#### 方案 B — MinGW Makefiles
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
+
+\```bash
+# cd 到项目目录
+cd <完整目录路径>
+
+# 配置
+cmake -G "MinGW Makefiles" -B build-mingw-make -S .
+
+# 构建
+cmake --build build-mingw-make
+
+# 运行
+./build-mingw-make/<EXE>.exe
+\```
+
+</details>
+
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
+
+\```cmd
+:: 配置
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B <完整目录路径>\build-mingw-make -S <完整目录路径> -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+
+:: 构建
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build <完整目录路径>\build-mingw-make
+
+:: 运行
+<完整目录路径>\build-mingw-make\<EXE>.exe
+\```
+
+</details>
+
+#### 方案 C — Ninja Multi-Config
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
+
+\```bash
+# cd 到项目目录
+cd <完整目录路径>
+
+# 配置
+cmake -G "Ninja Multi-Config" -B build-mingw-mc -S .
+
+# 构建
+cmake --build build-mingw-mc --config Release
+
+# 运行
+./build-mingw-mc/Release/<EXE>.exe
+\```
+
+</details>
+
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
+
+\```cmd
+:: 配置
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B <完整目录路径>\build-mingw-mc -S <完整目录路径> -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+
+:: 构建
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build <完整目录路径>\build-mingw-mc --config Release
+
+:: 运行
+<完整目录路径>\build-mingw-mc\Release\<EXE>.exe
+\```
+
+</details>
+
+### 2.2 命令行 · MSVC（cmd）
+
+**路径常量（绝对路径版使用）：**
+
+| 工具 | 完整路径 |
+|------|------|
+| cmake | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` |
+| ninja | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe` |
+| vcvarsall | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat` |
+| cl.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe` |
+
+> cl.exe 一般不用在命令里指定：`call vcvarsall.bat` 会把它注入 PATH，CMake 自动找到。
+> 列出仅供参考；版本号 14.51.36231 随 VS 更新可能变化。
+
+#### vcvarsall 注入的 4 个环境变量
+
+| 变量 | 给谁用 | 找什么 | 示例路径（MSVC 14.51 / Win10 SDK 26100） |
+|------|--------|--------|------|
+| PATH | cmd 命令 | cl.exe / link.exe / ninja / cmake | `...\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\` |
+| INCLUDE | cl.exe（编译器） | 头文件 | `...\VC\Tools\MSVC\14.51.36231\include\`<br>`...\Windows Kits\10\Include\10.0.26100.0\ucrt\` 等 |
+| LIB | link.exe（链接器） | .lib 库文件 | `...\VC\Tools\MSVC\14.51.36231\lib\x64\`<br>`...\Windows Kits\10\Lib\10.0.26100.0\ucrt\x64\` 等 |
+| LIBPATH | .NET 工具 | 程序集 | 本项目用不到 |
+
+- `call` 必须写在当前 cmd 会话里——`call` 让变量修改留在当前窗口；直接运行则只存在临时进程，退出就没了
+- 不激活直接调 cl.exe 会报"找不到头文件"：cl.exe 找到 cl 自身但 INCLUDE 没注入，`#include <iostream>` 无从解析
+- link.exe 依赖 LIB 找 `libcmt.lib` 等库文件，LIB 没注入则链接失败
+
+\```bat
+:: 激活 — 把 cl.exe / link.exe 加入当前会话 PATH，并注入 INCLUDE / LIB / LIBPATH
+call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+\```
+
+#### 方案 A — vcvarsall + Ninja
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
+
+\```cmd
+:: cd 到项目目录
+cd /d <完整目录路径>
+
+:: 激活
+call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+
+:: 配置
+cmake -G Ninja -B build-msvc-ninja -S .
+
+:: 构建
+cmake --build build-msvc-ninja
+
+:: 运行
+build-msvc-ninja\<EXE>.exe
+\```
+
+</details>
+
+<details><summary>绝对路径四步版（可在任意目录直接粘贴运行）</summary>
+
+\```cmd
+:: 激活
+call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+
+:: 配置
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -G Ninja -B <完整目录路径>\build-msvc-ninja -S <完整目录路径> -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+
+:: 构建
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build <完整目录路径>\build-msvc-ninja
+
+:: 运行
+<完整目录路径>\build-msvc-ninja\<EXE>.exe
+\```
+
+</details>
+
+#### 方案 B — VS Generator
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
+
+\```cmd
+:: cd 到项目目录
+cd /d <完整目录路径>
+
+:: 配置
+cmake -G "Visual Studio 18 2026" -A x64 -B build-msvc-vs -S .
+
+:: 构建
+cmake --build build-msvc-vs --config Release
+
+:: 运行
+build-msvc-vs\Release\<EXE>.exe
+\```
+
+</details>
+
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
+
+\```cmd
+:: 配置
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -G "Visual Studio 18 2026" -A x64 -B <完整目录路径>\build-msvc-vs -S <完整目录路径>
+
+:: 构建
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build <完整目录路径>\build-msvc-vs --config Release
+
+:: 运行
+<完整目录路径>\build-msvc-vs\Release\<EXE>.exe
+\```
+
+</details>
+
+### 2.3 命令行 · Linux / WSL
+
+\```bash
+# 配置
+cmake -G Ninja -B build-linux -S .
+
+# 构建
+cmake --build build-linux
+
+# 运行
+./build-linux/<EXE>
+\```
+
+## 3. 英文及缩写说明（可选）
+
+### 3.1 <分类名>
+
+| 词汇 | 说明 |
+|------|------|
+| ... | ... |
+```
+
+**README 格式规则：**
+- 三级编号体系：`## 1. 知识点` → `### 1.1 大组` → `#### 1.1.1 具体知识点`
+- `§ 2 构建` 合并为一章：`### 2.1 MinGW` / `### 2.2 MSVC` / `### 2.3 Linux`
+- `§ 3 英文及缩写说明` 用 `### 3.1` 分组
+- 知识点编号和 main.cpp 的 `// 知识点 X.Y：` 对应（README 的 `1.1.1` 对应 cpp 的 `知识点 1.1`）
+- 每个知识点用 `####` 四级标题（不是加粗），必须有独立代码示例
+- 构建命令每个方案两版折叠：`相对路径版（需先 cd）` + `绝对路径X步版（可任意目录粘贴）`
+- **绝对路径版：涉及到的路径全部用绝对路径**，包括 cmake.exe、g++.exe、ninja.exe、mingw32-make.exe、vcvarsall.bat 等工具路径（参考 § 2.1 / § 2.2 下的路径常量表）
+- 相对路径版：工具用短命令（假设在 PATH），只有 cd 用绝对路径
+- 所有代码块内命令加步骤注释（bash 用 `#`，cmd 用 `::`）和空行分隔
+- `<完整目录路径>` 替换为实际绝对路径
+- `<EXE>` 替换为 CMakeLists.txt 里 `add_executable` 的名字
+
+### CMakeLists.txt 模板
+
+```cmake
+cmake_minimum_required(VERSION 3.28)
+project(<项目名> LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if(MSVC)
+    add_compile_options(/W4 /utf-8)
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+add_executable(<项目名> main.cpp)
+```
+
+### 创建新章节 Checklist
+
+创建一个新知识点目录时，按顺序检查：
+
+- [ ] 目录名带两位数字前缀（如 `05_functions`）
+- [ ] `CMakeLists.txt`：按模板创建，项目名和目录名对应
+- [ ] `main.cpp`：文件头注释（C++ 版本 + 演示内容 + 构建命令）
+- [ ] `main.cpp`：每个知识点用 `// 知识点 X.Y：标题` 格式，后面空一行
+- [ ] `main.cpp`：注释详细（参数含义、为什么这样写、不这样写会怎样）
+- [ ] `main.cpp`：demo 函数按 `demo01_xxx()`、`demo02_xxx()` 命名
+- [ ] `README.md`：§ 1 知识点用三级编号（`## 1.` → `### 1.1` → `#### 1.1.1`），`####` 四级标题，每个有代码示例
+- [ ] `README.md`：§ 2 构建合并为一章（`### 2.1 MinGW` / `### 2.2 MSVC` / `### 2.3 Linux`）
+- [ ] `README.md`：每个方案两版折叠（相对路径版 + 绝对路径 X 步版），代码块内加步骤注释和空行
+- [ ] `README.md`：§ 3 英文及缩写说明用 `### 3.1` 分组（可选）
+- [ ] 上级目录 README 更新子目录表
+- [ ] STRUCTURE.md 目录树同步
+
+---
+
 ## CMake 结构
 
 8. **每个目录都是独立的 CMake 工程** — 任意层级的子目录均可在 CLion 中直接打开为独立项目，

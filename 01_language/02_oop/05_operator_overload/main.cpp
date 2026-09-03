@@ -24,8 +24,10 @@ public:
     }
 
     // ---- 成员函数写法：operator+= 修改自身，返回 *this ----
-    // 返回引用：允许链式调用 a += b += c
+    // 知识点 1.1：返回引用
+    // 允许链式调用 a += b += c
     // 修改自身而非创建新对象，语义和内置 += 一致
+
     Vec2& operator+=(const Vec2& rhs)
     {
         x += rhs.x;
@@ -41,8 +43,10 @@ public:
     }
 
     // ---- 标量乘法：成员函数写法 ----
+    // 知识点 1.2：标量乘法的两种写法
     // vec * scalar 可以用成员函数
     // 但 scalar * vec 左操作数不是 Vec2，必须用非成员函数（见下方友元）
+
     Vec2& operator*=(double scalar)
     {
         x *= scalar;
@@ -53,10 +57,11 @@ public:
     // ---- 友元声明：让非成员函数访问私有成员 ----
     // 这里 x, y 是 public 的，友元非必需，但演示标准写法
 
-    // operator+ 用非成员函数的原因：
+    // 知识点 1.3：operator+ 用非成员函数的原因
     // 如果写成成员函数 Vec2 operator+(const Vec2&)，
     // 那么 3.0 + vec 无法编译（左操作数不是 Vec2）
     // 非成员函数两个参数地位对等，支持任意一侧做隐式转换
+
     friend Vec2 operator+(Vec2 lhs, const Vec2& rhs);
     friend Vec2 operator-(Vec2 lhs, const Vec2& rhs);
 
@@ -70,8 +75,10 @@ public:
 };
 
 // ---- 非成员函数实现 ----
+// 知识点 1.4：基于 += 实现 + 的惯用法
 // 参数 lhs 按值传入（拷贝），然后复用 += 实现
 // 这是经典惯用法：operator+ 基于 operator+= 实现，避免代码重复
+
 Vec2 operator+(Vec2 lhs, const Vec2& rhs)
 {
     lhs += rhs;
@@ -140,6 +147,7 @@ public:
     }
 
     // ---- C++20 太空船运算符 <=> ----
+    // 知识点 2.1：太空船运算符 <=> 的用法
     // = default 让编译器按成员声明顺序逐个比较
     // 一行代码自动生成 ==, !=, <, >, <=, >= 全部六个运算符
     //
@@ -154,6 +162,7 @@ public:
     //       if (auto cmp = minor <=> rhs.minor; cmp != 0) return cmp;
     //       return patch <=> rhs.patch;
     //   }
+
     auto operator<=>(const Version&) const = default;
 
     friend std::ostream& operator<<(std::ostream& os, const Version& v)
@@ -216,6 +225,7 @@ void demo02_comparison()
 // ③ 流运算符（<<, >>）
 // ═══════════════════════════════════════════════════════════════════
 
+// 知识点 3.1：流运算符必须用友元函数
 // operator<< 和 operator>> 必须用友元函数（非成员函数）
 // 原因：左操作数是 std::ostream / std::istream，不是我们的类
 // 如果写成成员函数，调用方式变成 v << cout，语义完全反了
@@ -300,8 +310,10 @@ public:
     }
 
     // ---- const 版本：返回 const 引用，只允许读取 ----
+    // 知识点 4.1：下标运算符的 const 版本
     // 当对象本身是 const 时调用此版本
     // 不提供 const 版本的话，const IntArray 对象无法使用 [] 运算符
+
     const int& operator[](size_t index) const
     {
         if (index >= size_)
@@ -348,7 +360,8 @@ void demo04_subscript()
 // ⑤ 函数调用运算符（()）— 仿函数
 // ═══════════════════════════════════════════════════════════════════
 
-// 仿函数（Functor）：重载 operator() 让对象像函数一样调用
+// 知识点 5.1：仿函数（Functor）
+// 重载 operator() 让对象像函数一样调用
 // lambda 的本质：编译器会把 lambda 翻译成一个匿名的仿函数类
 //   auto mul = [factor](int n) { return n * factor; };
 //   等价于编译器生成：
@@ -451,8 +464,10 @@ public:
     }
 
     // ---- 前缀 ++x：先加再返回 ----
-    // 返回引用：修改自身后返回，调用方拿到的是加完之后的值
+    // 知识点 6.1：返回引用
+    // 修改自身后返回，调用方拿到的是加完之后的值
     // 无参数
+
     Counter& operator++()
     {
         ++value_;
@@ -460,9 +475,11 @@ public:
     }
 
     // ---- 后缀 x++：先返回旧值再加 ----
+    // 知识点 6.2：后缀自增 vs 前缀自增
     // int 是哑参数（dummy parameter），仅用于区分前缀和后缀，不使用
     // 返回值而非引用：因为返回的是修改前的旧值（临时对象）
     // 后缀比前缀多一次拷贝，性能稍差，优先用前缀
+
     Counter operator++(int)
     {
         Counter old = *this;
@@ -551,6 +568,7 @@ public:
     }
 
     // ---- explicit operator bool() ----
+    // 知识点 7.1：explicit operator bool()
     // 让对象在 if / while / 逻辑运算中当布尔值使用
     //
     // 为什么加 explicit：
@@ -558,6 +576,7 @@ public:
     //   然后 bool 又能隐式转成 int，导致 opt + 1 这种无意义的代码能编译通过
     //   加了 explicit 后，只有在条件表达式（if/while/&&/||/!/?:）中才会自动转换
     //   其他地方必须显式 static_cast<bool>(opt)
+
     explicit operator bool() const
     {
         return has_value_;

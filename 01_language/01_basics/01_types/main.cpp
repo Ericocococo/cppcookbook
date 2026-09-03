@@ -13,7 +13,9 @@ void demo01_integer_types()
 {
     std::cout << "\n① 整数类型\n";
 
-    // 有符号整数：可以存负数，范围 -2^(n-1) ~ 2^(n-1)-1
+    // 知识点 1.1：有符号整数
+    // 可以存负数，范围 -2^(n-1) ~ 2^(n-1)-1
+
     std::cout << "  --- 有符号整数 ---\n";
     std::cout << "  char:      " << sizeof(char) << " 字节  "
         << (int)CHAR_MIN << " ~ " << (int)CHAR_MAX << "\n";
@@ -26,7 +28,9 @@ void demo01_integer_types()
     std::cout << "  long long: " << sizeof(long long) << " 字节  "
         << LLONG_MIN << " ~ " << LLONG_MAX << "\n";
 
-    // 无符号整数：不能存负数，范围 0 ~ 2^n-1（正数范围翻倍）
+    // 知识点 1.2：无符号整数
+    // 不能存负数，范围 0 ~ 2^n-1（正数范围翻倍）
+
     std::cout << "  --- 无符号整数 ---\n";
     std::cout << "  unsigned char:      " << sizeof(unsigned char)
         << " 字节  0 ~ " << (unsigned)UCHAR_MAX << "\n";
@@ -35,7 +39,8 @@ void demo01_integer_types()
     std::cout << "  unsigned long long: " << sizeof(unsigned long long)
         << " 字节  0 ~ " << ULLONG_MAX << "\n";
 
-    // 整数溢出
+    // 知识点 1.3：整数溢出
+
     unsigned char uc = 255;
     ++uc; // 无符号溢出：取模 256 = 0（合法的定义行为）
     std::cout << "  无符号溢出：255u+1 = " << (unsigned)uc
@@ -50,15 +55,18 @@ void demo02_float_types()
     std::cout << "  float:  " << sizeof(float) << " 字节  精度约7位有效数字\n";
     std::cout << "  double: " << sizeof(double) << " 字节  精度约15位有效数字（推荐）\n";
 
-    // 浮点精度问题：不能用 == 比较
+    // 知识点 2.1：浮点精度问题
+    // 不能用 == 比较
     // 原因：计算机用二进制存储小数，0.1、0.2 在二进制里是无限循环小数（类似 1/3 在十进制是 0.333...）
     // 存进有限位数时被截断，产生微小误差；两个误差相加后不等于 0.3 的截断值
     // 正确做法：比较两数之差是否足够小，如 std::abs(a - 0.3) < 1e-9
+
     double a = 0.1 + 0.2;
     std::cout << "  0.1+0.2 == 0.3 : " << (a == 0.3)
         << "（0=false！浮点有精度误差）\n";
 
-    // 特殊值
+    // 知识点 2.2：浮点特殊值
+
     float inf = FLT_MAX * 2.0F; // 溢出 → +∞
     float nan = 0.0F / 0.0F; // 0/0 → NaN
     std::cout << "  FLT_MAX*2 = " << inf << "（正无穷）\n";
@@ -71,18 +79,22 @@ void demo03_bool_char()
 {
     std::cout << "\n③ bool 与 char\n";
 
-    // bool
+    // 知识点 3.1：bool 类型
+
     std::cout << "  true=" << true << "  false=" << false << "（1/0）\n";
     std::cout << "  bool(42)=" << (bool)42 << "  bool(0)=" << (bool)0
         << "  bool(-1)=" << (bool)-1 << "（非零即 true）\n";
 
-    // char：字符本质是整数
+    // 知识点 3.2：char 类型
+    // 字符本质是整数
+
     char c = 'A';
     std::cout << "  'A' = " << c << "  ASCII=" << (int)c << "\n";
     std::cout << "  'A'+1 = '" << (char)('A' + 1) << "'（B）\n";
     std::cout << "  'a'-'A' = " << ('a' - 'A') << "（大小写差32）\n";
 
-    // 转义字符
+    // 知识点 3.3：转义字符
+
     std::cout << "  转义：\\n换行 \\t制表 \\\\反斜杠 \\'单引号 \\\"双引号 \\0空字符\n";
 }
 
@@ -91,21 +103,25 @@ void demo04_literals()
 {
     std::cout << "\n④ 字面量写法\n";
 
-    // 不同进制
+    // 知识点 4.1：不同进制
+
     std::cout << "  255  = " << 255 << "（十进制）\n";
     std::cout << "  0xFF = " << 0xFF << "（十六进制）\n";
     std::cout << "  0377 = " << 0377 << "（八进制）\n";
     std::cout << "  0b11111111 = " << 0b11111111 << "（二进制，C++14）\n";
 
-    // 数字分隔符（C++14）
+    // 知识点 4.2：数字分隔符（C++14）
+
     int million = 1'000'000;
     std::cout << "  1'000'000 = " << million << "（单引号分隔，增加可读性）\n";
 
-    // 科学计数法
+    // 知识点 4.3：科学计数法
+
     std::cout << "  3.14e2 = " << 3.14e2 << "（= 314）\n";
     std::cout << "  1.5e-3 = " << 1.5e-3 << "（= 0.0015）\n";
 
-    // 后缀
+    // 知识点 4.4：字面量后缀
+
     std::cout << "  42   -> int:       " << sizeof(42) << " 字节\n";
     std::cout << "  42LL -> long long: " << sizeof(42LL) << " 字节\n";
     std::cout << "  42U  -> uint:      " << sizeof(42U) << " 字节\n";
@@ -123,18 +139,21 @@ void demo05_initialization()
     int d{}; // 值初始化（= 0）
     std::cout << "  a=" << a << "  b=" << b << "  c=" << c << "  d{}=" << d << "\n";
 
-    // 列表初始化防窄化
+    // 知识点 5.1：列表初始化防窄化
     // int bad{3.14};  // 编译错误：double→int 窄化
+
     int bad = 3.14; // 允许但丢精度
     std::cout << "  int bad=3.14 -> " << bad << "（悄悄截断，{}会报错）\n";
 
-    // 数组零初始化
+    // 知识点 5.2：数组零初始化
+
     int arr[5]{};
     std::cout << "  int arr[5]{}: ";
     for (int x : arr) std::cout << x << " ";
     std::cout << "（全零）\n";
 
-    // 结构体部分初始化
+    // 知识点 5.3：结构体部分初始化
+
     struct Point
     {
         int x, y, z;
@@ -194,7 +213,9 @@ void demo08_type_alias()
     std::cout << "  using Score=int;    Score s=" << s << "\n";
     std::cout << "  typedef double Price; Price p=" << p << "\n";
 
-    // size_t：无符号整数，专门表示大小/索引
+    // 知识点 8.1：size_t
+    // 无符号整数，专门表示大小/索引
+
     size_t len = sizeof(int);
     std::cout << "  size_t len=sizeof(int)=" << len
         << "（size_t：无符号，专门表示大小和索引）\n";

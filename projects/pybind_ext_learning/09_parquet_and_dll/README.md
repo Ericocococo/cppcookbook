@@ -15,31 +15,48 @@
 
 ---
 
-## 2. 命令行 · MinGW（Git Bash）
+## 2. 构建
 
-> pybind11 模块（.pyd）且依赖 vcpkg 安装的 arrow/parquet（MSVC 编译），MinGW 不适用。Linux 构建见 § 4。
+### 2.1 命令行 · MinGW（Git Bash）
 
----
+> pybind11 模块（.pyd）且依赖 vcpkg 安装的 arrow/parquet（MSVC 编译），MinGW 不适用。Linux 构建见 § 2.3。
 
-## 3. 命令行 · MSVC（cmd）
+### 2.2 命令行 · MSVC（cmd）
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
 ```bash
-D:\ProgramData\anaconda3\envs\quant311\python gen_test_data.py              # 1. 生成测试数据
-D:\ProgramData\anaconda3\envs\quant311\python build.py --dest lib           # 2. 编译 + 拷贝 pyd 和依赖 dll 到 lib/
-D:\ProgramData\anaconda3\envs\quant311\python test_parquet.py               # 3. 验证
+# cd 到项目目录
+cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\09_parquet_and_dll
+
+# 生成测试数据
+D:\ProgramData\anaconda3\envs\quant311\python gen_test_data.py
+
+# 编译 + 拷贝 pyd 和依赖 dll 到 lib/
+D:\ProgramData\anaconda3\envs\quant311\python build.py --dest lib
+
+# 验证
+D:\ProgramData\anaconda3\envs\quant311\python test_parquet.py
 ```
+
+</details>
 
 > `build.py` 内部传入 vcpkg toolchain 路径，自动定位 MSVC + pybind11 + Python。
 > 内部通过 `vswhere` 自动检测 VS 版本，使用 **VS Generator（方案 B，多配置）**，构建时传 `--config Release`。
 
----
-
-## 4. 命令行 · Linux / WSL
+### 2.3 命令行 · Linux / WSL
 
 ```bash
+# cd 到项目目录
 cd 09_parquet_and_dll
+
+# 生成测试数据
 python gen_test_data.py
+
+# 编译 + 拷贝
 python build.py --dest lib
+
+# 验证
 python test_parquet.py
 ```
 
@@ -48,7 +65,7 @@ python test_parquet.py
 
 ---
 
-## 5. CLion IDE
+## 3. CLion IDE
 
 1. `File → Open` 选择 `09_parquet_and_dll/` 目录
 2. CLion 自动识别 `CMakeLists.txt`，右下角点击**加载**
@@ -58,9 +75,9 @@ python test_parquet.py
 
 ---
 
-## 6. 本步要点
+## 4. 本步要点
 
-### 6.1 与第八步的区别
+### 4.1 与第八步的区别
 
 |      | 第八步 data_provider | 第九步（本步）                   |
 |:-----|:------------------|:--------------------------|
@@ -69,7 +86,7 @@ python test_parquet.py
 | 拷贝   | 只拷贝 .pyd          | .pyd + 依赖 dll 一起拷贝        |
 | 对应框架 | data_mgrs（内存查询层）  | build_engine.py（dll 部署机制） |
 
-### 6.2 为什么必须拷贝 dll？
+### 4.2 为什么必须拷贝 dll？
 
 ```python
 import parquet_reader   # ← 失败: DLL load failed
@@ -80,7 +97,7 @@ import 失败。MSBuild 编译时把依赖 dll 部署到了 build_py/Release/ �
 
 本步实测：拷贝了 **11 个依赖 dll**（arrow / parquet / boost / brotli / zstd 等）。
 
-### 6.3 vcpkg toolchain
+### 4.3 vcpkg toolchain
 
 ```cmake
 # CMakeLists.txt 中不写 vcpkg 路径，由 build.py 传参
@@ -89,7 +106,7 @@ import 失败。MSBuild 编译时把依赖 dll 部署到了 build_py/Release/ �
 
 框架的 build_engine.py 用 `VCPKG_ROOT` 环境变量定位，本步用 `--vcpkg` 参数（默认 `D:/software/vcpkg`）。
 
-### 6.4 arrow API 注意（从编译踩坑总结）
+### 4.4 arrow API 注意（从编译踩坑总结）
 
 | 坑                                   | 解决                                                               |
 |:------------------------------------|:-----------------------------------------------------------------|
@@ -99,7 +116,7 @@ import 失败。MSBuild 编译时把依赖 dll 部署到了 build_py/Release/ �
 
 ---
 
-## 7. 与本机框架的对应
+## 5. 与本机框架的对应
 
 | 本步                              | 框架                                                                  |
 |:--------------------------------|:--------------------------------------------------------------------|

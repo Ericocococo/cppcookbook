@@ -16,18 +16,20 @@ void demo01_typeid()
     double d = 3.14;
     std::string s = "hello";
 
-    // typeid().name()：返回类型名字符串（格式因编译器而异）
+    // 知识点 1.1：typeid().name()
+    // 返回类型名字符串（格式因编译器而异）
     std::cout << "  typeid(int).name()    = \"" << typeid(int).name() << "\"\n";
     std::cout << "  typeid(double).name() = \"" << typeid(double).name() << "\"\n";
     std::cout << "  typeid(n).name()      = \"" << typeid(n).name() << "\"\n";
     std::cout << "  typeid(s).name()      = \"" << typeid(s).name() << "\"\n";
     std::cout << "  （GCC 输出缩写如 i=int，MSVC 输出 int，格式不统一）\n";
 
-    // 比较类型是否相同
+    // 知识点 1.2：比较类型是否相同
     std::cout << "  typeid(n)==typeid(int)    : " << (typeid(n) == typeid(int)) << "\n";
     std::cout << "  typeid(n)==typeid(double) : " << (typeid(n) == typeid(double)) << "\n";
 
-    // typeid 在多态中的真正用途：查实际类型（运行期）
+    // 知识点 1.3：typeid 在多态中的真正用途
+    // 查实际类型（运行期）
     struct Base
     {
         virtual ~Base()
@@ -68,7 +70,8 @@ void demo02_sizeof_pack()
 }
 
 // ③ 变参模板基础（C++11）
-// 递归展开：把参数包逐一取出来处理
+// 知识点 3.1：递归展开
+// 把参数包逐一取出来处理
 void printAll() { std::cout << "\n"; } // 递归终止条件
 
 template <typename T, typename... Rest>
@@ -79,7 +82,8 @@ void printAll(T first, Rest... rest)
     printAll(rest...); // 递归：去掉第一个，继续处理剩余
 }
 
-// C++17 折叠表达式：更简洁地处理参数包
+// 知识点 3.2：C++17 折叠表达式
+// 更简洁地处理参数包
 template <typename... Args>
 auto sumAll(Args... args)
 {
@@ -112,20 +116,22 @@ void demo04_type_traits()
 {
     std::cout << "\n④ type_traits（编译期类型查询）\n";
 
-    // is_same_v：两个类型是否相同
+    // 知识点 4.1：is_same_v
+    // 两个类型是否相同
     std::cout << "  is_same_v<int,int>    = " << std::is_same_v<int, int> << "\n";
     std::cout << "  is_same_v<int,double> = " << std::is_same_v<int, double> << "\n";
 
-    // is_integral_v / is_floating_point_v
+    // 知识点 4.2：is_integral_v / is_floating_point_v
     std::cout << "  is_integral_v<int>    = " << std::is_integral_v<int> << "\n";
     std::cout << "  is_integral_v<double> = " << std::is_integral_v<double> << "\n";
     std::cout << "  is_floating_point_v<double> = " << std::is_floating_point_v<double> << "\n";
 
-    // is_pointer_v / is_reference_v
+    // 知识点 4.3：is_pointer_v / is_reference_v
     std::cout << "  is_pointer_v<int*>   = " << std::is_pointer_v<int*> << "\n";
     std::cout << "  is_reference_v<int&> = " << std::is_reference_v<int&> << "\n";
 
-    // add/remove 系列：变换类型
+    // 知识点 4.4：add/remove 系列
+    // 变换类型
     using NoConst = std::remove_const_t<const int>; // const int → int
     using AddPtr = std::add_pointer_t<int>; // int → int*
     std::cout << "  remove_const<const int> = int? "

@@ -12,6 +12,7 @@
 // ① 六个特殊成员函数
 // ═══════════════════════════════════════════════════════════════════
 //
+// 知识点 1.1：六个特殊成员函数总览
 // C++ 编译器最多可以为一个类自动生成以下 6 个特殊成员函数：
 //
 //   1. 默认构造函数       T()
@@ -126,6 +127,7 @@ void demo01_six_members()
 // ② 编译器何时自动生成
 // ═══════════════════════════════════════════════════════════════════
 //
+// 知识点 2.1：编译器自动生成规则
 // 规则汇总表（用户定义了某个 -> 对其他的影响）：
 //
 // ┌─────────────────────┬──────────┬──────────┬──────────┬──────────┐
@@ -154,8 +156,10 @@ public:
     {
     }
 
+    // 知识点 2.2：自定义析构对移动操作的影响
     // 自定义析构 -> 编译器不再生成移动构造/移动赋值
     // 但拷贝构造/拷贝赋值仍然生成（deprecated 行为）
+
     ~HasDestructor()
     {
         std::cout << "    [析构] " << name_ << "\n";
@@ -173,9 +177,11 @@ void demo02_generation_rules()
 
     HasDestructor h1("hello");
 
+    // 知识点 2.3：移动退化为拷贝
     // std::move(h1) 想触发移动构造，但移动构造未生成
     // 编译器退回到拷贝构造（const T& 可以绑定右值）
     // 结果：h1 没被"偷走"资源，h2 是 h1 的副本
+
     HasDestructor h2(std::move(h1));
 
     std::cout << "  h1.name = \"" << h1.name() << "\""
@@ -199,14 +205,18 @@ public:
     {
     }
 
+    // 知识点 3.1：= default 恢复默认构造
     // 定义了任何构造函数后，默认构造函数不再自动生成
     // Widget w;  // 编译错误！没有默认构造
     // 用 = default 恢复编译器默认实现
+
     Widget() = default;
 
+    // 知识点 3.2：= default 用于拷贝和移动
     // 对拷贝和移动也可以用 = default
     // 场景：自定义了析构，但拷贝/移动的默认实现够用
     // 显式写 = default 清晰表达意图："我知道规则，我要编译器版本"
+
     Widget(const Widget&) = default;
     Widget& operator=(const Widget&) = default;
     Widget(Widget&&) noexcept = default;
@@ -269,8 +279,10 @@ public:
     }
 
     // ---- 禁止拷贝 ----
+    // 知识点 4.1：= delete 禁止拷贝
     // 资源句柄不能被复制，两个对象持有同一个 handle 会导致双重释放
     // = delete 让编译器在任何尝试拷贝的地方报错
+
     UniqueResource(const UniqueResource&) = delete;
     UniqueResource& operator=(const UniqueResource&) = delete;
 
@@ -341,6 +353,7 @@ void demo04_delete()
 // ⑤ Rule of Zero
 // ═══════════════════════════════════════════════════════════════════
 //
+// 知识点 5.1：Rule of Zero
 // 最佳实践：尽量不自定义任何特殊成员函数
 //
 // 原因：
@@ -355,6 +368,7 @@ class Person
     int age_;
     std::vector<std::string> hobbies_;
 
+    // 知识点 5.2：RAII 成员的默认行为
     // 没有任何自定义特殊成员函数！
     // 编译器自动生成的全部正确：
     //   - 拷贝：string 和 vector 的拷贝构造做深拷贝
@@ -386,6 +400,7 @@ class ResourceOwner
     std::unique_ptr<int[]> data_;
     size_t size_;
 
+    // 知识点 5.3：unique_ptr 与 Rule of Zero
     // unique_ptr 不可拷贝 -> ResourceOwner 也不可拷贝（自动推导）
     // unique_ptr 可移动 -> ResourceOwner 也可移动（自动推导）
     // 析构时 unique_ptr 自动释放 -> 不需要写析构
@@ -443,6 +458,7 @@ void demo05_rule_of_zero()
 // ⑥ Rule of Five 完整示例（copy-and-swap 惯用法）
 // ═══════════════════════════════════════════════════════════════════
 //
+// 知识点 6.1：Rule of Five 与 copy-and-swap
 // 管理裸资源时，必须定义全部 5 个特殊成员：
 //   析构 + 拷贝构造 + 拷贝赋值 + 移动构造 + 移动赋值
 //
@@ -502,6 +518,7 @@ public:
 
     // ---- 3. 拷贝赋值运算符（copy-and-swap 惯用法）----
     //
+    // 知识点 6.2：copy-and-swap 按值传参
     // 参数按值传入，而非 const T&
     // 按值传入时，编译器自动调用拷贝构造或移动构造来创建 other
     //   - 如果传入的是左值：调用拷贝构造
@@ -512,6 +529,7 @@ public:
     //   - 异常安全：new 在拷贝构造中完成，失败时 *this 不变
     //   - 自赋值安全：a = a 时，other 是 a 的拷贝，swap 后 a 仍然正确
     //   - 同时处理拷贝赋值和移动赋值（传入右值时变成移动赋值）
+
     DynamicArray& operator=(DynamicArray other) // 注意：按值传入
     {
         std::cout << "    [赋值] copy-and-swap\n";
@@ -521,11 +539,13 @@ public:
     }
 
     // ---- 4. 移动构造函数 ----
+    // 知识点 6.3：移动构造与 noexcept
     // 从右值"偷走"资源，被移动的对象置为空
     //
     // noexcept 至关重要：
     //   std::vector 扩容时，如果元素的移动构造是 noexcept，
     //   vector 才会用移动而非拷贝。不标 noexcept = 性能退化。
+
     DynamicArray(DynamicArray&& other) noexcept
         : data_(std::exchange(other.data_, nullptr)),
           size_(std::exchange(other.size_, 0))
@@ -534,6 +554,7 @@ public:
     }
 
     // ---- 移动赋值：不需要单独写 ----
+    // 知识点 6.4：移动赋值的隐式实现
     // copy-and-swap 的拷贝赋值参数按值传入，传入右值时自动变成移动赋值
     // 如果要单独写：
     //   DynamicArray& operator=(DynamicArray&& other) noexcept {

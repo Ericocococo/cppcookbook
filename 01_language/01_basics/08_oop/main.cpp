@@ -8,7 +8,8 @@
 #include <algorithm>  // std::copy
 #include <utility>    // std::move
 
-// ① struct：数据聚合（默认 public）
+// 知识点 1.1：struct：数据聚合（默认 public）
+
 struct Point
 {
     double x, y;
@@ -37,7 +38,8 @@ void demo01_struct()
     p1.print();
 }
 
-// ② class：封装（默认 private）
+// 知识点 2.1：class：封装（默认 private）
+
 class Rectangle
 {
 private:
@@ -45,7 +47,8 @@ private:
     static int count_; // 静态成员：属于类，所有对象共享
 
 public:
-    // 构造函数 + 初始化列表（推荐：直接初始化，不是赋值）
+    // 知识点 2.2：构造函数 + 初始化列表（推荐：直接初始化，不是赋值）
+
     Rectangle(double w, double h)
         : width_(w), height_(h)
     {
@@ -55,12 +58,14 @@ public:
             << "  共创建=" << count_ << "\n";
     }
 
-    // 默认构造
+    // 知识点 2.3：默认构造
+
     Rectangle() : Rectangle(0, 0)
     {
     } // 委托构造（C++11）
 
-    // 析构函数：对象销毁时自动调用
+    // 知识点 2.4：析构函数：对象销毁时自动调用
+
     ~Rectangle()
     {
         --count_;
@@ -109,7 +114,8 @@ void demo02_class()
     std::cout << "  r2 析构后数量=" << Rectangle::count() << "\n";
 }
 
-// ③ 继承
+// 知识点 3.1：继承
+
 class Shape
 {
 protected:
@@ -125,7 +131,8 @@ public:
     virtual double area() const = 0; // 纯虚函数：强制子类实现
     virtual std::string type() const = 0;
 
-    // 非虚函数：共用实现，子类不覆盖
+    // 知识点 3.2：非虚函数：共用实现，子类不覆盖
+
     void describe() const
     {
         std::cout << "  " << type() << "（" << color_ << "）"
@@ -169,16 +176,18 @@ void demo03_inheritance()
     c.describe();
     s.describe();
 
-    // 子类可以访问 protected 成员（父类设置的 color_）
+    // 知识点 3.3：子类可以访问 protected 成员（父类设置的 color_）
     // c.color_ = "绿色";  // 错误：protected 只有类内和子类能访问
 }
 
-// ④ 多态：父类指针/引用调用子类的虚函数
+// 知识点 4.1：多态：父类指针/引用调用子类的虚函数
+
 void demo04_polymorphism()
 {
     std::cout << "\n④ 多态（运行时决定调用哪个版本）\n";
 
-    // 父类指针数组，存放不同子类对象
+    // 知识点 4.2：父类指针数组，存放不同子类对象
+
     Shape* shapes[] = {
         new Circle(3.0, "红"),
         new Square(4.0, "蓝"),
@@ -190,12 +199,13 @@ void demo04_polymorphism()
         s->describe(); // 运行时决定：调 Circle::area 还是 Square::area
     }
 
-    // 必须通过虚析构正确释放
+    // 知识点 4.3：必须通过虚析构正确释放
+
     for (auto* s : shapes) delete s;
     std::cout << "  （虚析构确保子类析构函数被正确调用）\n";
 }
 
-// ⑤ Rule of 0/3/5
+// 知识点 5.1：Rule of 0/3/5
 // Rule of 0：如果不需要自定义析构/拷贝/移动，就都不定义，用编译器默认的
 // Rule of 3：如果自定义了析构，则必须同时定义拷贝构造和拷贝赋值
 // Rule of 5：如果定义了移动，则需要定义全部5个（析构/拷贝构造/拷贝赋值/移动构造/移动赋值）
@@ -217,14 +227,16 @@ public:
         std::cout << "  [Buffer 析构] size=" << size_ << "\n";
     }
 
-    // 拷贝构造（深拷贝）
+    // 知识点 5.2：拷贝构造（深拷贝）
+
     Buffer(const Buffer& other) : data_(new int[other.size_]{}), size_(other.size_)
     {
         std::copy(other.data_, other.data_ + size_, data_);
         std::cout << "  [Buffer 拷贝构造]\n";
     }
 
-    // 移动构造（转移所有权，不复制）
+    // 知识点 5.3：移动构造（转移所有权，不复制）
+
     Buffer(Buffer&& other) noexcept
         : data_(other.data_), size_(other.size_)
     {

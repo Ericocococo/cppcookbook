@@ -15,30 +15,43 @@
 
 ---
 
-## 2. 命令行 · MinGW（Git Bash）
+## 2. 构建
+
+### 2.1 命令行 · MinGW（Git Bash）
 
 > pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux
-> 构建见 § 4。
+> 构建见 § 2.3。
 
----
+### 2.2 命令行 · MSVC（cmd）
 
-## 3. 命令行 · MSVC（cmd）
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
 ```bash
+# cd 到项目目录
+cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\07_simple_manager
+
+# 编译 + 拷贝 .pyd 到 lib/
 D:\ProgramData\anaconda3\envs\quant311\python build.py --dest lib
+
+# 验证
 D:\ProgramData\anaconda3\envs\quant311\python test_fhsg.py
 ```
+
+</details>
 
 > `build.py` 内部自动定位 MSVC + pybind11 + Python，调用 cmake 配置和编译。
 > 内部通过 `vswhere` 自动检测 VS 版本，使用 **VS Generator（方案 B，多配置）**，构建时传 `--config Release`。
 
----
-
-## 4. 命令行 · Linux / WSL
+### 2.3 命令行 · Linux / WSL
 
 ```bash
+# cd 到项目目录
 cd 07_simple_manager
+
+# 编译 + 拷贝
 python build.py --dest lib
+
+# 验证
 python test_fhsg.py
 ```
 
@@ -46,7 +59,7 @@ python test_fhsg.py
 
 ---
 
-## 5. CLion IDE
+## 3. CLion IDE
 
 1. `File → Open` 选择 `07_simple_manager/` 目录
 2. CLion 自动识别 `CMakeLists.txt`，右下角点击**加载**
@@ -55,7 +68,7 @@ python test_fhsg.py
 
 ---
 
-## 6. 核心模式
+## 4. 核心模式
 
 ```
 Load(records)                   Query("600519.SH")
@@ -68,7 +81,7 @@ Load(records)                   Query("600519.SH")
 
 ---
 
-## 7. 本步新学了什么
+## 5. 本步新学了什么
 
 | 上一步（06） | 本步新增                                     |
 |:--------|:-----------------------------------------|
@@ -79,7 +92,7 @@ Load(records)                   Query("600519.SH")
 
 ---
 
-## 8. 和下一步的区别
+## 6. 和下一步的区别
 
 | 本步                      | 下一步（08_data_provider）             |
 |:------------------------|:----------------------------------|

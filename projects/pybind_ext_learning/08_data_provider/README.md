@@ -25,195 +25,275 @@
 
 ---
 
-## 2. 命令行 · MinGW（Git Bash）
+## 2. 构建
+
+### 2.1 命令行 · MinGW（Git Bash）
 
 > MinGW 仅支持编译纯 C++ 可执行文件（`main.cpp`），pybind11 模块必须使用 MSVC。
 
-```bash
-CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
-GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
-NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
-MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
-```
+#### 方案 A — Ninja
 
-### 方案 A：Ninja（推荐）
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
 ```bash
+# cd 到项目目录
+cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider
+
 # 配置
-"$CMAKE" -B build-mingw-ninja -G Ninja \
-  -DCMAKE_CXX_COMPILER="$GXX" \
-  -DCMAKE_MAKE_PROGRAM="$NINJA"
+cmake -G Ninja -B build-mingw-ninja -S .
 
 # 构建
-"$CMAKE" --build build-mingw-ninja
+cmake --build build-mingw-ninja
 
 # 运行
 ./build-mingw-ninja/data_provider_ext.exe
 ```
 
-> cmd 三步版：
+</details>
 
-```bat
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
+
+```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-ninja -G Ninja -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-mingw-ninja -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-ninja
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-mingw-ninja
 
 :: 运行
-build-mingw-ninja\data_provider_ext.exe
+D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-mingw-ninja\data_provider_ext.exe
 ```
 
-### 方案 B：MinGW Makefiles（无需 ninja.exe）
+</details>
+
+#### 方案 B — MinGW Makefiles
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
 ```bash
+# cd 到项目目录
+cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider
+
 # 配置
-"$CMAKE" -B build-mingw-make -G "MinGW Makefiles" \
-  -DCMAKE_CXX_COMPILER="$GXX" \
-  -DCMAKE_MAKE_PROGRAM="$MAKE"
+cmake -G "MinGW Makefiles" -B build-mingw-make -S .
 
 # 构建
-"$CMAKE" --build build-mingw-make
+cmake --build build-mingw-make
 
 # 运行
 ./build-mingw-make/data_provider_ext.exe
 ```
 
-> cmd 三步版：
+</details>
 
-```bat
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
+
+```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-make -G "MinGW Makefiles" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-mingw-make -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-make
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-mingw-make
 
 :: 运行
-build-mingw-make\data_provider_ext.exe
+D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-mingw-make\data_provider_ext.exe
 ```
 
-### 方案 C：Ninja Multi-Config（多配置）
+</details>
+
+#### 方案 C — Ninja Multi-Config
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
 ```bash
-# 配置
-"$CMAKE" -B build-mingw-mc -G "Ninja Multi-Config" \
-  -DCMAKE_CXX_COMPILER="$GXX" \
-  -DCMAKE_MAKE_PROGRAM="$NINJA"
+# cd 到项目目录
+cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider
 
-# 构建（多配置须指定 --config）
-"$CMAKE" --build build-mingw-mc --config Debug
+# 配置
+cmake -G "Ninja Multi-Config" -B build-mingw-mc -S .
+
+# 构建
+cmake --build build-mingw-mc --config Debug
 
 # 运行
 ./build-mingw-mc/Debug/data_provider_ext.exe
 ```
 
-> cmd 三步版：
+</details>
 
-```bat
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
+
+```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-mc -G "Ninja Multi-Config" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-mingw-mc -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-mc --config Debug
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-mingw-mc --config Debug
 
 :: 运行
-build-mingw-mc\Debug\data_provider_ext.exe
+D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-mingw-mc\Debug\data_provider_ext.exe
 ```
 
----
+</details>
 
-## 3. 命令行 · MSVC（cmd）
+### 2.2 命令行 · MSVC（cmd）
 
-### 纯 C++ 可执行文件
+**路径常量（绝对路径版使用）：**
+
+| 工具 | 完整路径 |
+|------|------|
+| cmake | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` |
+| ninja | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe` |
+| vcvarsall | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat` |
+| cl.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe` |
+
+> cl.exe 一般不用在命令里指定：`call vcvarsall.bat` 会把它注入 PATH，CMake 自动找到。
+> 列出仅供参考；版本号 14.51.36231 随 VS 更新可能变化。
+
+#### vcvarsall 注入的 4 个环境变量
+
+| 变量 | 给谁用 | 找什么 | 示例路径（MSVC 14.51 / Win10 SDK 26100） |
+|------|--------|--------|------|
+| PATH | cmd 命令 | cl.exe / link.exe / ninja / cmake | `...\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\` |
+| INCLUDE | cl.exe（编译器） | 头文件 | `...\VC\Tools\MSVC\14.51.36231\include\`<br>`...\Windows Kits\10\Include\10.0.26100.0\ucrt\` 等 |
+| LIB | link.exe（链接器） | .lib 库文件 | `...\VC\Tools\MSVC\14.51.36231\lib\x64\`<br>`...\Windows Kits\10\Lib\10.0.26100.0\ucrt\x64\` 等 |
+| LIBPATH | .NET 工具 | 程序集 | 本项目用不到 |
+
+- `call` 必须写在当前 cmd 会话里——`call` 让变量修改留在当前窗口；直接运行则只存在临时进程，退出就没了
+- 不激活直接调 cl.exe 会报"找不到头文件"：cl.exe 找到 cl 自身但 INCLUDE 没注入，`#include <iostream>` 无从解析
+- link.exe 依赖 LIB 找 `libcmt.lib` 等库文件，LIB 没注入则链接失败
 
 ```bat
-set CMAKE=D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
-set VCVARSALL=D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat
-
-:: 激活
-call "%VCVARSALL%" x64
+:: 激活 — 把 cl.exe / link.exe 加入当前会话 PATH，并注入 INCLUDE / LIB / LIBPATH
+call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 ```
 
-#### 方案 A：vcvarsall + Ninja（推荐，单配置）
+#### 纯 C++ 可执行文件
 
-```bat
-"%CMAKE%" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+##### 方案 A — vcvarsall + Ninja
 
-"%CMAKE%" --build build-msvc-ninja
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
-build-msvc-ninja\data_provider_ext.exe
-```
+```cmd
+:: cd 到项目目录
+cd /d D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider
 
-> 四步版：
-
-```bat
 :: 激活
 call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 :: 配置
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-ninja -G Ninja -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+cmake -G Ninja -B build-msvc-ninja -S .
 
 :: 构建
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-ninja
+cmake --build build-msvc-ninja
 
 :: 运行
 build-msvc-ninja\data_provider_ext.exe
 ```
 
-#### 方案 B：Visual Studio 生成器（多配置）
+</details>
 
-```bat
-"%CMAKE%" -B build-msvc-vs -G "Visual Studio 18 2026" -A x64
+<details><summary>绝对路径四步版（可在任意目录直接粘贴运行）</summary>
 
-"%CMAKE%" --build build-msvc-vs --config Release
-
-build-msvc-vs\Release\data_provider_ext.exe
-```
-
-> 四步版：
-
-```bat
+```cmd
 :: 激活
 call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 :: 配置
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build-msvc-vs -G "Visual Studio 18 2026" -A x64
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -G Ninja -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-msvc-ninja -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
 
 :: 构建
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build build-msvc-vs --config Release
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-msvc-ninja
+
+:: 运行
+D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-msvc-ninja\data_provider_ext.exe
+```
+
+</details>
+
+##### 方案 B — VS Generator
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
+
+```cmd
+:: cd 到项目目录
+cd /d D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider
+
+:: 配置（-G "Visual Studio 18 2026" 生成 .sln 工程，-A x64 指定 64 位）
+cmake -B build-msvc-vs -G "Visual Studio 18 2026" -A x64 -S .
+
+:: 构建（VS 生成器一个工程含 Debug + Release，必须用 --config 指定；不写默认 Debug）
+cmake --build build-msvc-vs --config Release
 
 :: 运行
 build-msvc-vs\Release\data_provider_ext.exe
 ```
 
-### pybind11 Python 模块
+</details>
+
+<details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
+
+```cmd
+:: 配置
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -G "Visual Studio 18 2026" -A x64 -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-msvc-vs -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider
+
+:: 构建
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-msvc-vs --config Release
+
+:: 运行
+D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider\build-msvc-vs\Release\data_provider_ext.exe
+```
+
+</details>
+
+#### pybind11 Python 模块
+
+<details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
 ```bash
+# cd 到项目目录
+cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\08_data_provider
+
+# 编译 + 拷贝 .pyd 到 lib/
 D:\ProgramData\anaconda3\envs\quant311\python build.py --dest lib
+
+# 验证
 D:\ProgramData\anaconda3\envs\quant311\python test_bindings.py
 ```
 
+</details>
+
 > `build.py` 内部通过 `vswhere` 自动检测 VS 版本，使用 **VS Generator（方案 B，多配置）**，传入 `-DBUILD_PYBIND=ON` 配置编译。
 
----
+### 2.3 命令行 · Linux / WSL
 
-## 4. 命令行 · Linux / WSL
-
-### 纯 C++ 可执行文件
+#### 纯 C++ 可执行文件
 
 ```bash
+# cd 到项目目录
 cd 08_data_provider
+
+# 配置
 mkdir build && cd build
 cmake ..
+
+# 构建
 cmake --build .
+
+# 运行
 ./data_provider_ext
 ```
 
-### pybind11 Python 模块
+#### pybind11 Python 模块
 
 ```bash
+# cd 到项目目录
 cd 08_data_provider
+
+# 编译 + 拷贝
 python build.py --dest lib
+
+# 验证
 python test_bindings.py
 ```
 
@@ -221,7 +301,7 @@ python test_bindings.py
 
 ---
 
-## 5. CLion IDE
+## 3. CLion IDE
 
 1. `File → Open` 选择 `08_data_provider/` 目录
 2. CLion 自动识别 `CMakeLists.txt`，右下角点击**加载**
@@ -231,7 +311,7 @@ python test_bindings.py
 
 ---
 
-## 6. 预期输出（纯 C++）
+## 4. 预期输出（纯 C++）
 
 ```
 ========== 扩展数据提供者最小实现 ==========
@@ -263,9 +343,9 @@ python test_bindings.py
 
 ---
 
-## 7. 架构设计
+## 5. 架构设计
 
-### 7.1 问题背景
+### 5.1 问题背景
 
 量化回测引擎每个 bar 需要查询多种辅助数据（分红送股、涨跌停价、板块成份股、证券类型等）。原始实现在 Python 侧每次调用都读
 parquet 文件 + pandas 过滤，存在两个问题：
@@ -273,7 +353,7 @@ parquet 文件 + pandas 过滤，存在两个问题：
 1. **性能**：回测 5000 标的 × 2500 bar，每次都读文件+内存过滤，开销大
 2. **未来函数**：Python 实现未统一做时间截止过滤，查询可能返回"未来"数据导致回测结果失真
 
-### 7.2 解决方案
+### 5.2 解决方案
 
 ```
 启动阶段                                 每个 bar（高频调用）
@@ -289,7 +369,7 @@ parquet 文件 + pandas 过滤，存在两个问题：
 
 **核心思路**：把 I/O 开销集中到启动阶段（Load 一次），运行时全部走内存查询（Query 零 I/O）。
 
-### 7.3 数据结构选型
+### 5.3 数据结构选型
 
 ```
                     DataProvider（聚合类）
@@ -319,7 +399,7 @@ parquet 文件 + pandas 过滤，存在两个问题：
 | `vector<Record>` 按时间升序                             | 支持 `upper_bound` 二分查找 O(log N)，QueryLatest 取 `<= cur_ns` 的最后一条 |
 | `unordered_map` 而非 `map`                           | 按 symbol 查找 O(1) 均摊，回测中每 bar 多次查找性能关键                          |
 
-### 7.4 cur_ns 防未来函数
+### 5.4 cur_ns 防未来函数
 
 回测引擎逐 bar 推进时，当前 bar 的时间戳为 `cur_ns`。所有 Query 方法只返回 `<= cur_ns` 的数据：
 
@@ -337,7 +417,7 @@ cur_ns = 2025-12-31 时:
 
 这确保回测中策略只能看到"当时已知"的数据，避免用未来信息做决策。
 
-### 7.5 二分查找 QueryLatest
+### 5.5 二分查找 QueryLatest
 
 涨跌停价、股本结构等数据只需要"当前最新一条"（不需要历史区间），用 `upper_bound` 二分查找：
 
@@ -353,7 +433,7 @@ return *pos;
 
 时间复杂度 O(log N)，5000 条涨跌停记录（约 20 年日频）只需 ~13 次比较。
 
-### 7.6 pybind11 绑定层
+### 5.6 pybind11 绑定层
 
 ```
 C++ 层                          Python 层
@@ -382,7 +462,7 @@ C++ 层                          Python 层
 
 ---
 
-## 8. 与实际框架的对应关系
+## 6. 与实际框架的对应关系
 
 | demo 中                           | 框架中                                           | 差异                             |
 |:---------------------------------|:----------------------------------------------|:-------------------------------|
@@ -393,7 +473,7 @@ C++ 层                          Python 层
 
 ---
 
-## 9. 英文及缩写说明
+## 7. 英文及缩写说明
 
 | 缩写/术语          | 含义                                                           |
 |:---------------|:-------------------------------------------------------------|

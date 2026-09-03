@@ -11,7 +11,8 @@ void demo01_sizeof()
 {
     std::cout << "\n① sizeof\n";
 
-    // 基本类型大小
+    // 知识点 1.1：基本类型大小
+
     std::cout << "  sizeof(bool)      = " << sizeof(bool) << "\n";
     std::cout << "  sizeof(char)      = " << sizeof(char) << "\n";
     std::cout << "  sizeof(int)       = " << sizeof(int) << "\n";
@@ -20,17 +21,21 @@ void demo01_sizeof()
     std::cout << "  sizeof(void*)     = " << sizeof(void*)
         << "（指针大小 = 地址总线宽度，64位系统=8字节）\n";
 
-    // 查变量：不执行表达式！
+    // 知识点 1.2：sizeof 查变量
+    // 不执行表达式！
+
     int n = 0;
     sizeof(++n); // ++n 不会执行，n 仍为 0
     std::cout << "  sizeof(++n) 不执行 ++n，n 仍为 " << n << "\n";
 
-    // 查数组
+    // 知识点 1.3：sizeof 查数组
+
     int arr[7];
     std::cout << "  int arr[7]: sizeof=" << sizeof(arr)
         << "  元素数=" << sizeof(arr) / sizeof(arr[0]) << "\n";
 
-    // 注意：指针和数组的区别
+    // 知识点 1.4：指针和数组的区别
+
     int* p = arr;
     std::cout << "  int* p=arr: sizeof(p)=" << sizeof(p)
         << "（指针大小，不是数组大小！）\n";
@@ -48,7 +53,9 @@ void demo02_alignof_padding()
     std::cout << "  alignof(double)    = " << alignof(double) << "\n";
     std::cout << "  （含义：该类型必须放在几的倍数内存地址上）\n";
 
-    // 结构体填充示例：字段顺序不同，大小不同！
+    // 知识点 2.1：结构体填充
+    // 字段顺序不同，大小不同！
+
     struct Bad
     {
         // 顺序不好
@@ -74,7 +81,9 @@ void demo02_alignof_padding()
         << "（字段顺序好，浪费 " << sizeof(Good) - (4 + 1 + 1) << " 字节填充）\n";
     std::cout << "  建议：按对齐从大到小排列字段，减少填充浪费\n";
 
-    // alignas：手动指定对齐要求（C++11）
+    // 知识点 2.2：alignas
+    // 手动指定对齐要求（C++11）
+
     struct alignas(16) Vec4
     {
         // 强制16字节对齐（SIMD指令需要）
@@ -89,7 +98,8 @@ void demo03_auto()
 {
     std::cout << "\n③ auto（类型推断）\n";
 
-    // 基本推断
+    // 知识点 3.1：基本推断
+
     auto i = 42; // int
     auto d = 3.14; // double
     auto c = 'A'; // char
@@ -101,14 +111,16 @@ void demo03_auto()
     std::cout << "  auto c='A'    -> " << sizeof(c) << "字节(char)\n";
     std::cout << "  auto s=string -> " << s << "\n";
 
-    // auto 会剥掉 const 和引用！
+    // 知识点 3.2：auto 剥掉 const 和引用
+
     const int ci = 10;
     auto v1 = ci; // v1 是 int（剥掉了 const）
     v1 = 99; // 可以修改，说明 const 被剥掉了
     std::cout << "  auto v1=ci(const int): v1=" << v1
         << "（const 被剥掉，可修改）\n";
 
-    // 想保留 const/引用，要显式写
+    // 知识点 3.3：保留 const/引用要显式写
+
     const auto v2 = ci; // const int
     auto& v3 = ci; // const int&（引用的 const 保留）
     // v2 = 99;             // 错误
@@ -116,7 +128,8 @@ void demo03_auto()
     std::cout << "  const auto v2=ci: 不可修改\n";
     std::cout << "  auto& v3=ci:      引用，不可修改\n";
 
-    // auto 在范围 for 中的用法
+    // 知识点 3.4：auto 在范围 for 中的用法
+
     int arr[] = {1, 2, 3, 4, 5};
     std::cout << "  auto  遍历（副本）: ";
     for (auto x : arr) std::cout << x << " ";
@@ -141,7 +154,9 @@ void demo04_decltype()
     std::cout << "  decltype(b)     y -> " << sizeof(y) << "字节(double)\n";
     std::cout << "  decltype(a+b)   z -> " << sizeof(z) << "字节(double)\n";
 
-    // decltype vs auto 的关键区别：const 和引用的保留
+    // 知识点 4.1：decltype vs auto 的关键区别
+    // const 和引用的保留
+
     const int ci = 42;
     int& ri = a;
 
@@ -163,7 +178,9 @@ void demo04_decltype()
     (void)dv;
     (void)ar;
 
-    // decltype(auto)（C++14）：兼具 auto 的简洁和 decltype 的保留能力
+    // 知识点 4.2：decltype(auto)（C++14）
+    // 兼具 auto 的简洁和 decltype 的保留能力
+
     decltype(auto) da = ci; // const int（完整保留）
     std::cout << "  decltype(auto) da=ci -> const int（C++14，完整保留）\n";
     (void)da;
@@ -174,12 +191,14 @@ void demo05_practical()
 {
     std::cout << "\n⑤ 实际使用场景\n";
 
-    // 场景1：用 sizeof 计算数组元素数（C 风格的安全做法）
+    // 知识点 5.1：用 sizeof 计算数组元素数（C 风格的安全做法）
+
     int arr[] = {10, 20, 30, 40, 50};
     int len = sizeof(arr) / sizeof(arr[0]);
     std::cout << "  数组元素数 = " << len << "\n";
 
-    // 场景2：decltype 推断函数返回类型（泛型编程）
+    // 知识点 5.2：decltype 推断函数返回类型（泛型编程）
+
     auto add = [](auto a, auto b) -> decltype(a + b)
     {
         return a + b;
@@ -187,7 +206,8 @@ void demo05_practical()
     std::cout << "  add(1, 2.5) = " << add(1, 2.5)
         << "（decltype 推断返回 double）\n";
 
-    // 场景3：验证结构体对齐
+    // 知识点 5.3：验证结构体对齐
+
     struct Msg
     {
         uint8_t type; // 1字节

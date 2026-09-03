@@ -12,7 +12,8 @@
 // ① 友元函数（friend function）
 // ============================================================
 
-// 友元函数不是类的成员函数，但可以访问类的 private / protected 成员。
+// 知识点 1.1：友元函数
+// 不是类的成员函数，但可以访问类的 private / protected 成员。
 // 典型用途：重载 operator<< 输出运算符，需要读取私有数据但又不属于类接口。
 
 class Temperature
@@ -26,16 +27,22 @@ public:
     {
     }
 
-    // 声明友元函数：允许这个普通函数访问 private 成员
+    // 知识点 1.2：声明友元函数
+    // 允许这个普通函数访问 private 成员
     // friend 只是"授权"，不是成员函数声明
+
     friend std::ostream& operator<<(std::ostream& os, const Temperature& t);
 
+    // 知识点 1.3：非运算符友元
     // 友元函数也可以不是运算符，普通函数也行
+
     friend double to_fahrenheit(const Temperature& t);
 };
 
-// 友元函数的实现写在类外面，不需要 Temperature:: 前缀
+// 知识点 1.4：友元函数的实现
+// 写在类外面，不需要 Temperature:: 前缀
 // 因为它不是成员函数，不通过对象调用（t.operator<< 是错的）
+
 std::ostream& operator<<(std::ostream& os, const Temperature& t)
 {
     os << t.celsius_ << " C";  // 直接访问 private 成员 celsius_
@@ -71,6 +78,7 @@ void demo01_friend_function()
 // ② 友元类（friend class）
 // ============================================================
 
+// 知识点 2.1：友元类
 // 一个类可以把另一个类声明为友元，友元类的所有成员函数都能访问该类的 private 成员。
 // 注意：友元关系不可传递（A 是 B 的友元，B 是 C 的友元，不代表 A 是 C 的友元）
 // 注意：友元关系不可继承（A 是 B 的友元，不代表 A 的子类也是 B 的友元）
@@ -81,7 +89,9 @@ private:
     std::string model_;
     int horsepower_;
 
-    // 声明 Engine 为友元类：Engine 的所有成员函数都能访问 Car 的 private 成员
+    // 知识点 2.2：声明友元类
+    // Engine 的所有成员函数都能访问 Car 的 private 成员
+
     friend class Engine;
 
 public:
@@ -136,6 +146,7 @@ void demo02_friend_class()
 // ③ 嵌套类（nested class）
 // ============================================================
 
+// 知识点 3.1：嵌套类
 // 在类内部定义的类，用于封装"只给外部类使用"的实现细节。
 // C++11 起，嵌套类可以访问外部类的 private 成员。
 // 外部类不能自动访问嵌套类的 private 成员（需要嵌套类主动声明友元或提供公开接口）。
@@ -143,8 +154,10 @@ void demo02_friend_class()
 class LinkedList
 {
 private:
-    // 嵌套类 Node：外部不需要知道链表内部用了什么结构
+    // 知识点 3.2：嵌套类 Node
+    // 外部不需要知道链表内部用了什么结构
     // Node 定义在 private 区域，外部代码无法直接使用 LinkedList::Node
+
     struct Node
     {
         int data;
@@ -225,6 +238,7 @@ void demo03_nested_class()
 // ④ this 指针详解
 // ============================================================
 
+// 知识点 4.1：this 指针
 // this 是编译器自动传入的隐式参数，指向"调用该成员函数的那个对象"。
 // 类型：T*（非 const 成员函数）或 const T*（const 成员函数）。
 // 常见用途：链式调用（return *this）、消除成员与参数同名歧义。
@@ -243,8 +257,10 @@ public:
     {
     }
 
-    // 链式调用：每个 setter 返回 *this（当前对象的引用）
+    // 知识点 4.2：链式调用
+    // 每个 setter 返回 *this（当前对象的引用）
     // 返回类型必须是引用 Builder&，不是 Builder（否则会拷贝）
+
     Builder& setName(const std::string& name)
     {
         name_ = name;   // 这里 name 是参数，name_ 是成员
@@ -264,8 +280,10 @@ public:
         return *this;
     }
 
-    // const 成员函数：this 的类型变成 const Builder*
+    // 知识点 4.3：const 成员函数
+    // this 的类型变成 const Builder*
     // 意味着不能修改任何成员变量
+
     void print() const
     {
         std::cout << "  Builder: " << name_
@@ -304,6 +322,7 @@ void demo04_this_pointer()
 // ⑤ mutable 关键字
 // ============================================================
 
+// 知识点 5.1：mutable 关键字
 // const 成员函数中，所有成员变量默认不可修改。
 // mutable 关键字标记的成员变量例外：即使在 const 函数中也允许修改。
 // 适用场景：缓存结果、访问计数器、互斥锁（std::mutex 在 const 函数中需要 lock）。
@@ -313,8 +332,10 @@ class DataStore
 private:
     std::vector<int> data_;
 
-    // mutable：在 const 成员函数中也允许修改
+    // 知识点 5.2：mutable 声明
+    // 在 const 成员函数中也允许修改
     // 因为 access_count_ 是"观测行为的副作用"，不影响对象的逻辑状态
+
     mutable int access_count_;
 
     // 缓存：避免重复计算
@@ -336,8 +357,10 @@ public:
         cache_valid_ = false;  // 数据变了，缓存失效
     }
 
-    // const 函数：承诺不修改对象的逻辑状态
+    // 知识点 5.3：const 函数中修改 mutable
+    // 承诺不修改对象的逻辑状态
     // 但 mutable 成员（access_count_, cached_average_）允许修改
+
     double average() const
     {
         ++access_count_;  // mutable：const 函数中可以修改
@@ -402,6 +425,7 @@ void demo05_mutable()
 // ⑥ static 成员深入
 // ============================================================
 
+// 知识点 6.1：static 成员
 // static 成员变量：属于类本身，所有对象共享同一份，在类外初始化。
 // static 成员函数：没有 this 指针，不能访问非 static 成员，通过 类名:: 调用。
 // 典型用途：对象计数、工厂方法、单例模式。
@@ -440,8 +464,10 @@ public:
     Connection(const Connection&) = delete;
     Connection& operator=(const Connection&) = delete;
 
-    // static 成员函数：没有 this 指针，只能访问 static 成员
+    // 知识点 6.2：static 成员函数
+    // 没有 this 指针，只能访问 static 成员
     // 通过 Connection::aliveCount() 调用，不需要对象
+
     static int aliveCount()
     {
         return alive_count_;
@@ -465,8 +491,10 @@ public:
     }
 };
 
+// 知识点 6.3：static 变量类外初始化
 // static 成员变量必须在类外初始化（除非用 inline，见 next_id_）
 // 不写这两行会链接错误：undefined reference to Connection::total_count_
+
 int Connection::total_count_ = 0;
 int Connection::alive_count_ = 0;
 
@@ -475,7 +503,9 @@ int Connection::alive_count_ = 0;
 class Logger
 {
 private:
-    // 构造函数放在 private：外部无法直接 new 或创建对象
+    // 知识点 6.4：private 构造函数
+    // 外部无法直接 new 或创建对象
+
     Logger()
     {
         std::cout << "  [Logger] singleton\n";
@@ -486,8 +516,10 @@ private:
     Logger& operator=(const Logger&) = delete;
 
 public:
+    // 知识点 6.5：Meyers' Singleton
     // static 成员函数返回唯一实例的引用
-    // Meyers' Singleton：局部 static 变量，线程安全（C++11 保证）
+    // 局部 static 变量，线程安全（C++11 保证）
+
     static Logger& instance()
     {
         static Logger inst;  // 第一次调用时构造，程序结束时析构

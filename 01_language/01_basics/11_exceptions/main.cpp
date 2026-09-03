@@ -42,7 +42,7 @@ void demo01_basic()
     }
     catch (const std::runtime_error& e)
     {
-        // 捕获具体类型（放在 exception 前面！）
+        // 知识点 1.1：捕获具体类型（放在 exception 前面！）
         std::cout << "  runtime_error: " << e.what() << "\n";
     }
     catch (const std::exception& e)
@@ -51,7 +51,7 @@ void demo01_basic()
     }
     catch (...)
     {
-        // 捕获任何类型（兜底）
+        // 知识点 1.2：捕获任何类型（兜底）
         std::cout << "  未知异常\n";
     }
 }
@@ -71,7 +71,7 @@ void demo02_exception_hierarchy()
     std::cout << "      ├── underflow_error（下溢）\n";
     std::cout << "      └── range_error（范围错误）\n";
 
-    // 演示各种标准异常
+    // 知识点 2.1：演示各种标准异常
     std::vector<int> v = {1, 2, 3};
     try
     {
@@ -129,7 +129,7 @@ int safeAdd(int a, int b) noexcept
     return a + b; // 确实不会抛出
 }
 
-// noexcept 的条件形式
+// 知识点 4.1：noexcept 的条件形式
 template <typename T>
 void swapSafe(T& a, T& b) noexcept(std::is_nothrow_move_constructible_v<T>)
 {
@@ -148,7 +148,7 @@ void demo04_noexcept()
     swapSafe(a, b);
     std::cout << "  swapSafe 后: a=" << a << " b=" << b << "\n";
 
-    // noexcept 的作用：
+    // 知识点 4.2：noexcept 的作用
     // 1. 移动构造函数标 noexcept，vector 扩容时才会用移动（否则用拷贝）
     // 2. 让编译器去掉异常处理代码，生成更小更快的代码
     std::cout << "  noexcept 函数如果真的抛出异常：std::terminate() 直接终止程序\n";
@@ -180,7 +180,8 @@ void demo05_raii_exception()
 {
     std::cout << "\n⑤ RAII 与异常安全\n";
 
-    // RAII：即使抛出异常，析构函数也会被调用
+    // 知识点 5.1：RAII
+    // 即使抛出异常，析构函数也会被调用
     try
     {
         File f("data.txt"); // 构造时打开
@@ -194,7 +195,7 @@ void demo05_raii_exception()
         std::cout << "  （文件已被 RAII 关闭，即使抛出了异常）\n";
     }
 
-    // 不用 RAII 的危险写法
+    // 知识点 5.2：不用 RAII 的危险写法
     std::cout << "  危险写法：手动 delete 在异常路径中会被跳过！\n";
     std::cout << "  解决：用 unique_ptr / shared_ptr 代替裸指针\n";
 }

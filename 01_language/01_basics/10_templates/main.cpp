@@ -15,7 +15,7 @@ T maxVal(T a, T b)
     return (a > b) ? a : b;
 }
 
-// 多个类型参数
+// 知识点 1.1：多个类型参数
 template <typename T1, typename T2>
 void printPair(const T1& a, const T2& b)
 {
@@ -26,15 +26,15 @@ void demo01_function_template()
 {
     std::cout << "\n① 函数模板\n";
 
-    // 编译器自动推断 T
+    // 知识点 1.2：编译器自动推断 T
     std::cout << "  maxVal(3, 5)       = " << maxVal(3, 5) << "（T=int）\n";
     std::cout << "  maxVal(3.14, 2.71) = " << maxVal(3.14, 2.71) << "（T=double）\n";
     std::cout << "  maxVal('a', 'z')   = " << maxVal('a', 'z') << "（T=char）\n";
 
-    // 显式指定类型
+    // 知识点 1.3：显式指定类型
     std::cout << "  maxVal<double>(3, 5) = " << maxVal<double>(3, 5) << "\n";
 
-    // 多类型参数
+    // 知识点 1.4：多类型参数
     std::cout << "  printPair(1, 3.14): ";
     printPair(1, 3.14);
     std::cout << "  printPair(\"hello\", 42): ";
@@ -87,7 +87,7 @@ void demo02_class_template()
     ss.push("world");
     std::cout << "  Stack<string>: top=" << ss.top() << "\n";
 
-    // C++17 类模板参数推断（CTAD）
+    // 知识点 2.1：C++17 类模板参数推断（CTAD）
     // Stack s = Stack<int>{};   // 需要推断规则
 }
 
@@ -143,7 +143,8 @@ void demo04_nontype_param()
 }
 
 // ⑤ 模板与 concepts（C++20）：约束模板参数
-// requires 关键字：指定类型必须满足的条件
+// 知识点 5.1：requires 关键字
+// 指定类型必须满足的条件
 template <typename T>
     requires std::is_arithmetic_v<T> // T 必须是算术类型（int/float等）
 T average(T a, T b) { return (a + b) / 2; }

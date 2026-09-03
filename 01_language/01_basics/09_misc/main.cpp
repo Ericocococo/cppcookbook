@@ -11,14 +11,16 @@ void demo01_enum()
 {
     std::cout << "\n① 枚举\n";
 
-    // 传统 enum：枚举名暴露到外部命名空间，容易冲突
+    // 知识点 1.1：传统 enum
+    // 枚举名暴露到外部命名空间，容易冲突
     enum Direction { UP, DOWN, LEFT, RIGHT };
     Direction d = UP;
     int n = UP; // 可以隐式转为 int（可能意外）
     std::cout << "  enum Direction: UP=" << UP << "  (int)UP=" << n << "\n";
     std::cout << "  传统 enum 问题：枚举名污染外部命名空间，可以隐式转为 int\n";
 
-    // enum class（C++11，推荐）：限定在枚举类内，类型安全
+    // 知识点 1.2：enum class（C++11，推荐）
+    // 限定在枚举类内，类型安全
     enum class Color { RED, GREEN, BLUE };
     enum class Status : uint8_t { OK = 0, ERR = 1, TIMEOUT = 2 };
 
@@ -31,7 +33,7 @@ void demo01_enum()
     std::cout << "  Status::OK = " << (int)s << "\n";
     std::cout << "  Status 底层类型 uint8_t，大小=" << sizeof(s) << " 字节\n";
 
-    // switch 配合 enum class
+    // 知识点 1.3：switch 配合 enum class
     switch (c)
     {
     case Color::RED: std::cout << "  颜色: 红\n";
@@ -53,7 +55,7 @@ namespace math
 
     namespace trig
     {
-        // 嵌套命名空间
+        // 知识点 2.1：嵌套命名空间
         double sinApprox(double x) { return x - x * x * x / 6.0; } // 泰勒近似
     }
 }
@@ -64,7 +66,7 @@ namespace io
     void print(int n) { std::cout << "  io::print: " << n << "\n"; }
 }
 
-// C++17 嵌套命名空间简写
+// 知识点 2.2：C++17 嵌套命名空间简写
 namespace project::utils
 {
     void hello() { std::cout << "  project::utils::hello()\n"; }
@@ -79,17 +81,19 @@ void demo02_namespace()
     std::cout << "  io::add(3,4)=" << io::add(3, 4) << "（同名不冲突）\n";
     std::cout << "  math::trig::sinApprox(0.1)=" << math::trig::sinApprox(0.1) << "\n";
 
-    // using 声明：引入单个名字
+    // 知识点 2.3：using 声明
+    // 引入单个名字
     using math::PI;
     std::cout << "  using math::PI; PI=" << PI << "\n";
 
-    // using namespace：引入所有（不推荐在头文件用，会污染）
+    // 知识点 2.4：using namespace
+    // 引入所有（不推荐在头文件用，会污染）
     {
         using namespace math;
         std::cout << "  using namespace math; circleArea(2)=" << circleArea(2) << "\n";
     } // 出块后失效
 
-    // C++17 嵌套命名空间
+    // 知识点 2.5：C++17 嵌套命名空间
     project::utils::hello();
     io::print(42);
 }
@@ -99,19 +103,21 @@ void demo03_type_cast()
 {
     std::cout << "\n③ 类型转换\n";
 
-    // --- static_cast：最常用，编译期类型转换 ---
+    // 知识点 3.1：static_cast
+    // 最常用，编译期类型转换
     int i = 42;
     double d = static_cast<double>(i); // int → double
     int j = static_cast<int>(3.99); // double → int（截断）
     std::cout << "  static_cast<double>(42)=" << d << "\n";
     std::cout << "  static_cast<int>(3.99)=" << j << "（截断，不四舍五入）\n";
 
-    // enum class 转 int
+    // 知识点 3.2：enum class 转 int
     enum class Dir { UP = 0, DOWN = 1 };
     int di = static_cast<int>(Dir::DOWN);
     std::cout << "  static_cast<int>(Dir::DOWN)=" << di << "\n";
 
-    // --- dynamic_cast：运行时多态向下转型 ---
+    // 知识点 3.3：dynamic_cast
+    // 运行时多态向下转型
     class Base
     {
     public:
@@ -139,20 +145,23 @@ void demo03_type_cast()
     delete bp;
     delete bp2;
 
-    // --- const_cast：去掉/加上 const ---
+    // 知识点 3.4：const_cast
+    // 去掉/加上 const
     const int ci = 100;
     const int* cp = &ci;
     int* p = const_cast<int*>(cp); // 去掉 const 限定
     std::cout << "  const_cast 去 const: *p=" << *p << "\n";
     // 注意：修改真正 const 变量是未定义行为！const_cast 主要用于和老 API 交互
 
-    // --- reinterpret_cast：内存重新解释（危险！）---
+    // 知识点 3.5：reinterpret_cast
+    // 内存重新解释（危险！）
     int ni = 65;
     char* ch = reinterpret_cast<char*>(&ni);
     std::cout << "  reinterpret_cast<char*>(&65): '" << *ch
         << "'（ASCII 65='A'，把 int 的内存解释为 char）\n";
 
-    // C 风格转换（不推荐）：看不出意图，不安全
+    // 知识点 3.6：C 风格转换（不推荐）
+    // 看不出意图，不安全
     double cd = (double)i; // C 风格
     std::cout << "  C风格 (double)42=" << cd << "（不推荐，改用 static_cast）\n";
 

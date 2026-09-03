@@ -11,7 +11,8 @@
 // ① 构造函数全家族
 // ============================================================
 
-// 演示所有构造函数形式，每种都打印日志，方便观察调用顺序。
+// 知识点 1.1：构造函数全家族
+// 每种都打印日志，方便观察调用顺序。
 // 包括：默认构造、参数构造、拷贝构造、移动构造、委托构造、转换构造 + explicit。
 
 class Widget
@@ -21,17 +22,19 @@ private:
     int value_;
 
 public:
-    // --- 参数构造函数 ---
+    // 知识点 1.2：参数构造函数
     // 接收所有参数来初始化对象
+
     Widget(std::string name, int value)
         : name_(std::move(name)), value_(value)
     {
         std::cout << "  [param ctor] " << name_ << "=" << value_ << "\n";
     }
 
-    // --- 委托构造函数（C++11） ---
+    // 知识点 1.3：委托构造函数（C++11）
     // 一个构造函数调用另一个构造函数，避免重复初始化代码
     // 委托目标写在初始化列表中，不能再初始化其他成员
+
     Widget()
         : Widget("default", 0)  // 委托给参数构造函数
     {
@@ -39,18 +42,20 @@ public:
         std::cout << "  [delegating ctor] (default)\n";
     }
 
-    // --- 拷贝构造函数 ---
+    // 知识点 1.4：拷贝构造函数
     // 参数必须是 const 引用（const Widget&），不能按值传递
     // 如果按值传递，调用拷贝构造时又需要拷贝构造，无限递归
+
     Widget(const Widget& other)
         : name_(other.name_), value_(other.value_)
     {
         std::cout << "  [copy ctor] " << name_ << "\n";
     }
 
-    // --- 移动构造函数（C++11） ---
+    // 知识点 1.5：移动构造函数（C++11）
     // 参数是右值引用（Widget&&），"窃取"源对象的资源而不是复制
     // noexcept 很重要：容器（如 vector）扩容时只有 noexcept 移动构造才会被使用
+
     Widget(Widget&& other) noexcept
         : name_(std::move(other.name_)), value_(other.value_)
     {
@@ -69,7 +74,7 @@ public:
     }
 };
 
-// --- 转换构造 + explicit ---
+// 知识点 1.6：转换构造 + explicit
 // 只有一个参数的构造函数可以做隐式类型转换，explicit 阻止这种转换。
 
 class Meter
@@ -150,6 +155,7 @@ void demo01_constructors()
 // ② 初始化列表 vs 函数体赋值
 // ============================================================
 
+// 知识点 2.1：初始化列表 vs 函数体赋值
 // 初始化列表（推荐）：在成员构造时直接赋值，一步完成。
 // 函数体赋值：成员先默认构造，再赋值，两步，效率低。
 // const 成员和引用成员 必须 用初始化列表，因为它们只能初始化一次。
@@ -160,14 +166,17 @@ private:
     const int id_;         // const 成员：必须在初始化列表中初始化
     std::string name_;
 
-    // 注意：初始化顺序由成员声明顺序决定，不是列表中的书写顺序
+    // 知识点 2.2：初始化顺序
+    // 由成员声明顺序决定，不是列表中的书写顺序
     // 这里 first_ 声明在 second_ 前面，所以先初始化 first_
+
     int first_;
     int second_;
 
 public:
-    // 推荐：初始化列表方式
+    // 知识点 2.3：初始化列表方式（推荐）
     // 成员直接构造成目标值，高效
+
     InitDemo(int id, std::string name, int a, int b)
         : id_(id),                   // const 成员，必须在这里初始化
           name_(std::move(name)),     // string 直接移动构造，不是先默认构造再赋值
@@ -180,8 +189,10 @@ public:
                   << " second=" << second_ << "\n";
     }
 
-    // 对比：函数体赋值方式（效率低，这里仅演示区别）
+    // 知识点 2.4：函数体赋值方式
+    // 效率低，这里仅演示区别
     // 注意：这个构造函数和上面的参数不同，不会冲突
+
     InitDemo(int id, const std::string& name)
         : id_(id),        // const 成员仍然必须在初始化列表
           first_(0),      // 非 const 可以在函数体赋值，但初始化列表更好
@@ -205,11 +216,12 @@ void demo02_init_list()
     std::cout << "\n  --- body assign ---\n";
     InitDemo d2(2, "Bob");
 
-    // 初始化顺序陷阱：
+    // 知识点 2.5：初始化顺序陷阱
     // 如果写 : second_(b), first_(second_ + 1)
     // first_ 声明在 second_ 前面，所以 first_ 先初始化
     // 但此时 second_ 还没初始化 —— 未定义行为！
     // 编译器会警告 (-Wreorder)，但不会报错
+
     std::cout << "\n  [note] member init order = declaration order, not list order\n";
 }
 
@@ -217,7 +229,7 @@ void demo02_init_list()
 // ③ 析构顺序
 // ============================================================
 
-// 析构顺序：
+// 知识点 3.1：析构顺序
 // - 栈对象：后构造的先析构（LIFO，像弹栈）
 // - 继承：先析构子类，再析构父类
 // - 成员变量：按声明的逆序析构
@@ -255,8 +267,10 @@ public:
 
 class Derived : public Base
 {
+    // 知识点 3.2：成员构造析构顺序
     // 成员变量按声明顺序构造：first_ -> second_
     // 析构时逆序：second_ -> first_
+
     Component first_;
     Component second_;
 
@@ -272,7 +286,7 @@ public:
     ~Derived() override
     {
         std::cout << "  [Derived dtor]\n";
-        // 析构顺序：
+        // 知识点 3.3：继承体系的析构顺序
         // 1. Derived 的析构函数体执行
         // 2. second_ 析构（逆序）
         // 3. first_ 析构（逆序）
@@ -310,7 +324,8 @@ void demo03_destruction_order()
 // ④ RAII（Resource Acquisition Is Initialization）
 // ============================================================
 
-// 核心思想：资源（文件、锁、内存、网络连接）在构造时获取，在析构时释放。
+// 知识点 4.1：RAII 核心思想
+// 资源（文件、锁、内存、网络连接）在构造时获取，在析构时释放。
 // 无论正常退出还是异常退出，析构函数都会被调用（栈展开），保证资源不泄漏。
 // 标准库的 RAII 实例：unique_ptr、shared_ptr、lock_guard、fstream。
 
@@ -332,8 +347,10 @@ public:
 
     ~FileGuard()
     {
+        // 知识点 4.2：RAII 析构保证
         // 析构时"关闭文件"（模拟）
-        // 无论函数正常返回还是抛异常，析构都会执行
+        // 无论函数正常返回还是抛异常，析构都会执行（栈展开）
+
         if (is_open_)
         {
             std::cout << "  [~FileGuard] " << filename_ << "\n";
@@ -445,6 +462,7 @@ void demo04_raii()
 // ⑤ copy-and-swap 惯用法
 // ============================================================
 
+// 知识点 5.1：copy-and-swap 惯用法
 // 问题：手写拷贝赋值运算符容易出错
 // - 自赋值（a = a）时，如果先 delete 再 new，会访问已释放的内存
 // - 异常安全：new 失败时，对象已经被 delete，处于损坏状态
@@ -500,8 +518,10 @@ public:
     }
 
     // --- 步骤 2：swap 函数 ---
+    // 知识点 5.2：swap 函数
     // 交换两个对象的所有成员，noexcept 保证不抛异常
     // 使用 friend 让它可以被 std::swap 找到（ADL）
+
     friend void swap(IntArray& a, IntArray& b) noexcept
     {
         using std::swap;
@@ -510,11 +530,13 @@ public:
     }
 
     // --- 步骤 3：赋值运算符（copy-and-swap） ---
+    // 知识点 5.3：赋值运算符（copy-and-swap）
     // 参数按值传递：
     //   - 如果传入左值，触发拷贝构造 -> other 是副本
     //   - 如果传入右值，触发移动构造 -> other 接管资源
     // 然后 swap：把副本的资源交给自己，把自己的旧资源交给副本
     // 副本在函数结束时析构，自动释放旧资源
+
     IntArray& operator=(IntArray other)  // 注意：按值传参，不是引用
     {
         std::cout << "  [IntArray operator=] swap\n";

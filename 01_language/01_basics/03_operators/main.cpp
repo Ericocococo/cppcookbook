@@ -16,14 +16,20 @@ void demo01_arithmetic()
     std::cout << "  a/b=" << (a / b) << "（整数截断：10/3=3）\n";
     std::cout << "  a%b=" << (a % b) << "（取余：10%3=1）\n";
 
-    // 负数取余：符号与被除数一致
+    // 知识点 1.1：负数取余
+    // 符号与被除数一致
+
     std::cout << "  -7%3=" << (-7 % 3) << "（符号同被除数，=-1）\n";
     std::cout << "  7%-3=" << (7 % -3) << "（符号同被除数，=1）\n";
 
-    // 浮点除法：至少一个浮点数才得浮点结果
+    // 知识点 1.2：浮点除法
+    // 至少一个浮点数才得浮点结果
+
     std::cout << "  10.0/3=" << (10.0 / 3) << "\n";
 
-    // 整数提升：char/short 参与运算先提升为 int
+    // 知识点 1.3：整数提升
+    // char/short 参与运算先提升为 int
+
     char c1 = 100, c2 = 100;
     std::cout << "  char(100)+char(100)=" << (c1 + c2)
         << "（结果是 int，不溢出）\n";
@@ -39,13 +45,15 @@ void demo02_comparison()
         << "  " << a << "!=" << b << ":" << (a != b)
         << "  " << a << "<" << b << ":" << (a < b) << "\n";
 
-    // 浮点比较陷阱
+    // 知识点 2.1：浮点比较陷阱
+
     double x = 0.1 + 0.2;
     std::cout << "  0.1+0.2==0.3: " << (x == 0.3)
         << "（false！用 |差值|<epsilon 比较）\n";
     std::cout << "  |0.1+0.2-0.3|<1e-9: " << (std::abs(x - 0.3) < 1e-9) << "\n";
 
-    // 链式比较陷阱
+    // 知识点 2.2：链式比较陷阱
+
     int n = 5;
     bool trap = (1 < n < 10); // 先 1<5=1，再 1<10=true，永远 true！
     bool correct = (1 < n && n < 10);
@@ -63,7 +71,8 @@ void demo03_logical()
         << " T||F=" << (true || false)
         << " !T=" << (!true) << "\n";
 
-    // 短路求值演示
+    // 知识点 3.1：短路求值
+
     int counter = 0;
     auto inc = [&]() -> bool
     {
@@ -78,7 +87,8 @@ void demo03_logical()
     true || inc();
     std::cout << "  true  || inc(): counter=" << counter << "（inc 未执行）\n";
 
-    // 实际应用：防崩溃
+    // 知识点 3.2：短路求值防崩溃
+
     int* p = nullptr;
     int n = 0;
     bool r1 = p && (*p > 0); // p 空时不解引用
@@ -100,7 +110,8 @@ void demo04_bitwise()
     std::cout << "  a<<1=" << (a << 1) << "(左移=乘2)\n";
     std::cout << "  a>>1=" << (a >> 1) << "(右移=除2)\n";
 
-    // 实用：标志位操作
+    // 知识点 4.1：标志位操作
+
     enum Flags : unsigned { READ = 1 << 0, WRITE = 1 << 1, EXEC = 1 << 2 };
     unsigned perm = READ | WRITE;
     std::cout << "  权限 READ|WRITE=" << perm << "\n";
@@ -137,12 +148,14 @@ void demo06_ternary()
     int a = 8, b = 3;
     std::cout << "  max(8,3)=" << ((a > b) ? a : b) << "\n";
 
-    // 可初始化 const（if-else 不能做到）
+    // 知识点 6.1：用三目运算符初始化 const（if-else 不能做到）
+
     const int score = 85;
     const std::string grade = score >= 90 ? "优" : score >= 75 ? "良" : score >= 60 ? "及格" : "不及格";
     std::cout << "  score=" << score << " -> " << grade << "\n";
 
-    // 两分支类型不同时会提升
+    // 知识点 6.2：两分支类型不同时会提升
+
     auto x = true ? 1 : 3.14; // int 提升为 double
     std::cout << "  true?1:3.14 -> " << sizeof(x) << "字节(double)\n";
 }
@@ -166,7 +179,9 @@ void demo07_precedence()
     std::cout << "  2+3*4   =" << (2 + 3 * 4) << "（*先）\n";
     std::cout << "  (2+3)*4 =" << ((2 + 3) * 4) << "（括号改变）\n";
 
-    // 位运算优先级低于比较 → 常见陷阱
+    // 知识点 7.1：位运算优先级陷阱
+    // 位运算优先级低于比较
+
     std::cout << "  陷阱 1|2==3=" << (1 | 2 == 3)
         << "（先算2==3=0，再1|0=1；应写(1|2)==3=" << ((1 | 2) == 3) << "）\n";
     std::cout << "  原则：不确定时加括号，让意图清晰\n";
