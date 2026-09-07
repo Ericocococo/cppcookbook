@@ -4,21 +4,21 @@
 
 ## 目录导航
 
-| 目录                                       | 内容                                                                                                    |
-|------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| [01_language](01_language/README.md)     | C++ 语言本身：基础 → OOP → 模板 → 现代特性 → 内存 → 专家                                                               |
-| [02_algorithms](02_algorithms/README.md) | 数据结构 / 经典算法 / 设计模式（GoF in Modern C++）                                                                 |
-| [03_stl](03_stl/README.md)               | 标准模板库：容器 / 算法 / 迭代器 / ranges / IO / 并发…                                                               |
-| [04_libraries](04_libraries/README.md)   | 通用三方库：网络 / 序列化 / 日志 / 数学 / 测试…                                                                        |
-| [05_frameworks](05_frameworks/README.md) | 领域级完整框架：量化（CTP/vnpy）/ 游戏引擎（flecs/entt）                                                                |
-| [06_extending](06_extending/README.md)   | 互操作：C ABI / pybind11 / Lua / WebAssembly / JNI                                                        |
-| [07_systems](07_systems/README.md)       | 系统编程：网络 / IPC / POSIX / 嵌入式 / 高性能服务                                                                   |
-| [08_hpc](08_hpc/README.md)               | 高性能计算：SIMD / OpenMP / TBB / CUDA / 数值优化                                                               |
-| [09_domain](09_domain/README.md)         | 领域应用：游戏 / 图形 / AI 推理 / 音视频 / 量化 / 机器人                                                                 |
-| [10_ops](10_ops/README.md)               | 工程化：构建系统演进 / 调试 / 分析 / 包管理 / CI                                                                       |
-| [projects](projects/)                    | 阶段性实战项目：综合运用多个知识点的独立小项目（如 [pybind_ext_learning](projects/pybind_ext_learning/README.md) C++ 扩展九步学习路径） |
+| 目录                                       | 内容                                                                                                    | 状态 |
+|------------------------------------------|-------------------------------------------------------------------------------------------------------|------|
+| [01_language](01_language/README.md)     | C++ 语言本身：基础 ✅ → OOP ✅ → 模板 → 现代特性 → 内存 → 专家                                                      | ✅ 主线+OOP 建成 |
+| [02_algorithms](02_algorithms/README.md) | 数据结构 / 经典算法 / 设计模式（GoF in Modern C++）                                                              | ⏳ 规划中 |
+| [03_stl](03_stl/README.md)               | 标准模板库：容器 / 算法 / 迭代器 / ranges / IO / 并发…                                                            | ⏳ 规划中 |
+| [04_libraries](04_libraries/README.md)   | 通用三方库：网络 / 序列化 / 日志 / 数学 / 测试…                                                                      | ⏳ 规划中 |
+| [05_frameworks](05_frameworks/README.md) | 领域级完整框架：量化（CTP/vnpy）/ 游戏引擎（flecs/entt）                                                            | ⏳ 规划中 |
+| [06_extending](06_extending/README.md)   | 互操作：C ABI / pybind11 / Lua / WebAssembly / JNI                                                        | ⏳ 规划中 |
+| [07_systems](07_systems/README.md)       | 系统编程：网络 / IPC / POSIX / 嵌入式 / 高性能服务                                                                 | ⏳ 规划中 |
+| [08_hpc](08_hpc/README.md)               | 高性能计算：SIMD / OpenMP / TBB / CUDA / 数值优化                                                               | ⏳ 规划中 |
+| [09_domain](09_domain/README.md)         | 领域应用：游戏 / 图形 / AI 推理 / 音视频 / 量化 / 机器人                                                                 | ⏳ 规划中 |
+| [10_ops](10_ops/README.md)               | 工程化：构建系统 ✅ / 调试 / 分析 / 包管理 / CI                                                                     | 🚧 部分建成 |
+| [projects](projects/README.md)           | 阶段性实战项目（如 pybind_ext_learning C++ 扩展九步学习路径 ✅）                                                      | 🚧 部分建成 |
 
-详细目录规划见 [STRUCTURE.md](STRUCTURE.md)，编码习惯见 [CONVENTIONS.md](CONVENTIONS.md)。
+> 状态图例：✅ 建成 · 🚧 部分建成 · ⏳ 规划中（仅有规划 README）。详细目录规划见 [STRUCTURE.md](STRUCTURE.md)，编码习惯见 [CONVENTIONS.md](CONVENTIONS.md)。
 
 ## 开发环境
 

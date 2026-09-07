@@ -169,6 +169,8 @@ int main()
 
 `final` 有两种用法：final 类（`class X final {}`）禁止任何类继承它；final 虚函数（`void foo() override final`）禁止子类覆盖该函数。当确定不需要再派生或覆盖时加 final，编译器可以做去虚拟化优化（devirtualize），把虚函数调用变成普通调用，提升性能。
 
+下面代码的析构处出现了 `= default`：它让编译器提供"默认实现"的成员函数——这里是声明析构函数用编译器生成的版本（基类写虚析构是惯用法，函数体为空时用 `= default` 表达"我要编译器版本"，而不是手写一个空函数体）。`= default` 的完整讲解在 06_special_members 1.3。
+
 ```cpp
 #include <iostream>
 
@@ -296,9 +298,11 @@ int main()
 
 #### 1.6.1 三种继承方式的访问控制
 
-- `public` 继承：父类 public -> public，protected -> protected。最常用，表达"is-a"关系。
-- `protected` 继承：父类 public -> protected，protected -> protected。外部不能通过子类对象访问，但子类和孙子类内部可以。
-- `private` 继承：父类 public/protected -> 全变 private。外部和孙子类都不能访问。表达"用 A 实现 B"的关系（has-a 的替代写法）。
+| 继承方式 | 父类 public 成员 | 父类 protected 成员 | 语义 |
+|---------|------|------|------|
+| `public` 继承 | 变 public | 变 protected | "is-a"，最常用 |
+| `protected` 继承 | 变 protected | 变 protected | 外部不可访问，子类/孙子类内部可以 |
+| `private` 继承 | 变 private | 变 private | "用 A 实现 B"，has-a 的替代写法 |
 
 无论哪种继承方式，父类的 private 成员子类永远不能直接访问。
 

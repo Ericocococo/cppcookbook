@@ -183,6 +183,8 @@ int main()
 
 资源句柄（文件、网络连接、数据库）不能被复制，两个对象持有同一个 handle 会导致双重释放。`= delete` 让编译器在任何尝试拷贝的地方报错。`= delete` 也可以用于普通函数，禁止某些重载（比如只接受 `double` 不接受 `int`，避免隐式转换丢精度）。
 
+下面代码的移动构造里出现了 `std::exchange(x, 新值)`（C++14，`<utility>`）：它一步完成两件事——读出 `x` 的旧值作为返回值，同时把 `x` 写成新值。移动构造用它把源对象的 handle 置空最简洁，完整讲解见 1.6.3。
+
 ```cpp
 #include <iostream>
 #include <string>
@@ -305,100 +307,35 @@ int main()
 
 ### 1.6 Rule of Five 完整示例（copy-and-swap 惯用法）
 
-#### 1.6.1 Rule of Five 与 copy-and-swap
+#### 1.6.1 三步法回顾（详讲见 02_constructors_raii）
 
-管理裸资源时，必须定义全部 5 个特殊成员：析构 + 拷贝构造 + 拷贝赋值 + 移动构造 + 移动赋值。copy-and-swap 惯用法：拷贝赋值的参数按值传入（触发拷贝构造），然后和自己 swap。好处：异常安全（拷贝失败时 `*this` 不变）、自赋值安全（`a = a` 也安全）、代码简洁（复用拷贝构造的逻辑）。
+copy-and-swap 的完整推导——为什么赋值参数按值传、为什么自赋值和异常都安全、swap 为什么用 `friend` 加 `noexcept`——以及 IntArray 完整示例，都在 02_constructors_raii 1.5 详讲过了，这里不重复。需要手写五个特殊成员的场景照 02 的 IntArray 写即可；能用 `unique_ptr`/`shared_ptr` 管理资源就优先用（本目录 1.5 的 Rule of Zero），只有必须裸指针时才手写全套。
 
-#### 1.6.2 移动构造与 noexcept
+#### 1.6.2 noexcept 与 vector 扩容（回顾）
 
-`noexcept` 至关重要：`std::vector` 扩容时，如果元素的移动构造是 noexcept，vector 才会用移动而非拷贝。不标 noexcept 会导致性能退化。
+移动构造标 `noexcept` 与否、`std::vector` 扩容时为什么 noexcept 才走移动，已在 01_basics 的 11_exceptions 1.4.2 讲透。这里补一个验证工具：`std::is_nothrow_move_constructible_v<T>` 在编译期检查类型能否不抛异常地移动构造——确认自己写的移动构造真标了 noexcept（忘了标就会得到 `false`）。
 
-#### 1.6.3 copy-and-swap 按值传参实现移动赋值
+#### 1.6.3 std::exchange：一步完成"取走旧值并置空"
 
-copy-and-swap 的拷贝赋值参数按值传入。传入左值时调用拷贝构造，传入右值时调用移动构造，不需要单独写移动赋值运算符。
+02 的 IntArray 移动构造分两步写：先 `data_ = other.data_` 取走指针，再 `other.data_ = nullptr` 把源对象置空。C++14 起 `<utility>` 提供 `std::exchange(x, 新值)`，把这两步合成一步：读出 `x` 的旧值并返回，同时把 `x` 写成新值。移动构造用它写最简洁，也不容易漏掉置空：
 
 ```cpp
-#include <iostream>
-#include <algorithm>  // std::copy
-#include <utility>    // std::exchange
+#include <utility>   // std::exchange
 
-class DynamicArray
+// std::exchange(other.data_, nullptr)：
+//   返回 other.data_ 的旧值，同时把 other.data_ 改成 nullptr
+//   等价于两行：data_ = other.data_;  other.data_ = nullptr;
+DynamicArray(DynamicArray&& other) noexcept
+    : data_(std::exchange(other.data_, nullptr)),
+      size_(std::exchange(other.size_, 0))
 {
-    int* data_;
-    size_t size_;
-
-public:
-    // 构造
-    explicit DynamicArray(size_t n = 0)
-        : data_(n > 0 ? new int[n]{} : nullptr), size_(n) {}
-
-    // 1. 析构
-    ~DynamicArray()
-    {
-        delete[] data_;
-    }
-
-    // 2. 拷贝构造（深拷贝）
-    DynamicArray(const DynamicArray& other)
-        : data_(other.size_ > 0 ? new int[other.size_] : nullptr),
-          size_(other.size_)
-    {
-        std::copy(other.data_, other.data_ + size_, data_);
-    }
-
-    // 3. 拷贝赋值（copy-and-swap：参数按值传入）
-    // 传入左值 -> 拷贝构造 other
-    // 传入右值 -> 移动构造 other（同时作为移动赋值）
-    DynamicArray& operator=(DynamicArray other)
-    {
-        swap(*this, other);
-        return *this;
-    }
-
-    // 4. 移动构造（noexcept 至关重要）
-    DynamicArray(DynamicArray&& other) noexcept
-        : data_(std::exchange(other.data_, nullptr)),
-          size_(std::exchange(other.size_, 0))
-    {
-    }
-
-    // swap 函数
-    friend void swap(DynamicArray& a, DynamicArray& b) noexcept
-    {
-        using std::swap;
-        swap(a.data_, b.data_);
-        swap(a.size_, b.size_);
-    }
-
-    void set(size_t i, int val)
-    {
-        if (i < size_)
-        {
-            data_[i] = val;
-        }
-    }
-
-    size_t size() const { return size_; }
-};
-
-int main()
-{
-    DynamicArray a(3);
-    a.set(0, 10);
-    a.set(1, 20);
-    a.set(2, 30);
-
-    DynamicArray b(a);              // 拷贝构造
-    DynamicArray c(2);
-    c = a;                          // 拷贝赋值（copy-and-swap）
-    DynamicArray d(std::move(a));   // 移动构造
-    // a.size() == 0（被移走）
-
-    // noexcept 验证
-    std::cout << "noexcept = "
-              << std::is_nothrow_move_constructible_v<DynamicArray> << "\n";  // 1
 }
+
+// 编译期验证移动构造确实 noexcept（忘写 noexcept 这里就报错）
+static_assert(std::is_nothrow_move_constructible_v<DynamicArray>);
 ```
+
+`DynamicArray` 的完整可运行实现（五个特殊成员全写 + 拷贝/移动/自赋值调用演示）在 main.cpp 的 demo06。
 
 ## 2. 构建
 

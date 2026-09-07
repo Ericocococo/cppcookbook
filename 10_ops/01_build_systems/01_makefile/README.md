@@ -1,4 +1,4 @@
-# 00_makefile — 手写 Makefile
+# 01_makefile — 手写 Makefile
 
 手写构建规则，管理多文件项目的增量编译。
 
@@ -24,13 +24,13 @@ MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
 ## 2. 命令行 · MSVC（cmd）
 
 MSVC 自带 `nmake.exe`，但本示例 Makefile 使用了 GNU 扩展（模式规则 `%.o: %.cpp`），**nmake 不支持**。  
-MSVC 用户请直接从 `01_hello` 起使用 CMake。
+MSVC 用户请直接从 `02_hello` 起使用 CMake。
 
 如需了解 nmake 语法差异，参考 [Microsoft NMake 文档](https://learn.microsoft.com/cpp/build/reference/nmake-reference)。
 
 ---
 
-## 命令行 · Linux / WSL
+## 3. 命令行 · Linux / WSL
 
 ```bash
 make
@@ -39,7 +39,7 @@ make
 
 ---
 
-## 3. CLion IDE
+## 4. CLion IDE
 
 CLion 不直接支持 Makefile 项目，推荐在 Terminal 里运行：
 
@@ -50,7 +50,7 @@ View → Tool Windows → Terminal（Alt+F12）
 
 ---
 
-## 4. 本示例 Makefile 逐行解析
+## 5. 本示例 Makefile 逐行解析
 
 ```makefile
 CXX      := g++
@@ -129,9 +129,9 @@ endif
 
 ---
 
-## 5. 语法完整参考
+## 6. 语法完整参考
 
-### 5.1 变量赋值与引用
+### 6.1 变量赋值与引用
 
 **引用语法**：`$(VAR)` — 取变量值。多字符变量必须加括号，否则 `$TARGET` 被解析为 `$T` + 字面量 `ARGET`。单字符自动变量（`$@`
 `$<` `$^`）可省略括号。
@@ -143,7 +143,7 @@ endif
 | `VAR ?= val` | 定义时，仅当未定义才赋值  | 允许外部覆盖默认值   |
 | `VAR += val` | 追加到已有值        | 常用于累积 flags |
 
-### 5.2 自动变量
+### 6.2 自动变量
 
 | 变量   | 含义                    |
 |------|-----------------------|
@@ -152,7 +152,7 @@ endif
 | `$^` | 所有依赖文件（去重）            |
 | `$*` | 模式规则中 `%` 匹配的部分（文件基名） |
 
-### 5.3 替换引用与常用函数
+### 6.3 替换引用与常用函数
 
 **替换引用**：`$(VAR:旧后缀=新后缀)` — 只能替换后缀，是 `patsubst` 的简写。
 
@@ -169,7 +169,7 @@ GIT_HASH := $(shell git rev-parse --short HEAD)
 CXXFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"   # 把 git hash 编译进程序
 ```
 
-### 5.4 规则
+### 6.4 规则
 
 ```makefile
 # 普通规则
@@ -184,7 +184,7 @@ CXXFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"   # 把 git hash 编译进程序
 main.o: main.cpp math_utils.h logger.h
 ```
 
-### 5.5 伪目标
+### 6.5 伪目标
 
 ```makefile
 .PHONY: clean run all
@@ -195,7 +195,7 @@ clean:
 
 > 不加 `.PHONY`：若目录里存在名为 `clean` 的文件，make 认为目标已最新而跳过。
 
-### 5.6 命令前缀
+### 6.6 命令前缀
 
 | 前缀  | 作用                 |
 |-----|--------------------|
@@ -208,7 +208,7 @@ clean:
     -rm -f $(OBJS)     # rm 失败也继续
 ```
 
-### 5.7 条件判断与跨平台
+### 6.7 条件判断与跨平台
 
 ```makefile
 ifeq ($(OS),Windows_NT)   # Windows 下 $(OS) = "Windows_NT"

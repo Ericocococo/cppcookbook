@@ -1,11 +1,10 @@
 // C++20
-// 演示：if/else、switch（fall-through）、while、do-while、for、范围for、break/continue、if constexpr
+// 演示：if/else、switch（fall-through）、while、do-while、for、范围for、break/continue/goto
 // 构建：cmake -B build-mingw（详见 README.md）
 
 #include <iostream>
 #include <string>
 #include <vector>
-#include <type_traits>   // is_integral_v 等类型特性
 
 // ① if / else：条件分支
 void demo01_if_else()
@@ -244,27 +243,6 @@ done:
     std::cout << "    (跳出两层)\n";
 }
 
-// ⑦ if constexpr（C++17）：编译期条件，条件为 false 的分支完全不编译
-template <typename T>
-void printType(T val)
-{
-    if constexpr (std::is_integral_v<T>)
-        std::cout << "  整数: " << val << "\n";
-    else if constexpr (std::is_floating_point_v<T>)
-        std::cout << "  浮点: " << val << "\n";
-    else
-        std::cout << "  其他: " << val << "\n";
-}
-
-void demo07_if_constexpr()
-{
-    std::cout << "\n⑦ if constexpr（C++17）\n";
-    printType(42);
-    printType(3.14);
-    printType(std::string("hello"));
-    std::cout << "  （false 的分支在编译期丢弃，不参与编译）\n";
-}
-
 int main()
 {
     std::cout << "=== 04_control_flow: 控制流 ===";
@@ -274,7 +252,6 @@ int main()
     demo04_for();
     demo05_range_for();
     demo06_break_continue();
-    demo07_if_constexpr();
     std::cout << "\n完成。\n";
     return 0;
 }

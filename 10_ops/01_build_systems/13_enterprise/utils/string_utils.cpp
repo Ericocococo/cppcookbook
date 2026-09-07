@@ -1,6 +1,7 @@
 #include "utils/string_utils.h"
 #include <algorithm>
 #include <cctype>
+#include <ranges>    // std::views::reverse
 
 namespace utils
 {

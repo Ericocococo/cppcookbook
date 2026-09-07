@@ -1,5 +1,7 @@
 # 02_algorithms — 算法与设计模式
 
+> ⏳ 规划中：本目录尚无内容，规划见根 README 目录导航与 [STRUCTURE.md](../STRUCTURE.md)。
+
 手写数据结构、经典算法、Modern C++ 设计模式。
 
 | 目录                 | 内容                        |

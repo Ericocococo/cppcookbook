@@ -1,31 +1,14 @@
 # 02_type_queries — 类型查询运算符
 
-`sizeof`（大小与填充）、`alignof`（对齐）、`auto`（深入）、`decltype`（保留 const/引用）。
+`sizeof` 进阶（不执行表达式 / 指针退化 / `std::size`）、`alignof`（对齐与结构体填充）、`auto`（深入）、`decltype`（保留 const/引用）。`sizeof` 的基础用法已在 01_types 1.1 详讲。
 
 ## 1. 知识点
 
-### 1.1 sizeof
+### 1.1 sizeof（进阶）
 
-`sizeof` 是编译期运算符，返回类型或变量占用的字节数（类型为 `size_t`）。它在编译期求值，不会执行括号里的表达式。
+`sizeof` 的基础用法——查类型/变量字节数、查数组总字节与元素个数——已在 01_types 1.1 详讲，这里只补三个进阶行为：不执行表达式、对指针与退化的数组参数无效、C++17 推荐的 `std::size`。
 
-#### 1.1.1 基本类型大小
-
-不同类型占用不同字节数，指针大小取决于地址总线宽度（64 位系统 = 8 字节），与指向的类型无关。
-
-```cpp
-#include <iostream>
-
-int main() {
-    std::cout << "bool:      " << sizeof(bool)      << " 字节\n";  // 1
-    std::cout << "char:      " << sizeof(char)      << " 字节\n";  // 1（标准保证）
-    std::cout << "int:       " << sizeof(int)       << " 字节\n";  // 4（通常）
-    std::cout << "long long: " << sizeof(long long) << " 字节\n";  // 8
-    std::cout << "double:    " << sizeof(double)    << " 字节\n";  // 8
-    std::cout << "void*:     " << sizeof(void*)     << " 字节\n";  // 8（64位系统）
-}
-```
-
-#### 1.1.2 sizeof 不执行表达式
+#### 1.1.1 sizeof 不执行表达式
 
 `sizeof` 只在编译期分析类型，不会执行括号里的表达式。即使写了 `sizeof(++n)`，`n` 也不会自增。
 
@@ -38,18 +21,7 @@ std::cout << n << "\n";    // 0（n 没有改变）
 // sizeof(1 + 1.0) 等价于 sizeof(double)，结果是 8
 ```
 
-#### 1.1.3 sizeof 查数组
-
-对数组名使用 `sizeof` 返回整个数组的字节数，除以单个元素的字节数可以算出元素个数。这是 C/C++ 中常用的技巧。
-
-```cpp
-int arr[7];
-std::cout << sizeof(arr) << "\n";                      // 28（= 7 * 4）
-std::cout << sizeof(arr) / sizeof(arr[0]) << "\n";     // 7（元素个数）
-// C++17 推荐用 std::size(arr) 代替上面的除法写法
-```
-
-#### 1.1.4 指针和数组的区别
+#### 1.1.2 指针和数组的区别
 
 对指针使用 `sizeof` 只返回指针本身的大小（8 字节），不是它指向的数组的大小。数组传给函数后退化为指针，在函数内 `sizeof` 就得不到数组大小了。
 
@@ -61,6 +33,19 @@ std::cout << sizeof(p) << "\n";     // 8（指针大小，不是数组大小！�
 
 // 函数参数里写 int arr[] 等价于 int* arr，sizeof 只有指针大小
 // void foo(int arr[]) { sizeof(arr); }  // 结果是 8，不是数组大小
+```
+
+#### 1.1.3 数组长度：优先用 std::size（C++17）
+
+用 `sizeof(arr) / sizeof(arr[0])` 算元素个数要写两遍还容易漏括号。C++17 起标准库直接提供 `std::size()`，更清晰也不会写错，还能用于 `std::array`、`std::vector` 等所有有 `size()` 的容器。
+
+```cpp
+#include <iterator>     // std::size
+
+int arr[] = {10, 20, 30, 40, 50};
+std::cout << std::size(arr) << "\n";   // 5（元素个数）
+
+// 注意：数组退化成指针后 std::size 同样用不了（长度已丢失），见 1.1.2
 ```
 
 ### 1.2 alignof 与结构体填充
@@ -227,19 +212,7 @@ decltype(auto) da = ci;      // const int（完整保留，C++14）
 
 ### 1.5 实际使用场景
 
-#### 1.5.1 用 sizeof 计算数组元素数
-
-C 风格的数组元素数计算方法：总字节数除以单个元素字节数。C++17 起推荐用 `std::size(arr)` 代替。
-
-```cpp
-int arr[] = {10, 20, 30, 40, 50};
-int len = sizeof(arr) / sizeof(arr[0]);    // 5
-// C++17 更好的写法：
-// #include <iterator>
-// auto len = std::size(arr);              // 5
-```
-
-#### 1.5.2 decltype 推断函数返回类型
+#### 1.5.1 decltype 推断函数返回类型
 
 在泛型编程中，`decltype` 可以根据参数类型推断返回类型。`auto` + 尾置返回类型（trailing return type）是 C++11 的写法，C++14 起可以直接用 `auto` 让编译器推断。
 
@@ -253,7 +226,7 @@ std::cout << add(1, 2.5) << "\n";    // 3.5（int + double → double）
 std::cout << add(1, 2) << "\n";      // 3（int + int → int）
 ```
 
-#### 1.5.3 验证结构体对齐
+#### 1.5.2 验证结构体对齐
 
 用 `sizeof` 检查结构体是否因填充字节而变大，对网络传输和文件读写至关重要：序列化前需要知道实际大小，否则发送/写入的数据可能包含填充字节垃圾值。
 

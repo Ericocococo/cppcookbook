@@ -26,7 +26,7 @@ PYBIND11_MODULE(fhsg_demo, m) {
         //   [=]     按值拷贝捕获所有外部变量
         //   [x]     按值捕获 x
         //   [&x]    按引用捕获 x
-        // 这里 [] 空捕获，因为只用到了参数 r，不需要外部变量 TODO:lambda
+        // 这里 [] 空捕获：只用到了参数 r，不需要外部变量（lambda 详见 01_language/04_modern/01_lambda）
         .def(
             "__repr__",
             [](const FHSGRecord& r) {

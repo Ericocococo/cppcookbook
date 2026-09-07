@@ -1,6 +1,8 @@
 # CMakeLists.txt 语法详解
 
 > 所有示例均来自本目录各子工程，从简到繁递进。
+>
+> **本文件与各目录 README 的分工**：各目录 README 只讲"这个目录的知识点"（对比表/要点），并链接到本文件；本文件三层结构——§0 命令行速查（配置/构建/安装/测试一条命令）、§1 逐例解析（每个目录 CMakeLists.txt 的逐行注释）、§2 语法完整参考（字典式，权威展开）。查语法先 §2，看真实用法先 §1。
 
 ---
 
@@ -99,7 +101,7 @@ ctest --test-dir build -L edge --rerun-failed      # 只跑 edge 标签的失败
 
 ## 1. 逐例解析
 
-### 1.1 最小工程（01_hello）
+### 1.1 最小工程（02_hello）
 
 ```cmake
 cmake_minimum_required(VERSION 3.28)
@@ -150,7 +152,7 @@ cmake -B build \
 
 ---
 
-### 1.2 多源文件与头文件搜索路径（02_sources）
+### 1.2 多源文件与头文件搜索路径（03_sources）
 
 ```cmake
 add_executable(multi_sources
@@ -170,7 +172,7 @@ target_include_directories(multi_sources PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 ---
 
-### 1.3 静态库与动态库（03_library）
+### 1.3 静态库与动态库（04_library）
 
 ```cmake
 add_library(math_static STATIC math_utils.cpp)
@@ -221,7 +223,7 @@ target_link_libraries(use_static PRIVATE math_static)
 
 **`add_executable(use_static main_static.cpp)`**
 
-同 [1.1 节](#11-最小工程01_hello)，创建可执行目标。
+同 [1.1 节](#11-最小工程02_hello)，创建可执行目标。
 
 **`target_link_libraries(use_static PRIVATE math_static)`**
 
@@ -241,7 +243,7 @@ target_link_libraries(use_static PRIVATE math_static)
 
 ---
 
-### 1.4 现代 target 属性传播（04_targets）
+### 1.4 现代 target 属性传播（05_targets）
 
 ```cmake
 # 接口库（header-only）：不编译，只传播属性
@@ -285,7 +287,7 @@ g++ main.o core.a -o app
 
 ---
 
-### 1.5 编译选项与生成器表达式（05_compile_options）
+### 1.5 编译选项与生成器表达式（06_compile_options）
 
 > 入门简单写法（`if(MSVC)` + `add_compile_options`）见 § 2.20；本节演示进阶的生成器表达式写法。
 
@@ -321,7 +323,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 ---
 
-### 1.6 查找依赖（06_find_package）
+### 1.6 查找依赖（07_find_package）
 
 ```cmake
 find_package(Threads REQUIRED)           # 内置模块（FindThreads.cmake）
@@ -348,7 +350,7 @@ endif()
 
 ---
 
-### 1.7 vcpkg 集成（07_vcpkg）
+### 1.7 vcpkg 集成（08_vcpkg）
 
 ```cmake
 find_package(nlohmann_json CONFIG REQUIRED)
@@ -372,7 +374,7 @@ cmake -B build -DCMAKE_TOOLCHAIN_FILE=D:/software/vcpkg/scripts/buildsystems/vcp
 
 ---
 
-### 1.8 安装规则（08_install）
+### 1.8 安装规则（09_install）
 
 ```cmake
 include(GNUInstallDirs)   # 提供标准目录变量
@@ -404,7 +406,7 @@ install(EXPORT mylibTargets
 
 ---
 
-### 1.9 测试（09_ctest）
+### 1.9 测试（10_ctest）
 
 ```cmake
 enable_testing()
@@ -429,7 +431,7 @@ ctest --build-dir build -L edge   # 只运行 edge 标签的测试
 
 ---
 
-### 1.10 生成器表达式（10_generator_expr）
+### 1.10 生成器表达式（11_generator_expr）
 
 ```cmake
 target_compile_options(app PRIVATE
@@ -472,7 +474,7 @@ file(GENERATE
 
 ---
 
-### 1.11 CMakePresets.json（11_presets）
+### 1.11 CMakePresets.json（12_presets）
 
 ```json
 {
@@ -535,7 +537,7 @@ cmake --preset asan  && cmake --build --preset asan     # ASan 预设
 
 ---
 
-### 1.12 企业级多模块（12_enterprise）
+### 1.12 企业级多模块（13_enterprise）
 
 ```cmake
 # 顶层 CMakeLists.txt
@@ -564,30 +566,30 @@ add_subdirectory(app)     # 定义 enterprise_app，依赖 core_lib
 add_subdirectory(tests)   # 测试目标
 
 # utils/CMakeLists.txt
-add_library(utils_lib STATIC src/utils.cpp)
-target_include_directories(utils_lib PUBLIC include/)
-target_link_libraries(utils_lib PUBLIC project_options)
+add_library(utils STATIC string_utils.cpp)
+target_include_directories(utils PUBLIC include/)
+target_link_libraries(utils PRIVATE project_options)
 
 # core/CMakeLists.txt
-add_library(core_lib STATIC src/core.cpp)
-target_include_directories(core_lib PUBLIC include/)
-target_link_libraries(core_lib
-    PUBLIC  utils_lib        # PUBLIC：app 链接 core_lib 后自动获得 utils_lib
+add_library(core STATIC engine.cpp)
+target_include_directories(core PUBLIC include/)
+target_link_libraries(core
+    PUBLIC  utils             # PUBLIC：app 链接 core 后自动获得 utils 的头文件与链接
     PRIVATE project_options
 )
 
 # app/CMakeLists.txt
 add_executable(enterprise_app main.cpp)
 target_link_libraries(enterprise_app
-    PRIVATE core_lib         # 自动传递：core_lib → utils_lib → project_options
+    PRIVATE core project_options   # 依赖链自动传递：core → utils → project_options
 )
 
 # tests/CMakeLists.txt
 enable_testing()
 add_executable(test_utils test_utils.cpp)
-target_link_libraries(test_utils PRIVATE utils_lib)
-add_test(NAME utils_test COMMAND test_utils)
-set_tests_properties(utils_test PROPERTIES LABELS "unit" TIMEOUT 10)
+target_link_libraries(test_utils PRIVATE utils project_options)
+add_test(NAME utils COMMAND test_utils)
+set_tests_properties(utils PROPERTIES LABELS "unit" TIMEOUT 10)
 ```
 
 **架构要点**：

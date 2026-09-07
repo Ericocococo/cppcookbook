@@ -21,30 +21,8 @@
 
 ### 2.2 命令行 · MSVC（cmd）
 
-**路径常量（绝对路径版使用）：**
+> MSVC 路径常量表与 vcvarsall 注入说明（4 个环境变量、为什么必须 `call`）见第 1 步 [01_hello_cpp §2.2](../01_hello_cpp/README.md#22-命令行--msvccmd)，以下命令直接用。
 
-| 工具 | 完整路径 |
-|------|------|
-| cmake | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` |
-| ninja | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe` |
-| vcvarsall | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat` |
-| cl.exe | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe` |
-
-> cl.exe 一般不用在命令里指定：`call vcvarsall.bat` 会把它注入 PATH，CMake 自动找到。
-> 列出仅供参考；版本号 14.51.36231 随 VS 更新可能变化。
-
-#### vcvarsall 注入的 4 个环境变量
-
-| 变量 | 给谁用 | 找什么 | 示例路径（MSVC 14.51 / Win10 SDK 26100） |
-|------|--------|--------|------|
-| PATH | cmd 命令 | cl.exe / link.exe / ninja / cmake | `...\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\` |
-| INCLUDE | cl.exe（编译器） | 头文件 | `...\VC\Tools\MSVC\14.51.36231\include\`<br>`...\Windows Kits\10\Include\10.0.26100.0\ucrt\` 等 |
-| LIB | link.exe（链接器） | .lib 库文件 | `...\VC\Tools\MSVC\14.51.36231\lib\x64\`<br>`...\Windows Kits\10\Lib\10.0.26100.0\ucrt\x64\` 等 |
-| LIBPATH | .NET 工具 | 程序集 | 本项目用不到 |
-
-- `call` 必须写在当前 cmd 会话里——`call` 让变量修改留在当前窗口；直接运行则只存在临时进程，退出就没了
-- 不激活直接调 cl.exe 会报"找不到头文件"：cl.exe 找到 cl 自身但 INCLUDE 没注入，`#include <iostream>` 无从解析
-- link.exe 依赖 LIB 找 `libcmt.lib` 等库文件，LIB 没注入则链接失败
 
 ```bat
 :: 激活 — 把 cl.exe / link.exe 加入当前会话 PATH，并注入 INCLUDE / LIB / LIBPATH
@@ -162,8 +140,16 @@ python test_types.py
 
 ## 4. 验证
 
+直接运行仓库自带的 `test_types.py` 即可（脚本第 7-8 行 `sub_list` 已按当前构建方案配置好产物目录；切换构建方案时改这两行）：
+
+```bash
+python test_types.py
+```
+
+手动验证等价代码（Ninja 方案；VS Generator 方案把路径换成 `build_py_vs/Release`）：
+
 ```python
-import sys; sys.path.insert(0, "build_py/Release")
+import sys; sys.path.insert(0, "build_py")
 import types_demo as t
 
 t.avg([1, 2, 3, 4])          # → 2.5（Python list → C++ vector 自动转换）
@@ -190,18 +176,15 @@ t.split_symbol("600519.SH")   # → ['600519', 'SH']（C++ vector → Python lis
 
 `pybind11/stl.h` 为常见 STL 容器注册了**类型转换器（type caster）**：
 
-```
-C++ → Python:
-  std::vector<T>             →  list
-  std::map<K, V>             →  dict
-  std::pair<A, B>            →  tuple
-  std::string                →  str
-
-Python → C++:
-  list                       →  std::vector<T>
-  dict                       →  std::map<K, V>
-  tuple                      →  std::pair<A, B>
-  str                        →  std::string
-```
+| 方向 | C++ | Python |
+|------|-----|--------|
+| C++ → Python | `std::vector<T>` | `list` |
+| C++ → Python | `std::map<K, V>` | `dict` |
+| C++ → Python | `std::pair<A, B>` | `tuple` |
+| C++ → Python | `std::string` | `str` |
+| Python → C++ | `list` | `std::vector<T>` |
+| Python → C++ | `dict` | `std::map<K, V>` |
+| Python → C++ | `tuple` | `std::pair<A, B>` |
+| Python → C++ | `str` | `std::string` |
 
 转换是**值拷贝**（不是引用），Python 侧修改 list 不影响 C++ 侧的 vector。

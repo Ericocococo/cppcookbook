@@ -42,19 +42,19 @@
 ## 快速开始
 
 ```bash
-set PY=D:\ProgramData\anaconda3\envs\quant311\python
+PY="D:/ProgramData/anaconda3/envs/quant311/python"
 
 # 第1-2步（纯 C++，MinGW 即可）
 cd 01_hello_cpp && mkdir -p build && cd build && cmake -G "MinGW Makefiles" .. && cmake --build . && ./hello_cpp.exe && cd ../..
 cd 02_cpp_class  && mkdir -p build && cd build && cmake -G "MinGW Makefiles" .. && cmake --build . && ./stock_demo.exe && cd ../..
 
-# 第3-5步（手动 cmake，需 MSVC，详见各步 README 四步版）
+# 第3-5步（手动 cmake，需 MSVC，详见各步 README 四步版；产物在 build_py / build_py_vs）
 
-# 第6-9步有 build.py
-cd 06_build_and_test    && %PY% build.py --dest lib && %PY% test_basic.py && cd ..
-cd 07_simple_manager    && %PY% build.py --dest lib && %PY% test_fhsg.py && cd ..
-cd 08_data_provider     && %PY% build.py --dest lib && %PY% test_bindings.py && cd ..
-cd 09_parquet_and_dll   && %PY% gen_test_data.py && %PY% build.py --dest lib && %PY% test_parquet.py && cd ..
+# 第6-9步有 build.py（build.py 内部自动激活 MSVC 环境）
+cd 06_build_and_test && "$PY" build.py --dest lib && "$PY" test_basic.py && cd ..
+cd 07_simple_manager && "$PY" build.py --dest lib && "$PY" test_fhsg.py && cd ..
+cd 08_data_provider  && "$PY" build.py --dest lib && "$PY" test_bindings.py && cd ..
+cd 09_parquet_and_dll && "$PY" gen_test_data.py && "$PY" build.py --dest lib && "$PY" test_parquet.py && cd ..
 ```
 
 ## 每步完成标准

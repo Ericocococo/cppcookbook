@@ -15,7 +15,7 @@ T maxVal(T a, T b)
     return (a > b) ? a : b;
 }
 
-// 知识点 1.1：多个类型参数
+// 知识点 1.1.2：多个类型参数（printPair 定义）
 template <typename T1, typename T2>
 void printPair(const T1& a, const T2& b)
 {
@@ -26,19 +26,24 @@ void demo01_function_template()
 {
     std::cout << "\n① 函数模板\n";
 
-    // 知识点 1.2：编译器自动推断 T
+    // 知识点 1.1.1：编译器自动推断 T（调用时不写类型，编译器按实参推断）
     std::cout << "  maxVal(3, 5)       = " << maxVal(3, 5) << "（T=int）\n";
     std::cout << "  maxVal(3.14, 2.71) = " << maxVal(3.14, 2.71) << "（T=double）\n";
     std::cout << "  maxVal('a', 'z')   = " << maxVal('a', 'z') << "（T=char）\n";
 
-    // 知识点 1.3：显式指定类型
+    // 知识点 1.1.3：显式指定类型（尖括号写明 T，实参自动转换）
     std::cout << "  maxVal<double>(3, 5) = " << maxVal<double>(3, 5) << "\n";
 
-    // 知识点 1.4：多类型参数
+    // 知识点 1.1.2：printPair 调用演示（T1、T2 各推各的，类型完全不同也行）
     std::cout << "  printPair(1, 3.14): ";
     printPair(1, 3.14);
     std::cout << "  printPair(\"hello\", 42): ";
     printPair(std::string("hello"), 42);
+
+    // 知识点 1.1.4：类型推断失败——只能写注释，编译错误无法运行演示
+    // maxVal(3, 5.0);   // 编译错误！单类型参数 T 无法同时推断为 int 和 double
+    // 两个值该同类型 → 显式指定：maxVal<double>(3, 5.0)
+    // 两个值本就不同类型 → 用双类型参数（见上 printPair 的 T1/T2）
 
     std::cout << "  原理：编译器根据实际类型生成独立的函数，零运行时开销\n";
 }
@@ -87,7 +92,7 @@ void demo02_class_template()
     ss.push("world");
     std::cout << "  Stack<string>: top=" << ss.top() << "\n";
 
-    // 知识点 2.1：C++17 类模板参数推断（CTAD）
+    // 知识点 1.2.1：C++17 类模板参数推断（CTAD）
     // Stack s = Stack<int>{};   // 需要推断规则
 }
 
@@ -143,7 +148,7 @@ void demo04_nontype_param()
 }
 
 // ⑤ 模板与 concepts（C++20）：约束模板参数
-// 知识点 5.1：requires 关键字
+// 知识点 1.5.1：requires 关键字
 // 指定类型必须满足的条件
 template <typename T>
     requires std::is_arithmetic_v<T> // T 必须是算术类型（int/float等）

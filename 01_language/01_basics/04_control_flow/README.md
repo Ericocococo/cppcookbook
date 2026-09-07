@@ -320,31 +320,6 @@ std::cout << "跳出两层循环\n";
 // 输出：(0,0) (0,1) (0,2) (1,0) 跳出两层循环
 ```
 
-### 1.7 if constexpr（C++17）
-
-`if constexpr` 在编译期求值条件，条件为 `false` 的分支完全不编译（代码被丢弃）。用于模板编程中根据类型特性选择不同实现，替代繁琐的 SFINAE 和模板特化。
-
-```cpp
-#include <type_traits>   // std::is_integral_v, std::is_floating_point_v
-
-template <typename T>
-void printType(T val) {
-    if constexpr (std::is_integral_v<T>) {
-        std::cout << "整数: " << val << "\n";
-    } else if constexpr (std::is_floating_point_v<T>) {
-        std::cout << "浮点: " << val << "\n";
-    } else {
-        std::cout << "其他: " << val << "\n";
-    }
-    // 只有匹配的分支会被编译，其余分支不参与编译
-    // 好处：即使某个分支对当前类型不合法，也不会报错
-}
-
-// printType(42);                    → "整数: 42"
-// printType(3.14);                  → "浮点: 3.14"
-// printType(std::string("hello"));  → "其他: hello"
-```
-
 ## 2. 构建
 
 ### 2.1 命令行 · MinGW（Git Bash）

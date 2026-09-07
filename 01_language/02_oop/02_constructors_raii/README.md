@@ -47,7 +47,7 @@ int main()
 
 #### 1.1.2 委托构造函数（C++11）
 
-一个构造函数在初始化列表中调用同类的另一个构造函数，避免重复初始化代码。委托目标写在初始化列表中，此时不能再初始化其他成员。委托构造执行完后，才执行当前构造函数的函数体。
+委托构造（一个构造函数在初始化列表中调用同类的另一个构造函数，避免重复初始化代码）的基本用法在 01_basics 08_oop 1.2.3 已演示，这里补两条入门没讲的规则：委托目标写在初始化列表里时，**不能再同时初始化其他成员**；委托构造的函数体先执行完，才执行当前构造函数的函数体。
 
 ```cpp
 class Widget
@@ -63,7 +63,7 @@ public:
 
     // 委托给上面的参数构造函数
     Widget()
-        : Widget("default", 0)
+        : Widget("default", 0)   // 委托目标；此处不能再写 name_(...) 等其他成员
     {
         // 委托构造执行完后才执行这里
     }
@@ -102,7 +102,7 @@ int main()
 
 #### 1.1.4 移动构造函数（C++11）
 
-参数是右值引用 `T&&`，"窃取"源对象的资源而不是复制。`noexcept` 很重要：容器（如 `std::vector`）扩容时只有 noexcept 的移动构造才会被使用，否则退回到拷贝。
+参数是右值引用 `T&&`，"窃取"源对象的资源而不是复制。移动构造务必标 `noexcept`（vector 扩容时只有 noexcept 的移动构造才会被使用，原理见 01_basics 11_exceptions 1.4.2）。
 
 ```cpp
 class Widget
@@ -172,28 +172,16 @@ int main()
 
 ### 1.2 初始化列表 vs 函数体赋值
 
-#### 1.2.1 初始化列表 vs 函数体赋值
+#### 1.2.1 回顾与对比表
 
-初始化列表（推荐）在成员构造时直接赋值，一步完成。函数体赋值让成员先默认构造再赋值，两步操作效率低。`const` 成员和引用成员必须用初始化列表，因为它们只能初始化一次，不能被二次赋值。
+两者的本质差别（初始化列表让成员构造一步到位、函数体赋值先默认构造再赋值）在 01_basics 08_oop 1.2.2 已讲，这里用一张表收尾：
 
-```cpp
-#include <iostream>
-#include <string>
-
-class InitDemo
-{
-    const int id_;      // const 成员：必须在初始化列表中初始化
-    std::string name_;
-
-public:
-    // 初始化列表方式（推荐）：成员直接构造成目标值
-    InitDemo(int id, std::string name)
-        : id_(id),                    // const 成员，必须在这里
-          name_(std::move(name))      // 直接移动构造，高效
-    {
-    }
-};
-```
+| 对比项 | 初始化列表 `: x_(v)` | 函数体赋值 `x_ = v;` |
+|--------|------|------|
+| 时机 | 成员构造时一步到位 | 成员先默认构造、再赋值（两步） |
+| `const` 成员 | 可以（唯一方式） | 不行（只能初始化一次） |
+| 引用成员 | 可以（唯一方式） | 不行 |
+| 推荐度 | 推荐 | 不推荐 |
 
 #### 1.2.2 初始化顺序
 
@@ -283,60 +271,25 @@ public:
 
 ### 1.4 RAII（Resource Acquisition Is Initialization）
 
-#### 1.4.1 RAII 核心思想
+#### 1.4.1 RAII 核心思想（回顾）
 
-资源（文件、锁、内存、网络连接）在构造时获取，在析构时释放。无论正常退出还是异常退出，析构函数都会被调用（栈展开），保证资源不泄漏。标准库的 RAII 实例：`unique_ptr`、`shared_ptr`、`lock_guard`、`fstream`。
+RAII 思想——资源在构造时获取、析构时释放，栈展开保证无论正常退出还是抛异常都会释放——以及"构造开、析构关"的 FileGuard 入门例子，都在 01_basics 11_exceptions 1.5.1 讲过了，这里不再重复演示。直接总结 RAII 资源类（`unique_ptr`、`fstream`、`lock_guard`）的两个实现共同点：
 
-```cpp
-#include <iostream>
-#include <string>
-
-class FileGuard
-{
-    std::string filename_;
-
-public:
-    // 构造时"打开文件"
-    explicit FileGuard(std::string filename)
-        : filename_(std::move(filename))
-    {
-        std::cout << "[open] " << filename_ << "\n";
-    }
-
-    // 析构时"关闭文件"——无论正常返回还是抛异常都会执行
-    ~FileGuard()
-    {
-        std::cout << "[close] " << filename_ << "\n";
-    }
-
-    // 禁止拷贝（文件句柄不应被拷贝）
-    FileGuard(const FileGuard&) = delete;
-    FileGuard& operator=(const FileGuard&) = delete;
-
-    void write(const std::string& content) const
-    {
-        std::cout << "[write] " << filename_ << ": " << content << "\n";
-    }
-};
-
-int main()
-{
-    {
-        FileGuard file("data.txt");  // 构造时打开
-        file.write("hello");
-        file.write("world");
-        // 离开作用域时自动关闭，不需要手动调 close
-    }
-    // 此处文件已关闭
-    // 优势：即使中间抛异常，析构也会执行，不会泄漏
-}
-```
+1. **析构函数负责释放资源**——用户只管用，不需要手动释放；
+2. **拷贝被禁用**——两个对象共享同一份资源会双重释放，所以用 `= delete` 禁拷贝（`= delete` 见 06_special_members 1.4）。
 
 #### 1.4.2 LockGuard 模式
 
-用 RAII 管理锁的生命周期：构造时加锁，析构时解锁。标准库的 `std::lock_guard` 就是这个模式。
+RAII 管理锁的生命周期：构造时加锁，析构时解锁，不管怎么退出作用域都会释放。标准库的 `std::lock_guard` 就是这个模式。
 
 ```cpp
+struct FakeMutex
+{
+    void lock() {}
+    void unlock() {}
+};
+// 真实项目用 std::mutex（<mutex>）；这里用最小假锁，专注 RAII 模式本身
+
 class LockGuard
 {
     FakeMutex& mtx_;  // 引用：不拥有 mutex，只管理锁定状态
@@ -365,7 +318,7 @@ public:
 
 #### 1.5.2 swap 函数
 
-交换两个对象的所有成员，标记 `noexcept` 保证不抛异常。使用 `friend` 让 `std::swap` 通过 ADL（参数依赖查找）找到。
+交换两个对象的所有成员，标记 `noexcept` 保证不抛异常。使用 `friend` 让 `std::swap` 通过 ADL（Argument-Dependent Lookup，参数依赖查找）找到——调用 `swap(a, b)` 时编译器除了普通命名空间，还会在**参数类型所在的命名空间**里找 `swap`，于是能找到我们为这个类定义的 `friend swap`；不加 `friend` 写类外同名函数也能被 ADL 找到，但 friend 能访问 private 成员。
 
 #### 1.5.3 赋值运算符（copy-and-swap）
 

@@ -24,21 +24,7 @@ std::cout << maxVal(3.14, 2.71);   // T=double，输出 3.14
 std::cout << maxVal('a', 'z');     // T=char，输出 z
 ```
 
-#### 1.1.1 多个类型参数
-
-函数模板可以有多个类型参数，用逗号分隔。编译器分别推断每个类型参数。
-
-```cpp
-template <typename T1, typename T2>
-void printPair(const T1& a, const T2& b) {
-    std::cout << "(" << a << ", " << b << ")\n";
-}
-
-printPair(1, 3.14);                       // T1=int, T2=double
-printPair(std::string("hello"), 42);      // T1=string, T2=int
-```
-
-#### 1.1.2 编译器自动推断 T
+#### 1.1.1 编译器自动推断 T
 
 调用函数模板时，编译器根据实参类型自动推断 `T`，不需要手动指定。每次调用只要实参类型一致，编译器就能推断成功。
 
@@ -53,6 +39,20 @@ maxVal(3.14, 2.71);   // 自动推断 T=double
 // maxVal(3, 5.0);    // 编译错误：T 推断矛盾（int vs double）
 ```
 
+#### 1.1.2 多个类型参数
+
+函数模板可以有多个类型参数，用逗号分隔。编译器分别推断每个类型参数，互不干扰，两个实参类型完全不同也能匹配。
+
+```cpp
+template <typename T1, typename T2>
+void printPair(const T1& a, const T2& b) {
+    std::cout << "(" << a << ", " << b << ")\n";
+}
+
+printPair(1, 3.14);                       // T1=int, T2=double
+printPair(std::string("hello"), 42);      // T1=string, T2=int
+```
+
 #### 1.1.3 显式指定类型
 
 当需要强制指定类型（例如两个实参类型不同需要统一）时，在函数名后用尖括号写明类型。
@@ -61,19 +61,19 @@ maxVal(3.14, 2.71);   // 自动推断 T=double
 std::cout << maxVal<double>(3, 5);  // 显式指定 T=double，3 隐式转为 3.0
 ```
 
-#### 1.1.4 多类型参数
+#### 1.1.4 类型推断失败：实参类型不一致怎么办
 
-多个类型参数可以接受完全不同类型的实参组合，编译器自动推断每个类型。
+模板只有一个类型参数 `T` 时，两个实参必须是同一个类型（或能隐式转换到同一个 `T`）；实参类型不一致时，编译器无法唯一确定 `T`，直接报错。
 
 ```cpp
-template <typename T1, typename T2>
-void printPair(const T1& a, const T2& b) {
-    std::cout << "(" << a << ", " << b << ")\n";
-}
-
-printPair(1, 3.14);                    // (1, 3.14)  T1=int, T2=double
-printPair(std::string("hello"), 42);   // (hello, 42) T1=string, T2=int
+// maxVal(3, 5.0);   // 编译错误！T 推断矛盾：3 是 int，5.0 是 double
+// 编译器不知道该生成 maxVal<int> 还是 maxVal<double>
 ```
+
+两种解决思路，取决于真实意图：
+
+1. **两个值本来该是同一个类型**（如 3 和 5.0 表示同一种数量）——显式指定一个类型，另一个自动转换：`maxVal<double>(3, 5.0)`，输出 5
+2. **两个值本来就是不同类型**（如一对坐标、名字+年龄）——模板本身就该用两个类型参数，`T` 一个不够用：定义成 `template <typename T1, typename T2>`（见 1.1.2）
 
 ### 1.2 类模板
 

@@ -70,11 +70,11 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 ├── 01_language/                            # ─── C++ 语言本身（按难度递进）───
 │   ├── 01_basics/                          # 基础 ✅ 入门主线（每个知识点一个带序号子目录）
 │   │   ├── 00_hello_world/                     # 程序结构/main/cout/变量/注释/作用域
-│   │   ├── 01_types/                           # 内置类型/字面量后缀/初始化/const/constexpr/定宽整数
-│   │   ├── 02_type_queries/                    # sizeof/alignof/auto/decltype
+│   │   ├── 01_types/                           # 内置类型/sizeof（基础）/字面量后缀/初始化/const/constexpr/定宽整数
+│   │   ├── 02_type_queries/                    # sizeof（进阶）/alignof/auto/decltype
 │   │   ├── 03_operators/                       # 算术/比较/逻辑短路/位运算/三目/优先级/逗号
-│   │   ├── 04_control_flow/                    # if/switch/循环/范围for/结构化绑定/if constexpr
-│   │   ├── 05_functions/                       # 传参/默认参数/重载/inline/constexpr/函数指针/lambda
+│   │   ├── 04_control_flow/                    # if/switch/循环/范围for/结构化绑定/break/goto
+│   │   ├── 05_functions/                       # 传参/默认参数/重载/inline/constexpr/函数指针/lambda（详解）
 │   │   ├── 06_pointers_refs/                   # 引用/右值引用/指针/nullptr/const指针/智能指针
 │   │   ├── 07_arrays_strings/                  # 原始数组/std::array/vector/string/string_view
 │   │   ├── 08_oop/                             # struct/class/继承/多态/Rule 0-3-5/移动（入门）
@@ -82,7 +82,7 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 │   │   ├── 10_templates/                       # 函数模板/类模板/特化/Concepts/if constexpr（入门）
 │   │   ├── 11_exceptions/                      # try/catch/throw/标准异常/noexcept/RAII
 │   │   └── 12_typeid_pack/                     # typeid/sizeof.../变参模板/type_traits（入门）
-│   ├── 02_oop/                             # 面向对象 ⏳ 深化专章（待填充）
+│   ├── 02_oop/                             # 面向对象 ✅ 深化专章（已建成 6 子目录）
 │   │   ├── 01_classes_objects/                 # 类/成员/访问控制/友元
 │   │   ├── 02_constructors_raii/               # 构造/析构/拷贝/移动/RAII
 │   │   ├── 03_inheritance/                     # 继承/虚函数/override/final
@@ -96,7 +96,7 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 │   │   ├── 04_variadic_templates/              # 变参模板/fold 表达式
 │   │   └── 05_sfinae_tag_dispatch/             # SFINAE/标签分发（C++20 前）
 │   ├── 04_modern/                          # 现代 C++（C++11-23 核心特性）🚧 建设中
-│   │   ├── 01_lambda/                          # ✅ lambda/捕获/泛型/mutable/IIFE
+│   │   ├── 01_lambda/                          # ✅ lambda 补充章：捕获一览/默认捕获/STL 算法/批量回调（入门在 05_functions）
 │   │   ├── 02_move_semantics/                  # 移动语义/std::move/完美转发
 │   │   ├── 03_structured_bindings/             # 结构化绑定（C++17）
 │   │   ├── 04_if_switch_init/                  # if/switch 初始化语句（C++17）
@@ -223,8 +223,10 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 │       └── 09_parquet_and_dll/             #   第9步: arrow/parquet 读文件 + 拷贝依赖 dll
 │
 └── 10_ops/                                 # ─── ▲ 工程化（横切；只放"纯工程活动"）───
-    ├── 01_build_systems/                       # 构建系统演进：手动编译→Makefile→CMake→vcpkg→企业级
-    ├── 02_testing/                             # ctest 集成/代码覆盖率/模糊测试（libFuzzer/AFL）
+    ├── 01_build_systems/                       # 构建系统演进 ✅：手动编译→Makefile→CMake→vcpkg→企业级
+    │                                           #   14 个知识目录：00_compiler_cli、01_makefile、02_hello…
+    │                                           #   13_enterprise（详见 10_ops/01_build_systems/README.md 演进路线表）
+    ├── 02_testing/                             # 代码覆盖率/模糊测试（libFuzzer/AFL）；ctest 集成在 01_build_systems
     ├── 03_lint_format/                         # clang-tidy/clang-format/cppcheck/编译警告治理
     ├── 04_packaging/                           # vcpkg/conan/CPM/ExternalProject/FetchContent
     ├── 05_ci_cd/                               # GitHub Actions/Jenkins C++ CI 流水线

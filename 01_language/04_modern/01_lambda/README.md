@@ -1,6 +1,8 @@
 # 01_lambda — lambda 表达式
 
 > C++11 引入，C++14/20 持续增强。把函数写成"就地定义的匿名函数"，最常配合 STL 算法使用。
+>
+> **本章是补充章**：lambda 的入门讲解（基本语法、捕获、mutable、泛型 lambda、IIFE）已在 01_basics 05_functions 1.7 逐一详讲并有完整示例，本章不再重复展开，只补 4 个实战向内容：捕获七种形式一览、默认捕获 `[=]`/`[&]`、lambda 与 STL 算法、`std::function` 批量回调。可运行演示全集在 main.cpp（demo01–demo07）。
 
 ## 1. 知识点
 
@@ -13,72 +15,29 @@
 // 返回类型可省略，编译器自动推导
 ```
 
-#### 1.1.2 最简 lambda — 无参数、无捕获
+#### 1.1.2 最简 lambda、带参数、显式返回类型（回顾）
 
-```cpp
-auto hello = []() {
-    std::cout << "hello lambda\n";
-};
-hello();
-```
-
-#### 1.1.3 带参数
-
-```cpp
-auto add = [](int a, int b) {
-    return a + b;
-};
-int sum = add(3, 5);  // 8
-```
-
-#### 1.1.4 显式指定返回类型
-
-```cpp
-// 通常不需要，编译器能推导；当函数体有多条 return 且类型不同时才需要显式写
-auto divide = [](double a, double b) -> double {
-    if (b == 0) {
-        return 0.0;
-    }
-    return a / b;
-};
-```
+`[](){}` 三部分写法、省略参数、自动推导返回类型、多条 return 时才显式写 `-> 类型`——这些基本用法在 01_basics 05_functions 1.7.1/1.7.2 已逐个讲透，运行演示见 main.cpp demo01，本章不再重复。
 
 ### 1.2 捕获列表
 
 #### 1.2.1 捕获列表语法一览
 
-```cpp
-// []      不捕获任何外部变量
-// [x]     按值捕获 x（拷贝一份，lambda 内修改不影响外部）
-// [&x]    按引用捕获 x（lambda 内修改会影响外部）
-// [=]     按值捕获所有外部变量
-// [&]     按引用捕获所有外部变量
-// [=, &x] 默认按值，x 按引用
-// [&, x]  默认按引用，x 按值
-```
+| 写法 | 含义 | 能否修改外部变量 |
+|------|------|------|
+| `[]` | 不捕获任何外部变量 | — |
+| `[x]` | 按值捕获 x（拷贝一份） | 不能（默认 const；加 mutable 可改拷贝） |
+| `[&x]` | 按引用捕获 x | 能 |
+| `[=]` | 按值捕获所有用到的外部变量 | 不能 |
+| `[&]` | 按引用捕获所有用到的外部变量 | 能 |
+| `[=, &x]` | 默认按值，x 例外按引用 | 能改 x，改不了其他 |
+| `[&, x]` | 默认按引用，x 例外按值 | 能改 x 之外的 |
 
-#### 1.2.2 按值捕获 x — lambda 内拿到的是拷贝
+#### 1.2.2 按值 / 按引用捕获 x（回顾）
 
-```cpp
-int x = 10;
-auto by_value = [x]() {
-    std::cout << x << "\n";  // 拿到的是拷贝
-    // x = 99;  // 编译错误：按值捕获默认是 const
-};
-```
+`[x]` 拿到拷贝（lambda 内修改不影响外部）、`[&x]` 直接用外部变量（修改影响外部）——这两个基础捕获在 01_basics 05_functions 1.7.3 已详解，运行演示见 main.cpp demo02，这里不再重复。
 
-#### 1.2.3 按引用捕获 x — lambda 内修改会影响外部
-
-```cpp
-int x = 10;
-auto by_ref = [&x]() {
-    x = 99;
-};
-by_ref();
-// 此时外部 x == 99
-```
-
-#### 1.2.4 按值捕获所有
+#### 1.2.3 按值捕获所有
 
 ```cpp
 int x = 10, y = 20;
@@ -87,7 +46,7 @@ auto f = [=]() {
 };
 ```
 
-#### 1.2.5 按引用捕获所有
+#### 1.2.4 按引用捕获所有
 
 ```cpp
 int x = 10, y = 20;
@@ -99,57 +58,23 @@ f();
 // 此时 x == 100, y == 200
 ```
 
-### 1.3 mutable
+### 1.3 mutable 与泛型 lambda（回顾）
 
-#### 1.3.1 mutable — 允许修改按值捕获的变量
+#### 1.3.1 mutable 与泛型 lambda（回顾）
 
-```cpp
-// 修改的是拷贝，不影响外部
-int count = 0;
-auto counter = [count]() mutable {
-    count++;
-    std::cout << count << "\n";
-};
-```
+`mutable` 允许修改按值捕获的拷贝（改的是副本不影响外部）、泛型 lambda 用 `auto` 参数让编译器为每种类型生成版本——两者在 01_basics 05_functions 1.7.4/1.7.5 已详讲，运行演示见 main.cpp demo03/demo04，本章不再重复。
 
-#### 1.3.2 mutable 使用效果
+### 1.4 lambda 与 STL 算法
+
+#### 1.4.1 lambda 作为函数参数（总起）
+
+STL 算法的常见形态：把 lambda 当**谓词**（返回 `bool`）或**操作**传给算法，让算法替你写循环。下面按用途演示四个最常用的：`sort`（排序规则）、`count_if`（统计）、`for_each`（逐个操作）、`find_if`（查找）。示例容器：
 
 ```cpp
-counter();  // 1（lambda 内部的拷贝 +1）
-counter();  // 2（lambda 内部的拷贝再 +1）
-counter();  // 3
-std::cout << count << "\n";  // 0（外部 count 没变）
-```
-
-### 1.4 泛型 lambda
-
-#### 1.4.1 泛型 lambda（C++14）— 参数用 auto
-
-```cpp
-// 类似函数模板，编译器对每种类型生成一个版本
-auto print = [](const auto& value) {
-    std::cout << value << "\n";
-};
-```
-
-#### 1.4.2 auto 参数 — 编译器对每种类型生成一个版本
-
-```cpp
-print(42);                     // int
-print(3.14);                   // double
-print(std::string("hello"));   // std::string
-```
-
-### 1.5 lambda + STL
-
-#### 1.5.1 lambda 作为函数参数
-
-```cpp
-// STL 算法最常见的用法：把 lambda 当谓词或操作传给算法
 std::vector<int> nums = {5, 2, 8, 1, 9, 3, 7};
 ```
 
-#### 1.5.2 sort — 自定义比较规则
+#### 1.4.2 sort — 自定义比较规则
 
 ```cpp
 std::sort(nums.begin(), nums.end(), [](int a, int b) {
@@ -157,7 +82,7 @@ std::sort(nums.begin(), nums.end(), [](int a, int b) {
 });
 ```
 
-#### 1.5.3 count_if — 统计满足条件的元素个数
+#### 1.4.3 count_if — 统计满足条件的元素个数
 
 ```cpp
 int even_count = std::count_if(nums.begin(), nums.end(), [](int n) {
@@ -165,7 +90,9 @@ int even_count = std::count_if(nums.begin(), nums.end(), [](int n) {
 });
 ```
 
-#### 1.5.4 for_each — 对每个元素执行操作
+#### 1.4.4 for_each — 对每个元素执行一次操作
+
+`for_each` 替代手写 `for` 循环：对容器每个元素调用一次 lambda（按引用收参可以就地修改）。
 
 ```cpp
 std::for_each(nums.begin(), nums.end(), [](int& n) {
@@ -173,7 +100,9 @@ std::for_each(nums.begin(), nums.end(), [](int& n) {
 });
 ```
 
-#### 1.5.5 find_if — 查找第一个满足条件的元素
+#### 1.4.5 find_if — 查找第一个满足条件的元素
+
+`find_if` 线性查找，返回第一个满足条件的元素的迭代器；找不到就返回 `end()`，所以要先比较再使用。
 
 ```cpp
 auto it = std::find_if(nums.begin(), nums.end(), [](int n) {
@@ -184,27 +113,13 @@ if (it != nums.end()) {
 }
 ```
 
-### 1.6 std::function
+### 1.5 std::function 批量回调
 
-#### 1.6.1 std::function 概览
+#### 1.5.1 std::function 是什么（回顾）
 
-```cpp
-// 可以存任意可调用对象（lambda、函数指针、仿函数）
-// 常用于做回调、存到容器里
-```
+`std::function` 可以存任意可调用对象（lambda、函数指针、仿函数），在 01_basics 05_functions 1.6.5 已讲过基本用法（存一个、换一个再调用）。本章补它的实战场景——1.6.2 存到容器里批量执行。
 
-#### 1.6.2 std::function 存任意可调用对象
-
-```cpp
-std::function<int(int, int)> op;
-op = [](int a, int b) { return a + b; };
-std::cout << op(3, 4) << "\n";  // 7
-
-op = [](int a, int b) { return a * b; };
-std::cout << op(3, 4) << "\n";  // 12
-```
-
-#### 1.6.3 存到容器批量执行
+#### 1.5.2 存到容器批量执行
 
 ```cpp
 std::vector<std::function<int(int, int)>> ops = {
@@ -217,26 +132,11 @@ for (const auto& f : ops) {
 }
 ```
 
-### 1.7 IIFE
+### 1.6 IIFE（回顾）
 
-#### 1.7.1 立即调用的 lambda（IIFE）
+#### 1.6.1 立即调用与复杂 const 初始化（回顾）
 
-```cpp
-// 定义 lambda 后紧跟 () 立即调用
-```
-
-#### 1.7.2 IIFE 用于复杂 const 初始化
-
-```cpp
-const int value = [] {
-    int result = 0;
-    for (int i = 1; i <= 10; i++) {
-        result += i;
-    }
-    return result;
-}();
-// value == 55
-```
+定义 lambda 后紧跟 `()` 立即调用（IIFE，Immediately Invoked Function Expression），常用于一段逻辑复杂的 `const` 变量初始化——已在 01_basics 05_functions 1.7.6 详讲，运行演示见 main.cpp demo07，本章不再重复。
 
 ## 2. 构建
 

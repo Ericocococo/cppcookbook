@@ -87,7 +87,7 @@ Load(records)                   Query("600519.SH")
 |:--------|:-----------------------------------------|
 | 绑定现有的类  | **设计并实现一个数据管理器**（Load + Query + map 存储）  |
 | 一个类     | 两个类（FHSGRecord 结构体 + CFHSGMgr 管理器）       |
-| 无       | `def_readwrite` 直接暴露成员变量（FHSGRecord 的字段） |
+| 05 讲过的属性（`def_property_readonly`） | `def_readwrite` 直接暴露成员变量——05 只讲过概念未实际使用，本步首次用于 FHSGRecord 的字段 |
 | 无       | `py::init<>()` 无参构造函数                    |
 
 ---
