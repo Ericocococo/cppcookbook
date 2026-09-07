@@ -1,6 +1,7 @@
 # 03_stl — 标准模板库
 
-> ⏳ 规划中：本目录尚无内容，规划见根 README 目录导航与 [STRUCTURE.md](../STRUCTURE.md)。
+> ⏳ 规划中：主内容尚未建成，规划见根 README 目录导航与 [STRUCTURE.md](../STRUCTURE.md)。
+> 参考文档（已建成）：[headers.md](headers.md) — 标准库常用头文件速查（分类 + 首次详解位置索引）。
 
 STL = Standard Template Library，C++ 标准库的核心部分，包含容器、算法、迭代器等。
 

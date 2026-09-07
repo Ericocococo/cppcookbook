@@ -39,6 +39,8 @@ std::string name = "hi"; // std::string 是标准库的字符串类型
 | `<fstream>` | ifstream、ofstream | 读写文件 |
 | `<chrono>` | 时间点、时长 | 计时 |
 
+> 这只是最常用的 10 个；完整分类速查（含 IO/容器/算法/工具/并发等 40+ 头文件与详解位置）见 [03_stl/headers.md](../../../03_stl/headers.md)（后续章节学到哪可以回查）。
+
 #### 1.1.4 最小可运行程序（main 函数）
 
 ```cpp
@@ -195,6 +197,31 @@ std::getline(std::cin, line);  // 读一整行（含空格），遇回车结束
 ```
 
 ## 2. 构建
+
+### CMakeLists.txt 第一次详解（CMake 是什么）
+
+每个示例目录是一个**独立 CMake 工程**：目录里的 `CMakeLists.txt` 告诉 CMake 怎么编译你的代码，CMake 再调用真正的编译器（g++ / cl.exe）干活。本目录的 `CMakeLists.txt` 逐行解释：
+
+```cmake
+cmake_minimum_required(VERSION 3.28)   # ① 声明最低 CMake 版本：低于 3.28 直接报错
+project(hello_world LANGUAGES CXX)     # ② 工程名 hello_world，只启用 C++ 语言
+
+set(CMAKE_CXX_STANDARD 20)             # ③ 用 C++20 标准编译
+set(CMAKE_CXX_STANDARD_REQUIRED ON)    #    编译器不支持 C++20 就报错（不悄悄降级）
+set(CMAKE_CXX_EXTENSIONS OFF)          #    不用编译器私有扩展，严格按标准
+
+if (MSVC)                              # ④ 编译警告开关：不同编译器语法不同
+    add_compile_options(/W4 /utf-8)    #    MSVC（cl.exe）用 /W4 开警告
+else ()
+    add_compile_options(-Wall -Wextra -Wpedantic)  # GCC/Clang 用 -Wall 系列
+endif ()
+
+add_executable(hello_world main.cpp)   # ⑤ 把 main.cpp 编译链接成可执行文件 hello_world
+```
+
+构建流程三步：**配置** `cmake -B <目录>`（读 CMakeLists.txt，生成构建文件）→ **构建** `cmake --build <目录>`（真正编译链接）→ **运行** 生成的 exe。每个示例目录都用这套流程，命令里的目录名换成对应目录即可。
+
+> CMake 的**专门系统教学**在仓库末尾的 [10_ops/01_build_systems](../../../10_ops/01_build_systems/README.md) 章（从手动编译一步步演进到 CMake、包管理、企业级），学完本仓库 01_language 的 C++ 语法后再去；那里也是 CMakeLists.txt 各命令的完整参考。现在只需要会跑这三步、能看懂本目录 14 行即可。
 
 ### 2.1 命令行 · MinGW（Git Bash）
 

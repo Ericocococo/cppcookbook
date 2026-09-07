@@ -1,7 +1,7 @@
 # 04_modern — 现代 C++（C++11-23 核心特性）
 
 > 状态：🚧 建设中（目前仅 `01_lambda` 建成）。
-> 定位：**补充章集合**——basics 入门线讲过的现代特性（lambda 基础等）不在此重讲，只收 basics 没有的新内容与实战应用。计划目录见 [STRUCTURE.md](../../../STRUCTURE.md)。
+> 定位：**补充章集合**——basics 入门线讲过的现代特性（lambda 基础等）不在此重讲，只收 basics 没有的新内容与实战应用。计划目录见 [STRUCTURE.md](../../STRUCTURE.md)。
 
 ## 知识点分级大纲
 
