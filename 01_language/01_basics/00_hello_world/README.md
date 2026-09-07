@@ -99,6 +99,8 @@ int Count1 = 2;    // 合法：和 count1 是不同变量（区分大小写）
 
 ### 1.4 cout 打印
 
+> `cout` = character output（字符输出），`cin` = character input（字符输入），`cerr` = character error（字符错误输出）。`c` 是 character（字符），不是 console。
+
 #### 1.4.1 基本用法
 
 ```cpp
@@ -129,8 +131,10 @@ std::cout << "行2" << std::endl; // endl：换行 + 强制刷新缓冲区，立
 
 #### 1.4.4 `std::cerr` 错误输出
 
+`cerr` = character error，和 `cout` 一样用 `<<`，但不走缓冲区，立即输出。用于确保崩溃前错误信息不丢。
+
 ```cpp
-std::cerr << "出错了！\n";  // 不走缓冲区，立即输出，确保崩溃前错误信息不丢
+std::cerr << "出错了！\n";  // 不走缓冲区，立即输出
 ```
 
 ### 1.5 作用域
@@ -161,6 +165,8 @@ std::cout << outer;           // 输出 10，外层变量恢复
 ```
 
 ### 1.6 cin 输入
+
+> `cin` = character input（字符输入），从键盘读数据。
 
 #### 1.6.1 `cin >>` 读单个值
 

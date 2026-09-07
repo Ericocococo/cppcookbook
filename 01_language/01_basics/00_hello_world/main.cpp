@@ -105,7 +105,8 @@ void demo04_cout()
     std::cout << "\n④ cout 打印\n";
 
     // 知识点 4.1：std::cout 输出流
-    // std:: = "去标准库里找"；cout = console output（控制台输出）
+    // std:: = "去标准库里找"
+    // cout = character output（字符输出），向终端打印内容
     // << = 流插入运算符，把右边内容送进输出流
 
     // 知识点 4.2：<< 链式调用
@@ -138,7 +139,8 @@ void demo04_cout()
     std::cout << "    \\0  空字符（字符串结束标志）\n";
 
     // 知识点 4.5：cerr 错误输出
-    // cerr 和 cout 一样用 <<，但不走缓冲区，立即输出
+    // cerr = character error（字符错误输出）
+    // 和 cout 一样用 <<，但不走缓冲区，立即输出
     // 用于输出错误信息，确保程序崩溃前错误信息不会丢
 
     std::cerr << "  cerr（错误输出，立即刷新）\n";
@@ -179,6 +181,7 @@ void demo06_cin()
     std::cout << "\n⑥ cin（从键盘读输入）\n";
 
     // 知识点 6.1：cin >> 读取输入
+    // cin = character input（字符输入），从键盘读数据
     // >> 是流提取运算符，从输入流读取数据存入变量
     // 遇到空白字符（空格/换行/Tab）停止读取
 
