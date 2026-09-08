@@ -191,6 +191,7 @@ public:
     }
 
     // 禁止拷贝（简化示例，避免浅拷贝问题）
+    // = delete 声明"这个函数被删除"：任何调用的地方都编译报错——详细讲解见 06_special_members 1.4
     LinkedList(const LinkedList&) = delete;
     LinkedList& operator=(const LinkedList&) = delete;
 

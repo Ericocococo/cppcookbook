@@ -152,6 +152,7 @@ void demo03_type_cast()
     int* p = const_cast<int*>(cp); // 去掉 const 限定
     std::cout << "  const_cast 去 const: *p=" << *p << "\n";
     // 注意：修改真正 const 变量是未定义行为！const_cast 主要用于和老 API 交互
+    // （上面只演示"读"，不演示"写"——改写真 const 对象是 UB）
 
     // 知识点 3.5：reinterpret_cast
     // 内存重新解释（危险！）

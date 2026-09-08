@@ -129,13 +129,31 @@ void demo03_auto()
     std::cout << "  auto& v3=ci:      引用，不可修改\n";
 
     // 知识点 3.4：auto 在范围 for 中的用法
+    // 范围 for 的语法在 04_control_flow 章正式讲，这里只演示 auto 的三种写法
 
     int arr[] = {1, 2, 3, 4, 5};
     std::cout << "  auto  遍历（副本）: ";
-    for (auto x : arr) std::cout << x << " ";
+    for (auto x : arr) {
+        std::cout << x << " ";
+    }
     std::cout << "\n";
-    std::cout << "  auto& 遍历（引用）: 可修改原数组\n";
-    std::cout << "  const auto& 遍历: 只读，不复制（大对象推荐）\n";
+
+    // auto&：引用遍历，修改 x 会直接改原数组元素
+    for (auto& x : arr) {
+        x *= 10;
+    }
+    std::cout << "  auto& 遍历后原数组: ";
+    for (auto x : arr) {
+        std::cout << x << " ";
+    }
+    std::cout << "（×10，说明 auto& 改的就是原数组）\n";
+
+    // const auto&：只读引用，不复制也不修改（大对象遍历推荐）
+    std::cout << "  const auto& 遍历: ";
+    for (const auto& x : arr) {
+        std::cout << x << " ";
+    }
+    std::cout << "（只读，改不了）\n";
 }
 
 // ④ decltype：推断类型，保留 const 和引用，不执行表达式
@@ -198,6 +216,8 @@ void demo05_practical()
     std::cout << "  数组元素数 = " << len << "\n";
 
     // 知识点 5.2：decltype 推断函数返回类型（泛型编程）
+    // 这里的 lambda（[](auto a, auto b) {...}）与泛型参数语法在 05_functions 章正式讲，
+    // 此处只演示 decltype 的用途：根据参数类型推断返回类型
 
     auto add = [](auto a, auto b) -> decltype(a + b)
     {

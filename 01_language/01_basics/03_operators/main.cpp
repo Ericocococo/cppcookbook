@@ -72,6 +72,7 @@ void demo03_logical()
         << " !T=" << (!true) << "\n";
 
     // 知识点 3.1：短路求值
+    // 下面用 lambda（[&]() {...}）记录"右边是否被求值"——lambda 语法在 05_functions 章正式讲
 
     int counter = 0;
     auto inc = [&]() -> bool

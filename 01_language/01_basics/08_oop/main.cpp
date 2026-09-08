@@ -102,6 +102,7 @@ int Rectangle::count_ = 0; // 静态成员在类外初始化
 void demo02_class()
 {
     std::cout << "\n② class 封装\n";
+    Rectangle r0; // 默认构造 → 委托给 Rectangle(0,0)，看上面构造打印验证
     Rectangle r1(3.0, 4.0);
     r1.print();
     r1.setWidth(-1); // 负数被拒绝
@@ -150,6 +151,8 @@ public:
     {
     }
 
+    ~Circle() override { std::cout << "  [Circle 析构]\n"; } // 验证 delete 基类指针时被调用
+
     double area() const override { return 3.14159 * radius_ * radius_; }
     std::string type() const override { return "圆形"; }
 };
@@ -163,6 +166,8 @@ public:
         : Shape(std::move(color)), side_(s)
     {
     }
+
+    ~Square() override { std::cout << "  [Square 析构]\n"; }
 
     double area() const override { return side_ * side_; }
     std::string type() const override { return "正方形"; }

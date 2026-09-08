@@ -54,6 +54,7 @@ void demo02_pointer()
     // 知识点 2.2：未初始化指针：危险！值不确定
     // int* bad;    // 危险：bad 指向随机地址，解引用崩溃
     // *bad = 1;    // 未定义行为
+    // （故意不运行演示：解引用未初始化指针是 UB，可能崩溃或破坏数据）
 
     // 知识点 2.3：nullptr（C++11）：空指针，比 NULL 和 0 更安全
 
@@ -142,6 +143,8 @@ void demo05_void_pointer()
     void* vp = &n; // void* 可以指向任何类型
     std::cout << "  void* vp=&n: vp=" << vp << "\n";
     // *vp = 1;  // 错误：void* 不能解引用
+    // static_cast 是 C++ 类型转换之一（四种 cast 的系统讲解在 09_misc 章），
+    // 这里只记住：void* 要变回具体类型指针必须显式转换
     int* ip = static_cast<int*>(vp); // 需要强转才能解引用
     std::cout << "  static_cast<int*>(vp): *ip=" << *ip << "\n";
 

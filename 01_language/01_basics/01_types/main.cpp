@@ -9,6 +9,17 @@
 #include <string>
 
 // ① sizeof 运算符
+// 演示"数组退化为指针"：形参写 int arr[] 只是语法糖，等价于 int* arr
+// 调用时只把首元素地址传进来，长度信息丢失，函数内 sizeof 拿不到数组大小
+void print_param_size(int arr[])
+{
+    // 这里 sizeof(arr) 是指针大小（8 字节），不是数组大小！
+    // （编译器会提示 -Wsizeof-array-argument 警告——正是退化发生的最好证据，
+    //   这个警告是故意的，用来演示"函数内拿不到数组长度"）
+    std::cout << "  函数内 sizeof(arr) = " << sizeof(arr)
+        << "（已退化为指针，长度信息丢失）\n";
+}
+
 void demo01_sizeof()
 {
     std::cout << "\n① sizeof 运算符\n";
@@ -47,6 +58,9 @@ void demo01_sizeof()
     std::cout << "  sizeof(arr)    = " << sizeof(arr) << " 字节（5 个 int = 5×4 = 20）\n";
     std::cout << "  sizeof(arr[0]) = " << sizeof(arr[0]) << " 字节（单个元素）\n";
     std::cout << "  元素个数 = " << sizeof(arr) / sizeof(arr[0]) << "（总字节 / 单元素字节）\n";
+    // 这里只是让你看到"退化"现象——指针是什么、为什么地址能当参数传，
+    // 后面的 06_pointers_refs 章会专门讲；现在记住结论：函数内 sizeof(数组形参) 只有指针大小
+    print_param_size(arr); // 传进函数后 arr 退化为指针，上面公式不再适用
 }
 
 // ② 整数类型：大小、范围、符号
@@ -187,6 +201,8 @@ void demo06_initialization()
     std::cout << "  int bad=3.14 -> " << bad << "（悄悄截断，{}会报错）\n";
 
     // 知识点 6.2：数组零初始化
+    // 下面用范围 for（for (int x : arr)）遍历打印——它的完整语法在 04_control_flow 章讲，
+    // 这里按"对每个元素 x 执行一遍循环体"理解即可
 
     int arr[5]{};
     std::cout << "  int arr[5]{}: ";
@@ -196,6 +212,7 @@ void demo06_initialization()
     std::cout << "（全零）\n";
 
     // 知识点 6.3：结构体部分初始化
+    // struct（把几个变量打包成一个新类型）在 08_oop 章系统讲，这里只演示 {} 初始化
 
     struct Point
     {

@@ -130,6 +130,8 @@ int safeAdd(int a, int b) noexcept
 }
 
 // 知识点 4.1：noexcept 的条件形式
+// is_nothrow_move_constructible_v<T> 是 <type_traits> 的编译期查询：
+// "T 能不能不抛异常地移动构造？"——type_traits 家族的系统讲解在 12_typeid_pack 章
 template <typename T>
 void swapSafe(T& a, T& b) noexcept(std::is_nothrow_move_constructible_v<T>)
 {
@@ -151,6 +153,7 @@ void demo04_noexcept()
     // 知识点 4.2：noexcept 的作用
     // 1. 移动构造函数标 noexcept，vector 扩容时才会用移动（否则用拷贝）
     // 2. 让编译器去掉异常处理代码，生成更小更快的代码
+    // （不演示"noexcept 函数真抛异常"：会调用 std::terminate() 直接终止整个程序）
     std::cout << "  noexcept 函数如果真的抛出异常：std::terminate() 直接终止程序\n";
 }
 

@@ -6,6 +6,7 @@
 #include <string>
 #include <utility>   // std::move, std::swap
 #include <algorithm> // std::copy
+#include <stdexcept> // std::runtime_error（异常演示用，11_exceptions 章正式讲）
 
 // ============================================================
 // ① 构造函数全家族
@@ -359,6 +360,7 @@ public:
     }
 
     // 禁止拷贝（文件句柄不应被拷贝）
+    // = delete 详解见 06_special_members 1.4（两处都先禁用拷贝，防止双重释放）
     FileGuard(const FileGuard&) = delete;
     FileGuard& operator=(const FileGuard&) = delete;
 
@@ -439,6 +441,23 @@ void demo04_raii()
         // 即使中间抛异常，析构也会执行（栈展开）
     }
     std::cout << "  (file auto-closed)\n";
+
+    // --- FileGuard 遇异常：RAII 核心卖点 ---
+    // try/catch/throw 语法在 01_basics 11_exceptions 章正式讲，这里只演示效果：
+    // 抛异常 → 作用域退出 → FileGuard 析构先自动"关文件" → 异常才被 catch 接住
+    std::cout << "\n  --- FileGuard 遇异常 ---\n";
+    try
+    {
+        FileGuard file("danger.txt");
+        file.write("写入第一行");
+        throw std::runtime_error("中途出错"); // 触发异常
+        file.write("这行不会执行");           // 不会执行到
+    }
+    catch (const std::runtime_error& e)
+    {
+        std::cout << "  (catch 收到: " << e.what() << ")\n";
+    }
+    std::cout << "  (异常安全：文件在异常路径上也自动关闭了)\n";
 
     // --- LockGuard ---
     std::cout << "\n  --- LockGuard ---\n";

@@ -49,6 +49,8 @@ void demo01_function_template()
 }
 
 // ② 类模板
+// Stack 的 pop/top 用 throw 抛异常报告"空栈"——异常（try/catch/throw）在 11_exceptions 章正式讲，
+// 这里只把 throw 当作"出错时中断并报错"的写法，先认识样子即可
 template <typename T>
 class Stack
 {
@@ -150,6 +152,10 @@ void demo04_nontype_param()
 // ⑤ 模板与 concepts（C++20）：约束模板参数
 // 知识点 1.5.1：requires 关键字
 // 指定类型必须满足的条件
+// 知识点 5.1：requires 约束模板参数
+// is_arithmetic_v / is_integral_v 这类"编译期类型查询"来自 <type_traits>，
+// 系统讲解在 12_typeid_pack 章，这里先知道它们是"判断类型是不是 X"的开关即可
+
 template <typename T>
     requires std::is_arithmetic_v<T> // T 必须是算术类型（int/float等）
 T average(T a, T b) { return (a + b) / 2; }

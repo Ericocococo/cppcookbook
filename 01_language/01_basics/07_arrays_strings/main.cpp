@@ -69,6 +69,9 @@ void demo02_std_array()
     std::cout << "\n";
 
     // 知识点 2.4：排序
+    // arr.begin() / arr.end() 返回"迭代器"——可理解为指向元素的指针（比指针安全），
+    // sort 接收一段范围 [begin, end)。迭代器的系统讲解在本仓库 03_stl 章（规划中），
+    // 现在只需知道：begin()=第一个元素，end()=最后一个元素之后
 
     std::sort(arr.begin(), arr.end());
     std::cout << "  排序后: ";

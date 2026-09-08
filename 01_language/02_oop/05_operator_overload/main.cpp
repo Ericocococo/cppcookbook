@@ -257,6 +257,8 @@ void demo03_stream()
     std::cout << "  v = " << v << "\n";
 
     // operator>> 从字符串流读取（演示用，避免等待键盘输入）
+    // std::istringstream（<sstream>）：把字符串当作"输入流"，用 >> 从里面读，
+    // 相当于给 >> 一个现成的输入来源——字符串流会在 03_stl 的 io_streams 章展开
     std::istringstream input("10.5 20.5");
     Vec2 v2(0, 0);
     input >> v2;
@@ -288,6 +290,7 @@ public:
     }
 
     // 禁止拷贝（简化示例，专注 operator[]）
+    // = delete 详解见 06_special_members 1.4
     IntArray(const IntArray&) = delete;
     IntArray& operator=(const IntArray&) = delete;
 
@@ -433,6 +436,8 @@ void demo05_functor()
     std::cout << "\n";
 
     // std::transform 配合仿函数
+    // transform(src 首, src 尾, dst 首, 操作)：把 [首,尾) 每个元素依次变换后写入 dst
+    // （<algorithm>，迭代器语义同 sort——迭代器系统讲解在 03_stl 章）
     std::vector<int> src = {1, 2, 3, 4, 5};
     std::vector<int> dst(src.size());
     std::transform(src.begin(), src.end(), dst.begin(), Multiplier(10));

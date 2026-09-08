@@ -288,6 +288,8 @@ public:
 
     // ---- 允许移动 ----
     // 资源的所有权可以转移
+    // std::exchange(x, 新值)（<utility>，C++14）：读出 x 的旧值返回，同时把 x 写成新值。
+    // 这里一步完成"拿走 handle_ 并给源对象置 -1"（详见 README 1.6.3）
     UniqueResource(UniqueResource&& other) noexcept
         : resource_name_(std::move(other.resource_name_)),
           handle_(std::exchange(other.handle_, -1))
