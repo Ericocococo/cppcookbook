@@ -9,15 +9,21 @@
 #include <string>
 
 // ① sizeof 运算符
-// 演示"数组退化为指针"：形参写 int arr[] 只是语法糖，等价于 int* arr
-// 调用时只把首元素地址传进来，长度信息丢失，函数内 sizeof 拿不到数组大小
-void print_param_size(int arr[])
+// 演示"数组退化为指针"：传数组给函数时只把首元素地址传进来，形参 int arr[]
+// 只是语法糖，等价于 const int* arr——长度信息丢失，只能由调用方另传
+// size_t：无符号整数类型，专门表示大小/长度（64 位下 8 字节，能装下任何数组长度；
+//         第一次见到它，详见 README 1.9.2）
+void print_param_size(const int* arr, size_t len)
 {
-    // 这里 sizeof(arr) 是指针大小（8 字节），不是数组大小！
-    // （编译器会提示 -Wsizeof-array-argument 警告——正是退化发生的最好证据，
-    //   这个警告是故意的，用来演示"函数内拿不到数组长度"）
-    std::cout << "  函数内 sizeof(arr) = " << sizeof(arr)
-        << "（已退化为指针，长度信息丢失）\n";
+    // 形参 arr 的类型已是 int*（数组形参自动退化为指针），
+    // 所以 sizeof(arr) == sizeof(int*) == 8
+    // 说明：如果直接写 sizeof(arr)，编译器会警告 -Wsizeof-array-argument——
+    // 意思是"arr 是数组形参（已退化成指针），sizeof 只能量到指针大小"，
+    // 这个警告本身就是退化陷阱的官方提醒。这里写 sizeof(int*) 结果完全相同
+    // 且不会触发警告，构建保持零警告
+    std::cout << "  函数内 sizeof(int*) = " << sizeof(int*) << " 字节（指针大小）\n";
+    std::cout << "  首个元素 *arr = " << *arr << "，长度 len = " << len
+        << "（数组长度函数内拿不到，由调用方另传）\n";
 }
 
 void demo01_sizeof()
@@ -58,9 +64,18 @@ void demo01_sizeof()
     std::cout << "  sizeof(arr)    = " << sizeof(arr) << " 字节（5 个 int = 5×4 = 20）\n";
     std::cout << "  sizeof(arr[0]) = " << sizeof(arr[0]) << " 字节（单个元素）\n";
     std::cout << "  元素个数 = " << sizeof(arr) / sizeof(arr[0]) << "（总字节 / 单元素字节）\n";
+
+    // 知识点 1.4：指针的大小（为什么函数内是 8）
+    // 指针存的是内存地址：64 位系统的地址固定 8 字节，所以所有指针都一样大，
+    // 与指向什么类型无关（int*、double*、void* 都是 8）——这就是上面"函数内
+    // 只有 8 字节"的原因：传进函数的只是地址。指针的系统讲解在 06_pointers_refs 章
+
+    std::cout << "  sizeof(int*) = " << sizeof(int*) << "  sizeof(double*) = " << sizeof(double*)
+        << "  sizeof(void*) = " << sizeof(void*) << "（任何指针都是 8，与指向类型无关）\n";
+
     // 这里只是让你看到"退化"现象——指针是什么、为什么地址能当参数传，
     // 后面的 06_pointers_refs 章会专门讲；现在记住结论：函数内 sizeof(数组形参) 只有指针大小
-    print_param_size(arr); // 传进函数后 arr 退化为指针，上面公式不再适用
+    print_param_size(arr, sizeof(arr) / sizeof(arr[0])); // 进函数后 arr 退化为指针，长度要另传
 }
 
 // ② 整数类型：大小、范围、符号
@@ -148,7 +163,7 @@ void demo04_bool_char()
     std::cout << "  'A'+1 = '" << (char)('A' + 1) << "'（B）\n";
     std::cout << "  'a'-'A' = " << ('a' - 'A') << "（大小写差32）\n";
 
-    // 知识点 4.4：转义字符
+    // 知识点 4.3：转义字符
 
     std::cout << "  转义：\\n换行 \\t制表 \\\\反斜杠 \\'单引号 \\\"双引号 \\0空字符\n";
 }

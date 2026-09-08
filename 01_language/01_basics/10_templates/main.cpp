@@ -142,17 +142,19 @@ void demo04_nontype_param()
 {
     std::cout << "\n④ 非类型模板参数\n";
     FixedArray<int, 5> arr;
-    for (size_t i = 0; i < arr.size(); ++i) arr[i] = (int)i * 10;
+    for (size_t i = 0; i < arr.size(); ++i) {
+        arr[i] = (int)i * 10;
+    }
     std::cout << "  FixedArray<int,5>: ";
-    for (size_t i = 0; i < arr.size(); ++i) std::cout << arr[i] << " ";
+    for (size_t i = 0; i < arr.size(); ++i) {
+        std::cout << arr[i] << " ";
+    }
     std::cout << "\n";
     std::cout << "  大小在编译期确定，比 vector 更高效（无动态内存）\n";
 }
 
 // ⑤ 模板与 concepts（C++20）：约束模板参数
-// 知识点 1.5.1：requires 关键字
-// 指定类型必须满足的条件
-// 知识点 5.1：requires 约束模板参数
+// 知识点 1.5.1：requires 关键字——指定类型必须满足的条件
 // is_arithmetic_v / is_integral_v 这类"编译期类型查询"来自 <type_traits>，
 // 系统讲解在 12_typeid_pack 章，这里先知道它们是"判断类型是不是 X"的开关即可
 

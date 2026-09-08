@@ -31,10 +31,11 @@
   - 1.6.3 `std::getline` 读整行
   </details>
 
-<details><summary><a href="01_types/">01_types</a> — 数据类型（9 个主题 / 22 个小节）</summary>
+<details><summary><a href="01_types/">01_types</a> — 数据类型（9 个主题 / 23 个小节）</summary>
 
 - 1.1 sizeof 运算符
   - 1.1.1 sizeof 与数组
+  - 1.1.2 指针的大小：为什么函数内只有 8 字节
 - 1.2 整数类型
   - 1.2.1 有符号整数
   - 1.2.2 无符号整数

@@ -126,29 +126,38 @@ void demo04_for()
     std::cout << "\n④ for 循环\n";
 
     std::cout << "  正序0~4: ";
-    for (int i = 0; i < 5; ++i) std::cout << i << " ";
+    for (int i = 0; i < 5; ++i) {
+        std::cout << i << " ";
+    }
     std::cout << "\n";
 
     std::cout << "  倒序4~0: ";
-    for (int i = 4; i >= 0; --i) std::cout << i << " ";
+    for (int i = 4; i >= 0; --i) {
+        std::cout << i << " ";
+    }
     std::cout << "\n";
 
     std::cout << "  偶数0~10: ";
-    for (int i = 0; i <= 10; i += 2) std::cout << i << " ";
+    for (int i = 0; i <= 10; i += 2) {
+        std::cout << i << " ";
+    }
     std::cout << "\n";
 
     // 知识点 4.1：for 可以省略任何部分（分号不能省）
 
     int i = 0;
     std::cout << "  省略初始化(i已有): ";
-    for (; i < 3; ++i) std::cout << i << " ";
+    for (; i < 3; ++i) {
+        std::cout << i << " ";
+    }
     std::cout << "\n";
 
     // 知识点 4.2：多变量 for 循环
 
     std::cout << "  多变量: ";
-    for (int a = 0, b = 10; a < b; ++a, --b)
+    for (int a = 0, b = 10; a < b; ++a, --b) {
         std::cout << "(" << a << "," << b << ") ";
+    }
     std::cout << "\n";
 }
 
@@ -163,15 +172,22 @@ void demo05_range_for()
     // 副本，修改不影响原数组
 
     std::cout << "  auto  遍历: ";
-    for (auto x : arr) std::cout << x << " ";
+    for (auto x : arr) {
+        std::cout << x << " ";
+    }
     std::cout << "\n";
 
     // 知识点 5.2：引用遍历
     // 修改原数组
+    // auto& 里的 & 是"引用"：不复制，直接用原数组元素——引用的系统讲解在 06_pointers_refs 章
 
-    for (auto& x : arr) x *= 2;
+    for (auto& x : arr) {
+        x *= 2;
+    }
     std::cout << "  auto& 修改(*2): ";
-    for (auto x : arr) std::cout << x << " ";
+    for (auto x : arr) {
+        std::cout << x << " ";
+    }
     std::cout << "\n";
 
     // 知识点 5.3：const 引用遍历
@@ -179,10 +195,14 @@ void demo05_range_for()
 
     std::vector<std::string> words = {"hello", "world", "cpp"};
     std::cout << "  const auto& 只读: ";
-    for (const auto& w : words) std::cout << w << " ";
+    for (const auto& w : words) {
+        std::cout << w << " ";
+    }
     std::cout << "\n";
 
     // 知识点 5.4：C++17 结构化绑定遍历 pair
+    // std::vector<std::pair<...>>：vector 在 07 章系统讲，pair=两个值的组合，
+    // 这里只把它们当"一组 名字+分数 的数据"用，重点是结构化绑定语法
 
     std::vector<std::pair<std::string, int>> data = {
         {"Alice", 95}, {"Bob", 82}

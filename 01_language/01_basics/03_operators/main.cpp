@@ -89,6 +89,8 @@ void demo03_logical()
     std::cout << "  true  || inc(): counter=" << counter << "（inc 未执行）\n";
 
     // 知识点 3.2：短路求值防崩溃
+    // 这里用到了指针（int* p = nullptr）：指针是什么在 06_pointers_refs 章专门讲，
+    // 现在只需知道：p 可能为空（nullptr=空指针），空指针不能解引用
 
     int* p = nullptr;
     int n = 0;

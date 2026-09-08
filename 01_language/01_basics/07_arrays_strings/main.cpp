@@ -27,7 +27,9 @@ void demo01_raw_array()
 
     int zeros[5]{};
     std::cout << "  zeros[5]{}: ";
-    for (int x : zeros) std::cout << x << " ";
+    for (int x : zeros) {
+        std::cout << x << " ";
+    }
     std::cout << "\n";
 
     // 知识点 1.4：二维数组
@@ -62,7 +64,9 @@ void demo02_std_array()
 
     auto printArr = [](const std::array<int, 5>& a)
     {
-        for (auto x : a) std::cout << x << " ";
+        for (auto x : a) {
+            std::cout << x << " ";
+        }
     };
     std::cout << "  遍历: ";
     printArr(arr);
@@ -75,7 +79,9 @@ void demo02_std_array()
 
     std::sort(arr.begin(), arr.end());
     std::cout << "  排序后: ";
-    for (auto x : arr) std::cout << x << " ";
+    for (auto x : arr) {
+        std::cout << x << " ";
+    }
     std::cout << "\n";
 }
 
@@ -129,7 +135,9 @@ void demo03_vector()
     std::vector<int> v3(5, 42); // 5 个 42
     std::vector<int> v4 = {1, 2, 3, 4, 5};
     std::cout << "  vector(5,42): ";
-    for (auto x : v3) std::cout << x << " ";
+    for (auto x : v3) {
+        std::cout << x << " ";
+    }
     std::cout << "\n";
 }
 

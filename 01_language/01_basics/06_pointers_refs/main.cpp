@@ -170,7 +170,9 @@ void demo06_dynamic_memory()
 
     int* arr = new int[5]{1, 2, 3, 4, 5};
     std::cout << "  new int[5]: ";
-    for (int i = 0; i < 5; ++i) std::cout << arr[i] << " ";
+    for (int i = 0; i < 5; ++i) {
+        std::cout << arr[i] << " ";
+    }
     std::cout << "\n";
     delete[] arr; // 数组用 delete[]，不能用 delete
     arr = nullptr;

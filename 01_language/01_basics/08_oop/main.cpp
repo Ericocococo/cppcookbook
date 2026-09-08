@@ -206,7 +206,9 @@ void demo04_polymorphism()
 
     // 知识点 4.3：必须通过虚析构正确释放
 
-    for (auto* s : shapes) delete s;
+    for (auto* s : shapes) {
+        delete s;
+    }
     std::cout << "  （虚析构确保子类析构函数被正确调用）\n";
 }
 
@@ -236,6 +238,8 @@ public:
 
     Buffer(const Buffer& other) : data_(new int[other.size_]{}), size_(other.size_)
     {
+        // std::copy(源首, 源尾, 目标首)：把 [源首,源尾) 逐元素复制到目标
+        // （<algorithm> 的迭代器算法，深拷贝的惯用写法）
         std::copy(other.data_, other.data_ + size_, data_);
         std::cout << "  [Buffer 拷贝构造]\n";
     }
