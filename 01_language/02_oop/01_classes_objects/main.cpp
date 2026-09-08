@@ -6,7 +6,6 @@
 #include <string>
 #include <utility>   // std::move
 #include <vector>
-#include <algorithm> // std::for_each
 
 // ============================================================
 // ① 友元函数（friend function）

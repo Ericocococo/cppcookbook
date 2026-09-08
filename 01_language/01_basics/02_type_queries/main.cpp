@@ -25,7 +25,7 @@ void demo01_sizeof()
     // 不执行表达式！
 
     int n = 0;
-    sizeof(++n); // ++n 不会执行，n 仍为 0
+    (void)sizeof(++n); // ++n 不会执行，n 仍为 0（(void) 只是消除"语句无效果"警告）
     std::cout << "  sizeof(++n) 不执行 ++n，n 仍为 " << n << "\n";
 
     // 知识点 1.3：sizeof 查数组
@@ -108,6 +108,7 @@ void demo03_auto()
 
     std::cout << "  auto i=42     -> " << sizeof(i) << "字节(int)\n";
     std::cout << "  auto d=3.14   -> " << sizeof(d) << "字节(double)\n";
+    std::cout << "  auto b=true   -> " << sizeof(b) << "字节(bool)\n";
     std::cout << "  auto c='A'    -> " << sizeof(c) << "字节(char)\n";
     std::cout << "  auto s=string -> " << s << "\n";
 
@@ -125,8 +126,8 @@ void demo03_auto()
     auto& v3 = ci; // const int&（引用的 const 保留）
     // v2 = 99;             // 错误
     // v3 = 99;             // 错误
-    std::cout << "  const auto v2=ci: 不可修改\n";
-    std::cout << "  auto& v3=ci:      引用，不可修改\n";
+    std::cout << "  const auto v2=ci: 不可修改（v2=" << v2 << "）\n";
+    std::cout << "  auto& v3=ci:      引用，不可修改（v3=" << v3 << "）\n";
 
     // 知识点 3.4：auto 在范围 for 中的用法
     // 范围 for 的语法在 04_control_flow 章正式讲，这里只演示 auto 的三种写法

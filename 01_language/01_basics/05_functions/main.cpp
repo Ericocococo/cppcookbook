@@ -26,7 +26,7 @@ int multiply(int a, int b) { return a * b; } // 定义（可以在声明之后�
 
 // 知识点 2.1：参数传递：值、引用、const 引用、指针
 
-void byValue(int x) { x = 999; } // 副本，不影响外部
+void byValue(int x) { x = 999; (void)x; } // 副本，不影响外部（(void)x：演示后参数没再读，消除警告）
 void byRef(int& x) { x *= 2; } // 引用，影响外部
 void byConstRef(const int& x) { (void)x; } // 只读，不复制
 void byPointer(int* p) { if (p) *p = 42; } // 指针，可以传 nullptr
@@ -204,21 +204,23 @@ auto divide(double a, double b) -> double
 }
 
 // 知识点 8.2：返回引用的危险
-
+// 禁止写法示例（写成注释：一旦定义，编译器会对 return local 发出
+// -Wreturn-local-addr 警告；调用它更是未定义行为）：
+/*
 int& badReturn()
 {
     int local = 42;
     return local; // 危险！返回局部变量的引用，函数结束后 local 已销毁
 }
+*/
+// 规则：绝不返回局部变量的引用/指针——局部变量在函数返回时就销毁了，
+// 返回的引用指向已不存在的对象（UB），表现不可预测（垃圾值/旧值/崩溃）
 
 void demo08_return()
 {
     std::cout << "\n⑧ 返回类型\n";
     std::cout << "  尾置返回: divide(10,3)=" << divide(10, 3) << "\n";
-    // badReturn 故意不调用：返回已销毁局部变量的引用是未定义行为（UB），
-    // 表现不可预测（可能打印垃圾值、旧值，也可能崩溃）。编译器一般会警告
-    // -Wreturn-local-addr。记住规则：绝不返回局部变量的引用/指针。
-    std::cout << "  危险：不要返回局部变量的引用！（badReturn 定义在上方，不运行演示）\n";
+    std::cout << "  危险：不要返回局部变量的引用！（示例见上方注释，不运行演示）\n";
 }
 
 int main()

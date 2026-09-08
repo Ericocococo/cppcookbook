@@ -6,7 +6,6 @@
 #include <stdexcept>   // runtime_error / logic_error / out_of_range 等
 #include <string>
 #include <vector>
-#include <memory>
 #include <utility>     // std::move
 #include <type_traits> // std::is_nothrow_move_constructible_v
 

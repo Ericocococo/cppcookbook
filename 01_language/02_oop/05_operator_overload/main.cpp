@@ -2,7 +2,6 @@
 // 演示：运算符重载全形式 — 算术/比较/流/下标/函数调用/自增/太空船
 
 #include <iostream>
-#include <string>
 #include <compare>    // std::strong_ordering, operator<=>
 #include <vector>
 #include <algorithm>  // std::sort, std::transform

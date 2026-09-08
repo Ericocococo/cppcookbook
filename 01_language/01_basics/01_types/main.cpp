@@ -3,10 +3,13 @@
 // 构建：cmake -B build-mingw（详见 README.md）
 
 #include <iostream>
-#include <climits>    // INT_MAX / INT_MIN 等范围常量
-#include <cfloat>     // FLT_MAX / DBL_MAX 等浮点范围常量
-#include <cstdint>    // int8_t / uint32_t 等定宽整数类型
-#include <string>
+#include <climits>   // 整数范围常量（demo② 打印各类型 MIN/MAX 用）：
+                     //   CHAR_MIN/CHAR_MAX、SHRT_MIN/SHRT_MAX、
+                     //   INT_MIN/INT_MAX、LONG_MIN/LONG_MAX、
+                     //   LLONG_MIN/LLONG_MAX、UCHAR_MAX、UINT_MAX、ULLONG_MAX
+#include <cfloat>    // FLT_MAX（demo③ 用 FLT_MAX*2 演示浮点溢出 → inf）
+#include <cstdint>   // 定宽整数类型（demo⑧）：
+                     //   int8_t/int16_t/int32_t/int64_t、uint8_t/uint32_t
 
 // ① sizeof 运算符
 // 演示"数组退化为指针"：传数组给函数时只把首元素地址传进来，形参 int arr[]

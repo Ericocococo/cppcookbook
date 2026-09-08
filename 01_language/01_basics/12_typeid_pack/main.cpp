@@ -21,6 +21,7 @@ void demo01_typeid()
     std::cout << "  typeid(int).name()    = \"" << typeid(int).name() << "\"\n";
     std::cout << "  typeid(double).name() = \"" << typeid(double).name() << "\"\n";
     std::cout << "  typeid(n).name()      = \"" << typeid(n).name() << "\"\n";
+    std::cout << "  typeid(d).name()      = \"" << typeid(d).name() << "\"\n";
     std::cout << "  typeid(s).name()      = \"" << typeid(s).name() << "\"\n";
     std::cout << "  （GCC 输出缩写如 i=int，MSVC 输出 int，格式不统一）\n";
 
@@ -56,7 +57,8 @@ void showCount(Args... args)
 {
     std::cout << "  参数数量=" << sizeof...(args)
         << "  类型数量=" << sizeof...(Args) << "\n";
-    (void)(args, ...); // 展开 args，避免"未使用参数"警告
+    ((void)args, ...); // 逗号折叠展开参数包：逐个 (void)，消除"未使用参数"警告
+    // 上面只演示 sizeof...，参数本身不需要处理，但要用过它们才能消除编译警告
 }
 
 void demo02_sizeof_pack()

@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <memory>
 
 // ============================================================================
 // ① 虚函数表（vtable）原理
