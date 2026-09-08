@@ -4,6 +4,23 @@
 
 ## 1. 知识点
 
+> **内置类型 vs 标准库类型**：下表中的类型是 C++ 语言本身的关键字（内置类型），编译器天生认识，**不需要 `#include` 任何头文件**就能直接用。而 `std::string`、`std::vector`、`int32_t` 等是标准库提供的类型，必须 `#include` 对应头文件才能使用。本章 `#include <climits>` 不是为了用 `int`，而是为了用 `INT_MAX` 这些**范围常量**（头文件里的宏）。
+
+**C++ 全部内置类型一览（不需要 #include）：**
+
+| 分类 | 类型关键字 | 说明 |
+|------|-----------|------|
+| 布尔 | `bool` | `true` / `false` |
+| 字符 | `char`、`signed char`、`unsigned char`、`wchar_t`、`char8_t`（C++20）、`char16_t`（C++11）、`char32_t`（C++11） | 存储单个字符，本质是整数 |
+| 整数 | `short`（= `short int`）、`int`、`long`（= `long int`）、`long long`（= `long long int`，C++11） | 各自可加 `signed`（默认）或 `unsigned` 前缀，共 8 种组合 |
+| 浮点 | `float`、`double`、`long double` | 单精度 / 双精度 / 扩展精度 |
+| 空类型 | `void` | 无值，用于函数不返回 / `void*` 万能指针 |
+| 空指针 | `decltype(nullptr)`（= `std::nullptr_t`） | `nullptr` 的类型（C++11） |
+
+> 日常最常用的就 7 个：`bool`、`char`、`int`、`long long`、`float`、`double`、`void`。其余（`short`、`wchar_t`、`long double` 等）遇到再查即可。
+>
+> **需要 #include 的常见对照**：`std::string`（`<string>`）、`std::vector`（`<vector>`）、`int32_t` / `uint64_t`（`<cstdint>`）、`size_t`（`<cstddef>`）、`INT_MAX`（`<climits>`）——这些不是语言关键字，是标准库/头文件提供的。
+
 ### 1.1 sizeof 运算符
 
 `sizeof` 是编译期运算符（不是函数），返回类型或变量占用的字节数（`size_t` 类型）。编译时就确定结果，运行时零开销。C++ 标准保证 `sizeof(char) == 1`，其他类型的大小由实现决定。
@@ -12,14 +29,19 @@
 
 | 类型 | 字节数 | 说明 |
 |------|--------|------|
-| `char` | 1 | 标准保证恒为 1 |
-| `bool` | 1 | 通常 1 字节 |
-| `short` | 2 | 至少 2 字节 |
-| `int` | 4 | 至少 2 字节，通常 4 |
-| `long` | 4（Win）/ 8（Linux） | 至少 4 字节，平台相关 |
-| `long long` | 8 | 至少 8 字节（C++11） |
-| `float` | 4 | IEEE 754 单精度 |
-| `double` | 8 | IEEE 754 双精度 |
+| `bool` | 1 | `true`/`false` |
+| `char` / `signed char` / `unsigned char` | 1 | 标准保证恒为 1 |
+| `wchar_t` | 2（Win）/ 4（Linux） | 宽字符，平台相关 |
+| `char16_t` | 2 | UTF-16 字符（C++11） |
+| `char32_t` | 4 | UTF-32 字符（C++11） |
+| `short` / `unsigned short` | 2 | 至少 2 字节 |
+| `int` / `unsigned int` | 4 | 至少 2 字节，通常 4 |
+| `long` / `unsigned long` | 4（Win）/ 8（Linux） | 至少 4 字节，平台相关 |
+| `long long` / `unsigned long long` | 8 | 至少 8 字节（C++11） |
+| `float` | 4 | IEEE 754 单精度，≈7 位有效数字 |
+| `double` | 8 | IEEE 754 双精度，≈15 位有效数字（推荐） |
+| `long double` | 8（MSVC）/ 16（GCC） | 扩展精度，平台差异大 |
+| 指针（`T*` / `void*`） | 8 | 64 位系统恒为 8，与指向类型无关 |
 
 ```cpp
 #include <iostream>
@@ -201,7 +223,23 @@ int main() {
 }
 ```
 
-#### 1.4.3 转义字符（char 场景）
+#### 1.4.3 字符类型家族：char / signed char / unsigned char / wchar_t / charXX_t
+
+C++ 有 7 种字符类型，日常只用 `char`，其余遇到时查表即可：
+
+| 类型 | 字节 | 存什么 | 典型场景 |
+|------|:----:|--------|---------|
+| `char` | 1 | ASCII 字符 | 日常字符串 `"hello"`、`std::string` 的底层 |
+| `signed char` | 1 | -128 ~ 127 的小整数 | 明确要有符号的小整数 |
+| `unsigned char` | 1 | 0 ~ 255 的原始字节 | 二进制数据（网络包、图片像素） |
+| `wchar_t` | 2(Win) / 4(Linux) | 宽字符 | Windows API（`L"你好"`），不推荐跨平台用 |
+| `char8_t`（C++20） | 1 | UTF-8 码元 | `u8"你好"` 的字符类型，保证 UTF-8 |
+| `char16_t`（C++11） | 2 | UTF-16 码元 | `u"你好"`，Java / Windows 内部互操作 |
+| `char32_t`（C++11） | 4 | UTF-32 码点 | `U"你好"`，一个值 = 一个完整字符 |
+
+注意：`char`、`signed char`、`unsigned char` 是**三个不同类型**（不像 `int` 和 `signed int` 是同义词）。`char` 的符号性由编译器决定，存文本字符用 `char`，存原始字节数据用 `unsigned char`。`wchar_t` 大小平台不一致是历史遗留，C++11/20 引入的 `charXX_t` 大小固定、编码明确，是更好的 Unicode 方案。
+
+#### 1.4.4 转义字符（char 场景）
 
 反斜杠 `\` 开头的序列是转义字符。常用集合（`\n` 换行、`\t` 制表、`\\` 反斜杠、`\'` 单引号、`\"` 双引号）的完整表在 00_hello_world 1.4.3 已列过，这里补 char 语境独有的两点：转义同样出现在字符字面量里，以及 `\0` 空字符是字符串的结束标志。
 

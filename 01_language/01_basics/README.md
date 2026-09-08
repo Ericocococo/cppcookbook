@@ -31,7 +31,7 @@
   - 1.6.3 `std::getline` 读整行
   </details>
 
-<details><summary><a href="01_types/">01_types</a> — 数据类型（9 个主题 / 21 个小节）</summary>
+<details><summary><a href="01_types/">01_types</a> — 数据类型（9 个主题 / 22 个小节）</summary>
 
 - 1.1 sizeof 运算符
   - 1.1.1 sizeof 与数组
@@ -45,7 +45,8 @@
 - 1.4 bool 与 char
   - 1.4.1 bool 类型
   - 1.4.2 char 类型
-  - 1.4.3 转义字符（char 场景）
+  - 1.4.3 字符类型家族：char / signed char / unsigned char / wchar_t / charXX_t
+  - 1.4.4 转义字符（char 场景）
 - 1.5 字面量写法
   - 1.5.1 不同进制
   - 1.5.2 数字分隔符（C++14）
