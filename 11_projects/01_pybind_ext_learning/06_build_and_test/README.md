@@ -28,7 +28,7 @@
 
 ```bash
 # cd 到项目目录
-cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\06_build_and_test
+cd D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\06_build_and_test
 
 # 编译 + 拷贝 .pyd 到 lib/
 D:\ProgramData\anaconda3\envs\quant311\python build.py --dest lib

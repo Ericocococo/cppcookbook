@@ -207,11 +207,11 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 │   └── 06_robotics/                            # 机器人（ROS2/DDS/传感器融合/SLAM）
 │                                           #   其他领域来了就追加 07_ 08_ …
 │
-├── projects/                               # ─── 阶段性实战项目（综合运用，独立编译）───
-│   │                                       #   不带数字前缀；每个项目自含 CMakeLists.txt
+├── 11_projects/                               # ─── 阶段性实战项目（综合运用，独立编译）───
+│   │                                       #   项目带两位序号前缀（01_ 02_…）；每个项目自含 CMakeLists.txt
 │   │                                       #   例: snake_game/ json_parser/ http_server/
 │   │
-│   └── pybind_ext_learning/                # C++ 扩展学习路径（pybind11 九步走）
+│   └── 01_pybind_ext_learning/                # C++ 扩展学习路径（pybind11 九步走）
 │       ├── 01_hello_cpp/                   #   第1步: 纯 C++，确认编译环境
 │       ├── 02_cpp_class/                   #   第2步: C++ 类基础（三种定义写法）
 │       ├── 03_one_function/                #   第3步: 第一个 pybind11 模块（一个函数）
@@ -269,7 +269,7 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
 | `08_hpc`        | 无限增长  | 高性能计算：SIMD/OpenMP/TBB/CUDA/数值/内存优化                        |
 | `09_domain`     | 无限增长  | 领域应用：游戏/图形/AI推理/音视频/量化/机器人                                |
 | `10_ops`        | 无限增长  | 工程化横切（纯工程活动）：CMake/调试/分析/包管理                              |
-| `projects`      | 按需增长  | 阶段性实战项目，综合运用多个知识点，每个项目独立编译                                |
+| `11_projects`      | 按需增长  | 阶段性实战项目，综合运用多个知识点，每个项目独立编译                                |
 
 ---
 
@@ -283,8 +283,8 @@ cppcookbook/                                  # 顶层仓库（可运行的合�
    构建/CI/静态分析/交叉编译）归 `10_ops`，两边不重复。
 6. **`05_frameworks` 只放领域级完整系统**——通用 web 框架（drogon/crow）在 `07_systems/05_server`；序列化/CLI 等工具库在
    `04_libraries`。
-7. **`projects/` 放阶段性实战项目**——综合运用多个知识点的独立小项目（如贪吃蛇、JSON 解析器、mini HTTP 服务器），每个项目自含
-   `CMakeLists.txt`，不带数字前缀。
+7. **`11_projects/` 放阶段性实战项目**——综合运用多个知识点的独立小项目（如贪吃蛇、JSON 解析器、mini HTTP 服务器），每个项目自含
+   `CMakeLists.txt`，目录带两位序号前缀（`01_`、`02_`…，按加入顺序排列）。
 
 ---
 

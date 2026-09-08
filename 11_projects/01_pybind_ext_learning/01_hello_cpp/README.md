@@ -22,7 +22,7 @@
 
 ```bash
 # cd 到项目目录
-cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
+cd D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp
 
 # 配置
 cmake -G Ninja -B build-mingw-ninja -S .
@@ -40,13 +40,13 @@ cmake --build build-mingw-ninja
 
 ```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-ninja -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-mingw-ninja -S D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-ninja
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-mingw-ninja
 
 :: 运行
-D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-ninja\hello_cpp.exe
+D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-mingw-ninja\hello_cpp.exe
 ```
 
 </details>
@@ -57,7 +57,7 @@ D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_c
 
 ```bash
 # cd 到项目目录
-cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
+cd D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp
 
 # 配置
 cmake -G "MinGW Makefiles" -B build-mingw-make -S .
@@ -75,13 +75,13 @@ cmake --build build-mingw-make
 
 ```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-make -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-mingw-make -S D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-make
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-mingw-make
 
 :: 运行
-D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-make\hello_cpp.exe
+D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-mingw-make\hello_cpp.exe
 ```
 
 </details>
@@ -92,7 +92,7 @@ D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_c
 
 ```bash
 # cd 到项目目录
-cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
+cd D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp
 
 # 配置
 cmake -G "Ninja Multi-Config" -B build-mingw-mc -S .
@@ -110,13 +110,13 @@ cmake --build build-mingw-mc --config Debug
 
 ```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-mc -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-mingw-mc -S D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-mc --config Debug
+D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-mingw-mc --config Debug
 
 :: 运行
-D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-mingw-mc\Debug\hello_cpp.exe
+D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-mingw-mc\Debug\hello_cpp.exe
 ```
 
 </details>
@@ -159,7 +159,7 @@ call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\v
 
 ```cmd
 :: cd 到项目目录
-cd /d D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
+cd /d D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp
 
 :: 激活
 call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
@@ -183,13 +183,13 @@ build-msvc-ninja\hello_cpp.exe
 call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 :: 配置
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -G Ninja -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-ninja -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -G Ninja -B D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-msvc-ninja -S D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp -DCMAKE_MAKE_PROGRAM="D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
 
 :: 构建
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-ninja
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-msvc-ninja
 
 :: 运行
-D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-ninja\hello_cpp.exe
+D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-msvc-ninja\hello_cpp.exe
 ```
 
 </details>
@@ -202,7 +202,7 @@ CMake 自动通过 `vswhere.exe` 检测 MSVC 工具链，生成 `.sln` 工程。
 
 ```cmd
 :: cd 到项目目录
-cd /d D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
+cd /d D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp
 
 :: 配置（-G "Visual Studio 18 2026" 生成 .sln 工程，-A x64 指定 64 位）
 cmake -B build-msvc-vs -G "Visual Studio 18 2026" -A x64 -S .
@@ -220,13 +220,13 @@ build-msvc-vs\Release\hello_cpp.exe
 
 ```cmd
 :: 配置
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -G "Visual Studio 18 2026" -A x64 -B D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-vs -S D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -G "Visual Studio 18 2026" -A x64 -B D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-msvc-vs -S D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp
 
 :: 构建
-"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-vs --config Release
+"D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-msvc-vs --config Release
 
 :: 运行
-D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\01_hello_cpp\build-msvc-vs\Release\hello_cpp.exe
+D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\01_hello_cpp\build-msvc-vs\Release\hello_cpp.exe
 ```
 
 </details>

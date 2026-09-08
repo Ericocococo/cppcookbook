@@ -14,6 +14,7 @@
 - MinGW 包含方案 A（Ninja）、方案 B（MinGW Makefiles）、方案 C（Ninja Multi-Config），每个附 cmd 三步版。
 - 所有内联版全部用绝对路径，无变量依赖，可直接复制粘贴。
 - pybind11 项目 MinGW 不适用时，该章节保留标题并注明原因。
+- 例外：`10_ops/01_build_systems` 是在教 CMake 本身的章节，各知识目录 README 不套上述构建章节规范——六方案命令统一展开在章 README §5 通用构建流程，目录 README 只保留"本目录差异 + 指引"。
 
 ## Python 验证脚本
 

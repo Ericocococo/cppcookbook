@@ -35,7 +35,7 @@ call "D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\v
 
 ```bat
 :: cd 到项目目录
-cd /d D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\03_one_function
+cd /d D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\03_one_function
 
 :: 配置
 "D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build_py -G Ninja ^
@@ -75,7 +75,7 @@ CMake 自动通过 `vswhere.exe` 检测 MSVC 工具链，生成 `.sln` 工程。
 
 ```bat
 :: cd 到项目目录
-cd /d D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\03_one_function
+cd /d D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\03_one_function
 
 :: 配置（-G "Visual Studio 18 2026" 生成 .sln 工程，-A x64 指定 64 位）
 "D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -B build_py_vs -G "Visual Studio 18 2026" -A x64 ^

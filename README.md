@@ -16,7 +16,7 @@
 | [08_hpc](08_hpc/README.md)               | 高性能计算：SIMD / OpenMP / TBB / CUDA / 数值优化                                                               | ⏳ 规划中 |
 | [09_domain](09_domain/README.md)         | 领域应用：游戏 / 图形 / AI 推理 / 音视频 / 量化 / 机器人                                                                 | ⏳ 规划中 |
 | [10_ops](10_ops/README.md)               | 工程化：构建系统 ✅ / 调试 / 分析 / 包管理 / CI                                                                     | 🚧 部分建成 |
-| [projects](projects/README.md)           | 阶段性实战项目（如 pybind_ext_learning C++ 扩展九步学习路径 ✅）                                                      | 🚧 部分建成 |
+| [11_projects](11_projects/README.md)           | 阶段性实战项目（如 01_pybind_ext_learning C++ 扩展九步学习路径 ✅）                                                      | 🚧 部分建成 |
 
 > 状态图例：✅ 建成 · 🚧 部分建成 · ⏳ 规划中（仅有规划 README）。详细目录规划见 [STRUCTURE.md](STRUCTURE.md)，编码习惯见 [CONVENTIONS.md](CONVENTIONS.md)。
 

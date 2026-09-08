@@ -1,4 +1,4 @@
-# pybind_ext_learning — C++ 扩展学习路径
+# 01_pybind_ext_learning — C++ 扩展学习路径
 
 以量化框架（quant.core.frame）的 pybind11 扩展为背景，**由浅入深九步走**，从纯 C++
 开始，逐步引入类、pybind11、自动化脚本、架构模式、第三方依赖。每一步独立可编译、可运行、可验证。

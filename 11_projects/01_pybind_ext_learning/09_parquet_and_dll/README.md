@@ -27,7 +27,7 @@
 
 ```bash
 # cd 到项目目录
-cd D:\workspace\clion_workspace\cppcookbook\projects\pybind_ext_learning\09_parquet_and_dll
+cd D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\09_parquet_and_dll
 
 # 生成测试数据
 D:\ProgramData\anaconda3\envs\quant311\python gen_test_data.py
