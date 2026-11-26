@@ -8,10 +8,11 @@
 
 ## README 格式
 
-- 每个含 .cpp 的目录的 README.md 构建章节统一为：`## 2. 构建` 下挂 `### 2.1 命令行 · MinGW（Git Bash）`、`### 2.2 命令行 · MSVC（cmd）`、
+- 每个含 .cpp 的目录的 README.md 构建章节统一为：`## 2. 构建` 下挂 `### 2.1 命令行 · MinGW（cmd / Git Bash）`、`### 2.2 命令行 · MSVC（cmd）`、
   `### 2.3 命令行 · Linux / WSL`（标题带 2.x 编号，挂在 `## 2. 构建` 下，不单独作顶层章节）。
 - MSVC 包含方案 A（vcvarsall + Ninja）和方案 B（VS Generator），每个方案附自己的四步版，紧跟各自方案不堆在末尾。
-- MinGW 包含方案 A（Ninja）、方案 B（MinGW Makefiles）、方案 C（Ninja Multi-Config），每个附 cmd 三步版。
+- MinGW 包含方案 A（Ninja）、方案 B（MinGW Makefiles）、方案 C（Ninja Multi-Config）；每个方案的相对路径版与绝对路径版都在同一折叠块内并列 `**cmd：**` 与 `**Git Bash：**` 两个代码块。
+- MSVC 段只给 cmd 单份：`cl.exe` 必须先在 cmd 里用 `vcvarsall.bat` 激活环境，Git Bash 无法直接使用。
 - 所有内联版全部用绝对路径，无变量依赖，可直接复制粘贴。
 - pybind11 项目 MinGW 不适用时，该章节保留标题并注明原因。
 - 例外：`10_ops/01_build_systems` 是在教 CMake 本身的章节，各知识目录 README 不套上述构建章节规范——六方案命令统一展开在章 README §5 通用构建流程，目录 README 只保留"本目录差异 + 指引"。

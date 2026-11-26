@@ -6,9 +6,29 @@
 
 ---
 
-## 1. 命令行 · MinGW（Git Bash）
+## 1. 命令行 · MinGW（cmd / Git Bash）
 
 MinGW 自带 `mingw32-make.exe`，用完整路径调用：
+
+**cmd：**
+
+```bat
+set MAKE=D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe
+
+:: 构建（增量）
+"%MAKE%"
+
+:: 构建并运行
+"%MAKE%" run
+
+:: 清理
+"%MAKE%" clean
+
+:: 查看将要执行的命令（不实际构建）
+"%MAKE%" --dry-run
+```
+
+**Git Bash：**
 
 ```bash
 MAKE="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"

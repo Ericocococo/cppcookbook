@@ -235,7 +235,7 @@ std::getline(std::cin, line);  // 读一整行（含空格），遇回车结束
 
 ## 2. 构建
 
-### 2.1 命令行 · MinGW（Git Bash）
+### 2.1 命令行 · MinGW（cmd / Git Bash）
 
 **路径常量（绝对路径版使用）：**
 
@@ -250,9 +250,27 @@ std::getline(std::cin, line);  // 读一整行（含空格），遇回车结束
 
 <details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
+**cmd：**
+
+```bat
+:: cd 到项目目录
+cd /d D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world
+
+:: 配置
+cmake -G Ninja -B build-mingw-ninja -S .
+
+:: 构建
+cmake --build build-mingw-ninja
+
+:: 运行
+.\build-mingw-ninja\hello_world.exe
+```
+
+**Git Bash：**
+
 ```bash
 # cd 到项目目录
-cd D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world
+cd /d/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world
 
 # 配置
 cmake -G Ninja -B build-mingw-ninja -S .
@@ -268,7 +286,9 @@ cmake --build build-mingw-ninja
 
 <details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
 
-```cmd
+**cmd：**
+
+```bat
 :: 配置
 D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-ninja -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
@@ -279,15 +299,46 @@ D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:\worksp
 D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-ninja\hello_world.exe
 ```
 
+**Git Bash：**
+
+```bash
+# 配置
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world/build-mingw-ninja -S D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
+
+# 构建
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world/build-mingw-ninja
+
+# 运行
+D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world/build-mingw-ninja/hello_world.exe
+```
+
 </details>
 
 #### 方案 B — MinGW Makefiles
 
 <details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
+**cmd：**
+
+```bat
+:: cd 到项目目录
+cd /d D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world
+
+:: 配置
+cmake -G "MinGW Makefiles" -B build-mingw-make -S .
+
+:: 构建
+cmake --build build-mingw-make
+
+:: 运行
+.\build-mingw-make\hello_world.exe
+```
+
+**Git Bash：**
+
 ```bash
 # cd 到项目目录
-cd D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world
+cd /d/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world
 
 # 配置
 cmake -G "MinGW Makefiles" -B build-mingw-make -S .
@@ -303,7 +354,9 @@ cmake --build build-mingw-make
 
 <details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
 
-```cmd
+**cmd：**
+
+```bat
 :: 配置
 D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-make -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"
 
@@ -314,15 +367,46 @@ D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:\worksp
 D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-make\hello_world.exe
 ```
 
+**Git Bash：**
+
+```bash
+# 配置
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world/build-mingw-make -S D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"
+
+# 构建
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world/build-mingw-make
+
+# 运行
+D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world/build-mingw-make/hello_world.exe
+```
+
 </details>
 
 #### 方案 C — Ninja Multi-Config
 
 <details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
+**cmd：**
+
+```bat
+:: cd 到项目目录
+cd /d D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world
+
+:: 配置
+cmake -G "Ninja Multi-Config" -B build-mingw-mc -S .
+
+:: 构建
+cmake --build build-mingw-mc --config Release
+
+:: 运行
+.\build-mingw-mc\Release\hello_world.exe
+```
+
+**Git Bash：**
+
 ```bash
 # cd 到项目目录
-cd D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world
+cd /d/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world
 
 # 配置
 cmake -G "Ninja Multi-Config" -B build-mingw-mc -S .
@@ -338,7 +422,9 @@ cmake --build build-mingw-mc --config Release
 
 <details><summary>绝对路径三步版（可在任意目录直接粘贴运行）</summary>
 
-```cmd
+**cmd：**
+
+```bat
 :: 配置
 D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-mc -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
@@ -347,6 +433,19 @@ D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:\worksp
 
 :: 运行
 D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-mc\Release\hello_world.exe
+```
+
+**Git Bash：**
+
+```bash
+# 配置
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world/build-mingw-mc -S D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
+
+# 构建
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world/build-mingw-mc --config Release
+
+# 运行
+D:/workspace/clion_workspace/cppcookbook/01_language/01_basics/00_hello_world/build-mingw-mc/Release/hello_world.exe
 ```
 
 </details>
@@ -364,6 +463,7 @@ D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\bu
 
 > cl.exe 一般不用在命令里指定：`call vcvarsall.bat` 会把它注入 PATH，CMake 自动找到。
 > 列出仅供参考；版本号 14.51.36231 随 VS 更新可能变化。
+> **只支持 cmd**：`cl.exe` 依赖 `vcvarsall.bat` 注入的环境变量（PATH / INCLUDE / LIB），Git Bash 无法直接调用——它不能执行 cmd 批处理，且启动时会重建 PATH，继承不到激活结果。
 
 #### vcvarsall 注入的 4 个环境变量
 

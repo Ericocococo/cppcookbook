@@ -18,14 +18,14 @@
 
 ## 2. 构建
 
-### 2.1 命令行 · MinGW（Git Bash）
+### 2.1 命令行 · MinGW（cmd / Git Bash）
 
 > pybind11 模块（.pyd）必须使用与 Python 相同的编译器。Windows 上的 Python（Anaconda）由 MSVC 编译，因此 MinGW 不适用。Linux
 > 构建见 § 2.3。
 
 ### 2.2 命令行 · MSVC（cmd）
 
-> MSVC 路径常量表与 vcvarsall 注入说明（4 个环境变量、为什么必须 `call`）见第 1 步 [01_hello_cpp §2.2](../01_hello_cpp/README.md#22-命令行--msvccmd)，以下命令直接用。
+> MSVC 只能在 cmd 下用（`cl.exe` 依赖 `vcvarsall.bat` 激活，Git Bash 无法直接调用）；路径常量表与注入说明见第 1 步 [01_hello_cpp §2.2](../01_hello_cpp/README.md#22-命令行--msvccmd)，以下命令直接用。
 
 
 ```bat

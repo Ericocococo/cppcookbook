@@ -6,7 +6,27 @@
 
 ---
 
-## 命令行 · MinGW（Git Bash）
+## 命令行 · MinGW（cmd / Git Bash）
+
+**cmd：**
+
+```bat
+:: 定义路径变量（下同）
+set GXX=D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe
+
+:: ① 多源文件一步编译链接
+"%GXX%" -std=c++20 -Wall -Wextra -o app.exe main.cpp math_utils.cpp
+
+:: ② 分步：先编译生成 .o，再链接
+"%GXX%" -std=c++20 -Wall -c main.cpp
+"%GXX%" -std=c++20 -Wall -c math_utils.cpp
+"%GXX%" -o app.exe main.o math_utils.o
+
+:: ③ 运行
+app.exe
+```
+
+**Git Bash：**
 
 ```bash
 # 定义路径变量（下同）

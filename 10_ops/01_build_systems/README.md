@@ -208,7 +208,9 @@ ninja --version
 
 > 本章每个 CMake 知识目录的 README 不再重复整套构建命令，统一在这里展开一次。使用步骤：① 把 `<exe_name>` 换成该目录的可执行名（各目录 README 的「本目录差异」小节给出）；② 其余命令通用。以下是 02_hello 验证过的六套方案（MinGW 三套 + MSVC 三套）与对比：
 
-### 5.1 命令行 · MinGW（Git Bash）
+### 5.1 命令行 · MinGW（cmd / Git Bash）
+
+**Git Bash（路径变量，cmd 方案用各块里的完整路径）：**
 
 ```bash
 CMAKE="D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe"
@@ -218,6 +220,8 @@ MAKE="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"
 ```
 
 #### 方案 A：Ninja（推荐）
+
+**Git Bash：**
 
 ```bash
 # 配置
@@ -232,7 +236,7 @@ MAKE="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"
 ./build-mingw-ninja/<exe_name>.exe
 ```
 
-> cmd 三步版：
+**cmd：**
 
 ```bat
 :: 配置
@@ -247,6 +251,8 @@ build-mingw-ninja\<exe_name>.exe
 
 #### 方案 B：MinGW Makefiles（无需 ninja.exe）
 
+**Git Bash：**
+
 ```bash
 # 配置
 "$CMAKE" -B build-mingw-make -G "MinGW Makefiles" \
@@ -260,7 +266,7 @@ build-mingw-ninja\<exe_name>.exe
 ./build-mingw-make/<exe_name>.exe
 ```
 
-> cmd 三步版：
+**cmd：**
 
 ```bat
 :: 配置
@@ -274,6 +280,8 @@ build-mingw-make\<exe_name>.exe
 ```
 
 #### 方案 C：Ninja Multi-Config（一目录同时支持 Debug / Release）
+
+**Git Bash：**
 
 ```bash
 # 配置
@@ -294,7 +302,7 @@ build-mingw-make\<exe_name>.exe
 ./build-mingw-ninja-mc/Release/<exe_name>.exe
 ```
 
-> cmd 三步版（以 Debug 为例）：
+**cmd（以 Debug 为例）：**
 
 ```bat
 :: 配置
@@ -312,6 +320,8 @@ build-mingw-ninja-mc\Release\<exe_name>.exe
 ---
 
 ### 5.2 命令行 · MSVC（cmd）
+
+> MSVC 只能在 cmd 下用：`cl.exe` 依赖 `vcvarsall.bat` 注入的环境变量（PATH / INCLUDE / LIB），Git Bash 无法直接调用（不能执行 cmd 批处理，且启动时会重建 PATH）。
 
 #### 方案 A：vcvarsall + Ninja（推荐）
 

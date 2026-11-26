@@ -17,25 +17,29 @@
 
 ## 2. 构建
 
-### 2.1 命令行 · MinGW（Git Bash）
+### 2.1 命令行 · MinGW（cmd / Git Bash）
 
 > pybind11 模块（.pyd）且依赖 vcpkg 安装的 arrow/parquet（MSVC 编译），MinGW 不适用。Linux 构建见 § 2.3。
 
 ### 2.2 命令行 · MSVC（cmd）
 
+> MSVC 只能在 cmd 下用：`cl.exe` 依赖 `vcvarsall.bat` 注入的环境变量（PATH / INCLUDE / LIB），Git Bash 无法直接调用（不能执行 cmd 批处理，且启动时会重建 PATH）。
+
 <details><summary>相对路径版（需先 cd 到项目目录）</summary>
 
-```bash
-# cd 到项目目录
-cd D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\09_parquet_and_dll
+**cmd：**
 
-# 生成测试数据
+```bat
+:: cd 到项目目录
+cd /d D:\workspace\clion_workspace\cppcookbook\11_projects\01_pybind_ext_learning\09_parquet_and_dll
+
+:: 生成测试数据
 D:\ProgramData\anaconda3\envs\quant311\python gen_test_data.py
 
-# 编译 + 拷贝 pyd 和依赖 dll 到 lib/
+:: 编译 + 拷贝 pyd 和依赖 dll 到 lib/
 D:\ProgramData\anaconda3\envs\quant311\python build.py --dest lib
 
-# 验证
+:: 验证
 D:\ProgramData\anaconda3\envs\quant311\python test_parquet.py
 ```
 
