@@ -30,9 +30,9 @@ CLion 中执行安装：构建成功后 **Tools → CMake → Install**（安装
 完整六套方案（MinGW 三方案 / MSVC 三方案，含对比与 CLion）见 [章 README § 5 通用构建流程](../README.md)。本目录可执行目标是 `myapp`（另有静态库 `mylib`，由 myapp 链接），exe 不安装也能在 build 目录直接运行；安装流程是验证重点。日常最常用——Ninja 方案 A（Git Bash）：
 
 ```bash
-CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
-GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
-NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+CMAKE="D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe"
+GXX="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe"
+NINJA="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 "$CMAKE" -B build-mingw-ninja -G Ninja -DCMAKE_CXX_COMPILER="$GXX" -DCMAKE_MAKE_PROGRAM="$NINJA" -DCMAKE_INSTALL_PREFIX=./install-root
 "$CMAKE" --build build-mingw-ninja

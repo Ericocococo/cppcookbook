@@ -35,8 +35,8 @@ cmake -B <构建目录> [选项...]
 ```bash
 # 完整示例
 cmake -B build -G Ninja \
-  -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" \
-  -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe" \
+  -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" \
+  -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe" \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=./install-root
 ```
@@ -1854,7 +1854,7 @@ ctest --preset default                             # 测试
 |-------------------------------------|--------------------------------------------------------------------|
 | `CMakeFiles/`                       | CMake 内部工作目录，存放配置日志、中间状态、目标中间文件（`.o` / `.obj`）                     |
 | `CMakeFiles/CMakeConfigureLog.yaml` | 配置阶段详细日志，记录编译器探测结果、feature 检测等，排查配置失败时看这里                          |
-| `CMakeFiles/<version>/`             | CMake 版本号目录（如 `4.2.2/`），存放编译器探测脚本和结果                               |
+| `CMakeFiles/<version>/`             | CMake 版本号目录（如 `4.3.1/`），存放编译器探测脚本和结果                               |
 | `CMakeFiles/CMakeScratch/`          | 配置阶段临时文件，探测完即废弃                                                    |
 | `CMakeFiles/pkgRedirects/`          | 包重定向配置（find_package 相关）                                            |
 | `CMakeFiles/<target>.dir/`          | 各构建目标的中间文件目录（`.o`、依赖文件等），目标名即 `add_executable` / `add_library` 的名称 |

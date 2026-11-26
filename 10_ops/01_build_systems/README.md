@@ -11,7 +11,7 @@
 | 工具                | 上游最新稳定                     | 备注                                                |
 |-------------------|----------------------------|---------------------------------------------------|
 | **C++ 标准**        | C++23                      | C++17 最广泛；C++20 快速普及；GCC 15 默认仍是 `-std=gnu++17`   |
-| **g++ / GCC**     | 15.1（2025-04-25）           | 14.3 长期维护；15.x 大幅推进 C++23 支持                      |
+| **g++ / GCC**     | 15.2（2025-08-08）           | 14.3 长期维护；15.x 大幅推进 C++23 支持                      |
 | **CMake**         | 4.4.0（2026-07-10）          | 4.0 起不再兼容 `cmake_minimum_required(VERSION < 3.5)` |
 | **Ninja**         | 1.13.2（2025-11-20）         |                                                   |
 | **cl.exe / MSVC** | VS 2026 v18 / toolset v145 | VS 2022 v17 (v143) 仍是工程主流；VS 2026 起 MSVC 版本号独立    |
@@ -66,23 +66,23 @@
 
 ### 2.1 工具链 A · MinGW（CLion 内置）
 
-| 工具        | 完整路径                                                                     |
-|-----------|--------------------------------------------------------------------------|
-| g++.exe   | `D:\ProgramData\JetBrains\CLion20260101\bin\mingw\bin\g++.exe`           |
-| cmake.exe | `D:\ProgramData\JetBrains\CLion20260101\bin\cmake\win\x64\bin\cmake.exe` |
-| ninja.exe | `D:\ProgramData\JetBrains\CLion20260101\bin\ninja\win\x64\ninja.exe`     |
+| 工具        | 完整路径                                                             |
+|-----------|------------------------------------------------------------------|
+| g++.exe   | `D:\ProgramData\JetBrains\CLion\bin\mingw\bin\g++.exe`           |
+| cmake.exe | `D:\ProgramData\JetBrains\CLion\bin\cmake\win\x64\bin\cmake.exe` |
+| ninja.exe | `D:\ProgramData\JetBrains\CLion\bin\ninja\win\x64\ninja.exe`     |
 
 **Git Bash 里定义变量（可粘贴到 ~/.bashrc 长期生效）：**
 
 ```bash
-GCC="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/gcc.exe"
-GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
-CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
-NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+GCC="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/gcc.exe"
+GXX="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe"
+CMAKE="D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe"
+NINJA="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 # 验证
-"$GXX"   --version   # → GCC 13.1.0
-"$CMAKE" --version   # → cmake version 4.2.2
+"$GXX"   --version   # → GCC 15.2.0
+"$CMAKE" --version   # → cmake version 4.3.1
 "$NINJA" --version   # → 1.13.2
 ```
 
@@ -211,10 +211,10 @@ ninja --version
 ### 5.1 命令行 · MinGW（Git Bash）
 
 ```bash
-CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
-GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
-NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
-MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+CMAKE="D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe"
+GXX="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe"
+NINJA="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
+MAKE="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"
 ```
 
 #### 方案 A：Ninja（推荐）
@@ -236,10 +236,10 @@ MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
 
 ```bat
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-ninja -G Ninja -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-ninja -G Ninja -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-ninja
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-ninja
 
 :: 运行
 build-mingw-ninja\<exe_name>.exe
@@ -264,10 +264,10 @@ build-mingw-ninja\<exe_name>.exe
 
 ```bat
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-make -G "MinGW Makefiles" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-make -G "MinGW Makefiles" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-make
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-make
 
 :: 运行
 build-mingw-make\<exe_name>.exe
@@ -298,11 +298,11 @@ build-mingw-make\<exe_name>.exe
 
 ```bat
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-ninja-mc -G "Ninja Multi-Config" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -B build-mingw-ninja-mc -G "Ninja Multi-Config" -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-ninja-mc --config Debug
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-ninja-mc --config Release
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-ninja-mc --config Debug
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build build-mingw-ninja-mc --config Release
 
 :: 运行
 build-mingw-ninja-mc\Debug\<exe_name>.exe

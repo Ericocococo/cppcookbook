@@ -23,7 +23,7 @@
 ## 开发环境
 
 - **OS**：Windows 11 x64（Build 26200）
-- **IDE**：CLion 2026.0.1
+- **IDE**：CLion 2026.2.4
 
 ---
 
@@ -45,12 +45,12 @@
 GCC + GDB 组合，跨平台友好，适合学习语言特性和标准库。
 编译器目标三元组：`x86_64-w64-mingw32`。
 
-| 工具        | 完整路径                                                                     | 版本                           |
-|-----------|--------------------------------------------------------------------------|------------------------------|
-| g++.exe   | `D:\ProgramData\JetBrains\CLion20260101\bin\mingw\bin\g++.exe`           | GCC 13.1.0                   |
-| cmake.exe | `D:\ProgramData\JetBrains\CLion20260101\bin\cmake\win\x64\bin\cmake.exe` | 4.2.2                        |
-| ninja.exe | `D:\ProgramData\JetBrains\CLion20260101\bin\ninja\win\x64\ninja.exe`     | 1.13.2                       |
-| 调试器       | `D:\ProgramData\JetBrains\CLion20260101\bin\gdb\win\x64\bin\gdb.exe`     | GDB 16.3（JetBrains 定制构建 243） |
+| 工具        | 完整路径                                                             | 版本                           |
+|-----------|------------------------------------------------------------------|------------------------------|
+| g++.exe   | `D:\ProgramData\JetBrains\CLion\bin\mingw\bin\g++.exe`           | GCC 15.2.0                   |
+| cmake.exe | `D:\ProgramData\JetBrains\CLion\bin\cmake\win\x64\bin\cmake.exe` | 4.3.1                        |
+| ninja.exe | `D:\ProgramData\JetBrains\CLion\bin\ninja\win\x64\ninja.exe`     | 1.13.2                       |
+| 调试器       | `D:\ProgramData\JetBrains\CLion\bin\gdb\win\x64\bin\gdb.exe`     | GDB 17.1（JetBrains 定制构建 262） |
 
 ---
 
@@ -59,14 +59,14 @@ GCC + GDB 组合，跨平台友好，适合学习语言特性和标准库。
 cl.exe + LLDB 组合，生成原生 Windows COFF 格式目标文件，适合调试 Windows API、测试 ABI 兼容性。
 工具集版本号 `14.51`，对应 VS 2026 18.x。
 
-| 工具            | 完整路径                                                                                                                     | 版本                           |
-|---------------|--------------------------------------------------------------------------------------------------------------------------|------------------------------|
-| cl.exe        | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe`                 | 19.51.36247                  |
-| link.exe      | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\link.exe`               | 同上                           |
-| cmake.exe     | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` | 4.3.1-msvc1                  |
-| ninja.exe     | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe`     | 1.13.2                       |
-| vcvarsall.bat | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat`                                 | —                            |
-| 调试器           | `D:\ProgramData\JetBrains\CLion20260101\bin\lldb\win\x64\bin\lldb.exe`                                                   | LLDB 9.0（JetBrains 定制构建 445） |
+| 工具            | 完整路径                                                                                                                     | 版本                             |
+|---------------|--------------------------------------------------------------------------------------------------------------------------|--------------------------------|
+| cl.exe        | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe`                 | 19.51.36247                    |
+| link.exe      | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\link.exe`               | 同上                             |
+| cmake.exe     | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` | 4.3.1-msvc1                    |
+| ninja.exe     | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe`     | 1.13.2                         |
+| vcvarsall.bat | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat`                                 | —                              |
+| 调试器           | `D:\ProgramData\JetBrains\CLion\bin\lldb\win\x64\bin\lldb.exe`                                                           | LLDB 9.0.0（JetBrains 定制构建 618） |
 
 > cl.exe 依赖 `vcvarsall.bat` 注入头文件路径、库路径、SDK 路径，不能脱离 VS 环境单独调用。
 > CLion 构建时自动注入，命令行使用时需手动执行（注意路径有空格，**必须加引号**）：

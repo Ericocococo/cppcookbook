@@ -30,9 +30,9 @@
 完整六套方案（MinGW 三方案 / MSVC 三方案，含对比与 CLion）见 [章 README § 5 通用构建流程](../README.md)，本目录 exe 名是 `app`，且要按 `-DCMAKE_BUILD_TYPE` 各配一个目录来对比宏值差异。日常最常用——Ninja 方案 A 配 Debug / Release 两目录（Git Bash）：
 
 ```bash
-CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
-GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
-NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+CMAKE="D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe"
+GXX="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe"
+NINJA="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 # Debug
 "$CMAKE" -B build-mingw-ninja-debug -G Ninja -DCMAKE_CXX_COMPILER="$GXX" -DCMAKE_MAKE_PROGRAM="$NINJA" -DCMAKE_BUILD_TYPE=Debug

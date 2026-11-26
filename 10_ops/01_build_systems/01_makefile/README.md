@@ -11,7 +11,7 @@
 MinGW 自带 `mingw32-make.exe`，用完整路径调用：
 
 ```bash
-MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+MAKE="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"
 
 "$MAKE"            # 构建（增量）
 "$MAKE" run        # 构建并运行

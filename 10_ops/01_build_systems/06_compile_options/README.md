@@ -95,9 +95,9 @@ Debug/Release，前者不行。入门阶段用 `if(MSVC)` 即可。
 完整六套方案（MinGW 三方案 / MSVC 三方案，含对比与 CLion）见 [章 README § 5 通用构建流程](../README.md)，本目录把 `<exe_name>` 换成 `app`。由于本目录需对比 Debug / Release 两种编译选项的效果，单配置方案每个 build 目录带 `-debug` / `-release` 后缀，并加 `-DCMAKE_BUILD_TYPE`（原因见下）。日常最常用——Ninja 方案 A，Debug（Git Bash 三步）：
 
 ```bash
-CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
-GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
-NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+CMAKE="D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe"
+GXX="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe"
+NINJA="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 "$CMAKE" -B build-mingw-ninja-debug -G Ninja -DCMAKE_CXX_COMPILER="$GXX" -DCMAKE_MAKE_PROGRAM="$NINJA" -DCMAKE_BUILD_TYPE=Debug
 "$CMAKE" --build build-mingw-ninja-debug

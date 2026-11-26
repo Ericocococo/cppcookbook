@@ -100,11 +100,11 @@ std::cout << x;    // 不需要：cout = 输出流
 CLion 安装后自动将以下路径写入系统 PATH，打开任意终端即可直接使用短命令：
 
 ```
-D:\ProgramData\JetBrains\CLion20260101\bin\mingw\bin        ← g++, gcc, mingw32-make
-D:\ProgramData\JetBrains\CLion20260101\bin\ninja\win\x64    ← ninja
+D:\ProgramData\JetBrains\CLion\bin\mingw\bin        ← g++, gcc, mingw32-make
+D:\ProgramData\JetBrains\CLion\bin\ninja\win\x64    ← ninja
 D:\Program Files\Microsoft Visual Studio\18\Community\
     Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin  ← cmake 4.3.1-msvc1（优先）
-D:\ProgramData\JetBrains\CLion20260101\bin\cmake\win\x64\bin ← cmake 4.2.2（被上条覆盖）
+D:\ProgramData\JetBrains\CLion\bin\cmake\win\x64\bin ← cmake 4.3.1（被上条覆盖）
 D:\software\vcpkg                                           ← vcpkg
 ```
 
@@ -126,11 +126,11 @@ ninja -C build
 **Git Bash（MinGW 工具链）：**
 
 ```bash
-GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
-GCC="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/gcc.exe"
+GXX="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe"
+GCC="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/gcc.exe"
 CMAKE="D:/Program Files/Microsoft Visual Studio/18/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe"
-NINJA="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
-MAKE="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+NINJA="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
+MAKE="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"
 
 "$GXX" -std=c++20 main.cpp -o app.exe
 "$CMAKE" -B build -G Ninja -DCMAKE_CXX_COMPILER="$GXX"
@@ -165,10 +165,10 @@ CMake 教学类目录用瘦身样式（只留一条最常用命令 + 指引章 R
 
 | 变量                | 路径                                                                                                                       |
 |-------------------|--------------------------------------------------------------------------------------------------------------------------|
-| `CMAKE`（MinGW 段用） | `D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe`                                                 |
-| `GXX`             | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe`                                                           |
-| `NINJA`           | `D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe`                                                     |
-| `MAKE`            | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe`                                                  |
+| `CMAKE`（MinGW 段用） | `D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe`                                                         |
+| `GXX`             | `D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe`                                                                   |
+| `NINJA`           | `D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe`                                                             |
+| `MAKE`            | `D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe`                                                          |
 | `CMAKE`（MSVC 段用）  | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` |
 | `VCVARSALL`       | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat`                                 |
 | MSVC Ninja        | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe`     |
@@ -271,10 +271,10 @@ int main()
 
 | 工具 | 完整路径 |
 |------|------|
-| cmake | `D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe` |
-| g++ | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe` |
-| ninja | `D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe` |
-| mingw32-make | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe` |
+| cmake | `D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe` |
+| g++ | `D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe` |
+| ninja | `D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe` |
+| mingw32-make | `D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe` |
 
 #### 方案 A — Ninja
 
@@ -300,10 +300,10 @@ cmake --build build-mingw-ninja
 
 \```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B <完整目录路径>\build-mingw-ninja -S <完整目录路径> -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B <完整目录路径>\build-mingw-ninja -S <完整目录路径> -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build <完整目录路径>\build-mingw-ninja
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build <完整目录路径>\build-mingw-ninja
 
 :: 运行
 <完整目录路径>\build-mingw-ninja\<EXE>.exe
@@ -335,10 +335,10 @@ cmake --build build-mingw-make
 
 \```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B <完整目录路径>\build-mingw-make -S <完整目录路径> -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B <完整目录路径>\build-mingw-make -S <完整目录路径> -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build <完整目录路径>\build-mingw-make
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build <完整目录路径>\build-mingw-make
 
 :: 运行
 <完整目录路径>\build-mingw-make\<EXE>.exe
@@ -370,10 +370,10 @@ cmake --build build-mingw-mc --config Release
 
 \```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B <完整目录路径>\build-mingw-mc -S <完整目录路径> -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B <完整目录路径>\build-mingw-mc -S <完整目录路径> -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build <完整目录路径>\build-mingw-mc --config Release
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build <完整目录路径>\build-mingw-mc --config Release
 
 :: 运行
 <完整目录路径>\build-mingw-mc\Release\<EXE>.exe

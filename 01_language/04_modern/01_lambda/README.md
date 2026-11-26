@@ -166,10 +166,10 @@ cmake --build build-mingw-ninja
 
 ```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-ninja -S D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-ninja -S D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-ninja
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-ninja
 
 :: 运行
 D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-ninja\lambda.exe
@@ -201,10 +201,10 @@ cmake --build build-mingw-make
 
 ```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-make -S D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-make -S D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-make
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-make
 
 :: 运行
 D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-make\lambda.exe
@@ -236,10 +236,10 @@ cmake --build build-mingw-mc --config Release
 
 ```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-mc -S D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-mc -S D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-mc --config Release
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-mc --config Release
 
 :: 运行
 D:\workspace\clion_workspace\cppcookbook\01_language\04_modern\01_lambda\build-mingw-mc\Release\lambda.exe

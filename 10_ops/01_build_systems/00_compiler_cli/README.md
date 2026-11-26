@@ -10,7 +10,7 @@
 
 ```bash
 # 定义路径变量（下同）
-GXX="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe"
+GXX="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe"
 
 # ① 多源文件一步编译链接
 "$GXX" -std=c++20 -Wall -Wextra -o app.exe main.cpp math_utils.cpp

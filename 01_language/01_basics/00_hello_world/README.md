@@ -239,12 +239,12 @@ std::getline(std::cin, line);  // 读一整行（含空格），遇回车结束
 
 **路径常量（绝对路径版使用）：**
 
-| 工具 | 完整路径 |
-|------|------|
-| cmake | `D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe` |
-| g++ | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe` |
-| ninja | `D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe` |
-| mingw32-make | `D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe` |
+| 工具           | 完整路径                                                             |
+|--------------|------------------------------------------------------------------|
+| cmake        | `D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe` |
+| g++          | `D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe`           |
+| ninja        | `D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe`     |
+| mingw32-make | `D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe`  |
 
 #### 方案 A — Ninja
 
@@ -270,10 +270,10 @@ cmake --build build-mingw-ninja
 
 ```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-ninja -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G Ninja -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-ninja -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-ninja
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-ninja
 
 :: 运行
 D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-ninja\hello_world.exe
@@ -305,10 +305,10 @@ cmake --build build-mingw-make
 
 ```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-make -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/mingw32-make.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G "MinGW Makefiles" -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-make -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/mingw32-make.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-make
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-make
 
 :: 运行
 D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-make\hello_world.exe
@@ -340,10 +340,10 @@ cmake --build build-mingw-mc --config Release
 
 ```cmd
 :: 配置
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-mc -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion20260101/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion20260101/bin/ninja/win/x64/ninja.exe"
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe -G "Ninja Multi-Config" -B D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-mc -S D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world -DCMAKE_CXX_COMPILER="D:/ProgramData/JetBrains/CLion/bin/mingw/bin/g++.exe" -DCMAKE_MAKE_PROGRAM="D:/ProgramData/JetBrains/CLion/bin/ninja/win/x64/ninja.exe"
 
 :: 构建
-D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-mc --config Release
+D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe --build D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-mc --config Release
 
 :: 运行
 D:\workspace\clion_workspace\cppcookbook\01_language\01_basics\00_hello_world\build-mingw-mc\Release\hello_world.exe

@@ -29,7 +29,7 @@
 本目录用 preset 代替手动传参，构建命令不再是章 README §5 的 `-B/-G` 形式（但工具链激活、CLion 用法仍见 [章 README § 5 通用构建流程](../README.md)）。exe 名 `app`，产物在 `build/<preset 名>/` 下。日常最常用——Debug 预设（Git Bash，cmd 同理）：
 
 ```bash
-CMAKE="D:/ProgramData/JetBrains/CLion20260101/bin/cmake/win/x64/bin/cmake.exe"
+CMAKE="D:/ProgramData/JetBrains/CLion/bin/cmake/win/x64/bin/cmake.exe"
 
 "$CMAKE" --preset debug
 "$CMAKE" --build --preset debug
