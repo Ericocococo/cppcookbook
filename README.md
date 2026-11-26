@@ -45,12 +45,13 @@
 GCC + GDB 组合，跨平台友好，适合学习语言特性和标准库。
 编译器目标三元组：`x86_64-w64-mingw32`。
 
-| 工具        | 完整路径                                                             | 版本                           |
-|-----------|------------------------------------------------------------------|------------------------------|
-| g++.exe   | `D:\ProgramData\JetBrains\CLion\bin\mingw\bin\g++.exe`           | GCC 15.2.0                   |
-| cmake.exe | `D:\ProgramData\JetBrains\CLion\bin\cmake\win\x64\bin\cmake.exe` | 4.3.1                        |
-| ninja.exe | `D:\ProgramData\JetBrains\CLion\bin\ninja\win\x64\ninja.exe`     | 1.13.2                       |
-| 调试器       | `D:\ProgramData\JetBrains\CLion\bin\gdb\win\x64\bin\gdb.exe`     | GDB 17.1（JetBrains 定制构建 262） |
+| 工具               | 完整路径                                                             | 版本                           |
+|------------------|------------------------------------------------------------------|------------------------------|
+| g++.exe          | `D:\ProgramData\JetBrains\CLion\bin\mingw\bin\g++.exe`           | GCC 15.2.0                   |
+| mingw32-make.exe | `D:\ProgramData\JetBrains\CLion\bin\mingw\bin\mingw32-make.exe`  | GNU Make 4.4.1               |
+| cmake.exe        | `D:\ProgramData\JetBrains\CLion\bin\cmake\win\x64\bin\cmake.exe` | 4.3.1                        |
+| ninja.exe        | `D:\ProgramData\JetBrains\CLion\bin\ninja\win\x64\ninja.exe`     | 1.13.2                       |
+| 调试器              | `D:\ProgramData\JetBrains\CLion\bin\gdb\win\x64\bin\gdb.exe`     | GDB 17.1（JetBrains 定制构建 262） |
 
 ---
 
@@ -61,8 +62,8 @@ cl.exe + LLDB 组合，生成原生 Windows COFF 格式目标文件，适合调�
 
 | 工具            | 完整路径                                                                                                                     | 版本                             |
 |---------------|--------------------------------------------------------------------------------------------------------------------------|--------------------------------|
-| cl.exe        | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe`                 | 19.51.36247                    |
-| link.exe      | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\link.exe`               | 同上                             |
+| cl.exe        | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe`                 | 19.51.36263                    |
+| link.exe      | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\link.exe`               | 14.51.36263.0                  |
 | cmake.exe     | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` | 4.3.1-msvc1                    |
 | ninja.exe     | `D:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe`     | 1.13.2                         |
 | vcvarsall.bat | `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat`                                 | —                              |
